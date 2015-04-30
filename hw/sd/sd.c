@@ -1208,6 +1208,7 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
         break;
 
     /* Erase commands (Class 5) */
+    case 35:
     case 32:	/* CMD32:  ERASE_WR_BLK_START */
         switch (sd->state) {
         case sd_transfer_state:
@@ -1219,6 +1220,7 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
         }
         break;
 
+    case 36:
     case 33:	/* CMD33:  ERASE_WR_BLK_END */
         switch (sd->state) {
         case sd_transfer_state:
