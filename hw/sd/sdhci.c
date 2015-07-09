@@ -65,6 +65,12 @@
  * If not stated otherwise:
  * 0 - not supported, 1 - supported, other - prohibited.
  */
+#define SDHC_CAPAB_DRIVER_D       1ull       /* Driver type D support */
+#define SDHC_CAPAB_DRIVER_C       1ull       /* Driver type C support */
+#define SDHC_CAPAB_DRIVER_A       1ull       /* Driver type A support */
+#define SDHC_CAPAB_DDR50          1ull       /* DDR50 support */
+#define SDHC_CAPAB_SDR104         1ull       /* SDR104 support */
+#define SDHC_CAPAB_SDR50          1ull       /* SDR50 support */
 #define SDHC_CAPAB_64BITBUS       0ul        /* 64-bit System Bus Support */
 #define SDHC_CAPAB_18V            1ul        /* Voltage support 1.8v */
 #define SDHC_CAPAB_30V            0ul        /* Voltage support 3.0v */
@@ -112,7 +118,10 @@
 #endif
 
 #define SDHC_CAPAB_REG_DEFAULT                                 \
-   ((SDHC_CAPAB_64BITBUS << 28) | (SDHC_CAPAB_18V << 26) |     \
+   ((SDHC_CAPAB_DRIVER_D << 38) | (SDHC_CAPAB_DRIVER_C << 37) |\
+    (SDHC_CAPAB_DRIVER_A << 36) | (SDHC_CAPAB_DDR50 << 34) |   \
+    (SDHC_CAPAB_SDR104 << 33) | (SDHC_CAPAB_SDR50 << 32) |     \
+    (SDHC_CAPAB_64BITBUS << 28) | (SDHC_CAPAB_18V << 26) |     \
     (SDHC_CAPAB_30V << 25) | (SDHC_CAPAB_33V << 24) |          \
     (SDHC_CAPAB_SUSPRESUME << 23) | (SDHC_CAPAB_SDMA << 22) |  \
     (SDHC_CAPAB_HIGHSPEED << 21) | (SDHC_CAPAB_ADMA1 << 20) |  \
