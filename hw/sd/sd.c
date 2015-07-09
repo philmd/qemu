@@ -336,7 +336,7 @@ static void sd_set_rca(SDState *sd)
  */
 #define CARD_STATUS_A	0x02004100
 #define CARD_STATUS_B	0x00c01e00
-#define CARD_STATUS_C	0xfd39a028
+#define CARD_STATUS_C	0xfd39a0a8
 
 static void sd_set_cardstatus(SDState *sd)
 {
