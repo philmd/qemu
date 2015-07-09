@@ -51,9 +51,17 @@
 #define ERASE_RESET		(1 << 13)
 #define CURRENT_STATE		(7 << 9)
 #define READY_FOR_DATA		(1 << 8)
+#define SWTICH_ERROR        (1 << 7)
 #define APP_CMD			(1 << 5)
 #define AKE_SEQ_ERROR		(1 << 3)
 #define OCR_CCS_BITN        30
+
+#define EXCSD_BUS_WIDTH_OFFSET 183
+#define BUS_WIDTH_8_MASK    0x4
+#define BUS_WIDTH_4_MASK    0x2
+
+#define SD_TUNING_BLOCK_SIZE    64
+#define MMC_TUNING_BLOCK_SIZE   128
 
 typedef enum {
     sd_none = -1,
@@ -122,6 +130,8 @@ typedef struct {
 
 /* Legacy functions to be used only by non-qdevified callers */
 SDState *sd_init(BlockBackend *bs, bool is_spi);
+SDState *mmc_init(BlockBackend *bs);
+
 int sd_do_command(SDState *sd, SDRequest *req,
                   uint8_t *response);
 void sd_write_data(SDState *sd, uint8_t value);

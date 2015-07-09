@@ -95,6 +95,7 @@ struct SDState {
     uint8_t scr[8];
     uint8_t cid[16];
     uint8_t csd[16];
+    uint8_t ext_csd[512];
     uint16_t rca;
     uint32_t card_status;
     uint8_t sd_status[64];
@@ -112,6 +113,7 @@ struct SDState {
     uint8_t function_group[6];
 
     bool spi;
+    bool mmc;
     uint8_t current_cmd;
     /* True if we will handle the next command as an ACMD. Note that this does
      * *not* track the APP_CMD status bit!
@@ -202,6 +204,32 @@ static const int sd_cmd_class[64] = {
     7,  7, 10,  7,  9,  9,  9,  8,  8, 10,  8,  8,  8,  8,  8,  8,
 };
 
+static const uint32_t sd_tunning_data[16] = {
+    0xFF0FFF00, 0xFFCC3CC, 0xC33CCCFF, 0xFEFFFEEF,
+    0xFFDFFFDD, 0xFFFBFFFB, 0XBFFF7FFF, 0X77F7BDEF,
+    0XFFF0FFF0, 0X0FFCCC3C, 0XCC33CCCF, 0XFFEFFFEE,
+    0XFFFDFFFD, 0XDFFFBFFF, 0XBBFFF7FF, 0XF77F7BDE,
+};
+
+static const uint8_t emmc_tunning_data_8bit[128] = {
+       0xff, 0xff, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00,
+       0xff, 0xff, 0xcc, 0xcc, 0xcc, 0x33, 0xcc, 0xcc,
+       0xcc, 0x33, 0x33, 0xcc, 0xcc, 0xcc, 0xff, 0xff,
+       0xff, 0xee, 0xff, 0xff, 0xff, 0xee, 0xee, 0xff,
+       0xff, 0xff, 0xdd, 0xff, 0xff, 0xff, 0xdd, 0xdd,
+       0xff, 0xff, 0xff, 0xbb, 0xff, 0xff, 0xff, 0xbb,
+       0xbb, 0xff, 0xff, 0xff, 0x77, 0xff, 0xff, 0xff,
+       0x77, 0x77, 0xff, 0x77, 0xbb, 0xdd, 0xee, 0xff,
+       0xff, 0xff, 0xff, 0x00, 0xff, 0xff, 0xff, 0x00,
+       0x00, 0xff, 0xff, 0xcc, 0xcc, 0xcc, 0x33, 0xcc,
+       0xcc, 0xcc, 0x33, 0x33, 0xcc, 0xcc, 0xcc, 0xff,
+       0xff, 0xff, 0xee, 0xff, 0xff, 0xff, 0xee, 0xee,
+       0xff, 0xff, 0xff, 0xdd, 0xff, 0xff, 0xff, 0xdd,
+       0xdd, 0xff, 0xff, 0xff, 0xbb, 0xff, 0xff, 0xff,
+       0xbb, 0xbb, 0xff, 0xff, 0xff, 0x77, 0xff, 0xff,
+       0xff, 0x77, 0x77, 0xff, 0x77, 0xbb, 0xdd, 0xee,
+};
+
 static uint8_t sd_crc7(void *message, size_t width)
 {
     int i, bit;
@@ -238,7 +266,7 @@ static uint16_t sd_crc16(void *message, size_t width)
 static void sd_set_ocr(SDState *sd)
 {
     /* All voltages OK, card power-up OK, Standard Capacity SD Memory Card */
-    sd->ocr = 0xc0ffff00;
+    sd->ocr = 0xc0ffff00 | (sd->mmc ? 0 : 1 << 24);
 }
 
 static void sd_ocr_powerup(void *opaque)
@@ -301,6 +329,13 @@ static const uint8_t sd_csd_rw_mask[16] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xfe,
 };
 
+static void sd_set_ext_csd(SDState *sd)
+{
+    /* FIXME: come up with sane reset value */
+    memset(sd->ext_csd, 0, sizeof(sd->ext_csd));
+    sd->ext_csd[196] = 0x3f; /* Support all timing modes */
+}
+
 static void sd_set_csd(SDState *sd, uint64_t size)
 {
     uint32_t csize = (size >> (CMULT_SHIFT + HWBLOCK_SHIFT)) - 1;
@@ -356,9 +391,9 @@ static void sd_set_csd(SDState *sd, uint64_t size)
     }
 }
 
-static void sd_set_rca(SDState *sd)
+static void sd_set_rca(SDState *sd, uint32_t val)
 {
-    sd->rca += 0x4567;
+    sd->rca = val;
 }
 
 /* Card status bits, split by clear condition:
@@ -463,6 +498,7 @@ static void sd_reset(DeviceState *dev)
     sd_set_scr(sd);
     sd_set_cid(sd);
     sd_set_csd(sd, size);
+    sd_set_ext_csd(sd);
     sd_set_cardstatus(sd);
     sd_set_sdstatus(sd);
 
@@ -724,6 +760,43 @@ static const sd_fn_support *sd_fn_support_defs [] = {
 
 #define SD_FN_NO_INFLUENCE          (1 << 15)
 
+enum {
+    MMC_CMD6_ACCESS_COMMAND_SET = 0,
+    MMC_CMD6_ACCESS_SET_BITS,
+    MMC_CMD6_ACCESS_CLEAR_BITS,
+    MMC_CMD6_ACCESS_WRITE_BYTE,
+};
+
+static void mmc_function_switch(SDState *sd, uint32_t arg)
+{
+    uint32_t access = extract32(arg, 24, 2);
+    uint32_t index = extract32(arg, 16, 8);
+    uint32_t value = extract32(arg, 8, 8);
+    uint8_t b = sd->ext_csd[index];
+
+    switch(access) {
+    case MMC_CMD6_ACCESS_COMMAND_SET:
+        qemu_log_mask(LOG_UNIMP, "MMC Command set switching not supported\n");
+        return;
+    case MMC_CMD6_ACCESS_SET_BITS:
+        b |= value;
+        break;
+    case MMC_CMD6_ACCESS_CLEAR_BITS:
+        b &= ~value;
+        break;
+    case MMC_CMD6_ACCESS_WRITE_BYTE:
+        b = value;
+        break;
+    }
+
+    if (index >= 192) {
+        sd->card_status |= SWTICH_ERROR;
+        return;
+    }
+
+    sd->ext_csd[index] = b;
+}
+
 static void sd_function_switch(SDState *sd, uint32_t arg)
 {
     int fn_grp, new_func, crc, i;
@@ -894,11 +967,27 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
         break;
 
     case 1:	/* CMD1:   SEND_OP_CMD */
-        if (!sd->spi)
-            goto bad_cmd;
+	    /* ACMD41: SD_APP_OP_COND */
+        if (!sd->mmc) {
+            return sd_r0;
+        }
+        if (sd->spi) {
+            /* SEND_OP_CMD */
+            sd->state = sd_transfer_state;
+            return sd_r1;
+        }
+        switch (sd->state) {
+        case sd_idle_state:
+            /* We accept any voltage.  10000 V is nothing.  */
+            if (req.arg)
+                sd->state = sd_ready_state;
 
-        sd->state = sd_transfer_state;
-        return sd_r1;
+            return sd_r3;
+
+        default:
+            break;
+        }
+        break;
 
     case 2:	/* CMD2:   ALL_SEND_CID */
         if (sd->spi)
@@ -920,8 +1009,8 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
         case sd_identification_state:
         case sd_standby_state:
             sd->state = sd_standby_state;
-            sd_set_rca(sd);
-            return sd_r6;
+            sd_set_rca(sd, sd->mmc ? extract32(req.arg, 16, 16) : 0x4567);
+            return sd->mmc ? sd_r1 : sd_r6;
 
         default:
             break;
@@ -948,12 +1037,19 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
             goto bad_cmd;
         switch (sd->mode) {
         case sd_data_transfer_mode:
-            sd_function_switch(sd, req.arg);
-            sd->state = sd_sendingdata_state;
-            sd->data_start = 0;
-            sd->data_offset = 0;
-            return sd_r1;
-
+            if (sd->mmc) {
+                sd->state = sd_programming_state;
+                mmc_function_switch(sd, req.arg);
+                /* Bzzzzzzztt .... Operation complete.  */
+                sd->state = sd_transfer_state;
+                return sd_r1b;
+            } else {
+                sd_function_switch(sd, req.arg);
+                sd->state = sd_sendingdata_state;
+                sd->data_start = 0;
+                sd->data_offset = 0;
+                return sd_r1;
+            }
         default:
             break;
         }
@@ -1014,7 +1110,15 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
             /* Accept.  */
             sd->vhs = req.arg;
             return sd_r7;
-
+        case sd_transfer_state:
+            if (!sd->mmc) {
+                break;
+            }
+            sd->state = sd_sendingdata_state;
+            memcpy(sd->data, sd->ext_csd, 512);
+            sd->data_start = 0;
+            sd->data_offset = 0;
+            return sd_r1;
         default:
             break;
         }
@@ -1168,6 +1272,30 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
             break;
         }
         break;
+
+    case 19:    /* CMD19: sd SEND_TUNING_BLOCK */
+        switch (sd->state) {
+        case sd_transfer_state:
+            sd->state = sd_sendingdata_state;
+            sd->data_offset = 0;
+            return sd_r1;
+        default:
+                break;
+        }
+        break;
+
+    case 21:    /* CMD21: mmc SEND TUNING_BLOCK */
+        if (!sd->mmc) {
+            break;
+        }
+        switch (sd->state) {
+        case sd_transfer_state:
+            sd->state = sd_sendingdata_state;
+            sd->data_offset = 0;
+            return sd_r1;
+        default:
+            break;
+        }
 
     case 23:    /* CMD23: SET_BLOCK_COUNT */
         switch (sd->state) {
@@ -1388,12 +1516,25 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
 
     /* Application specific commands (Class 8) */
     case 55:	/* CMD55:  APP_CMD */
-        if (sd->rca != rca)
-            return sd_r0;
+        switch (sd->state) {
+        case sd_idle_state:
+        case sd_standby_state:
+        case sd_transfer_state:
+        case sd_sendingdata_state:
+        case sd_receivingdata_state:
+        case sd_programming_state:
+        case sd_disconnect_state:
+            if (sd->rca != rca) {
+                return sd_r0;
+            }
 
-        sd->expecting_acmd = true;
-        sd->card_status |= APP_CMD;
-        return sd_r1;
+            sd->expecting_acmd = true;
+            sd->card_status |= APP_CMD;
+            return sd_r1;
+
+        default:
+            break;
+        }
 
     case 56:	/* CMD56:  GEN_CMD */
         fprintf(stderr, "SD: GEN_CMD 0x%08x\n", req.arg);
@@ -1871,27 +2012,20 @@ uint8_t sd_read_data(SDState *sd)
             sd->state = sd_transfer_state;
         break;
 
+    case 8:	/* CMD6:   SEND_EXT_CSD */
+	assert(sd->mmc);
+        ret = sd->data[sd->data_offset ++];
+
+        if (sd->data_offset >= 512)
+            sd->state = sd_transfer_state;
+        break;
+
     case 9:	/* CMD9:   SEND_CSD */
     case 10:	/* CMD10:  SEND_CID */
         ret = sd->data[sd->data_offset ++];
 
         if (sd->data_offset >= 16)
             sd->state = sd_transfer_state;
-        break;
-
-    case 11:	/* CMD11:  READ_DAT_UNTIL_STOP */
-        if (sd->data_offset == 0)
-            BLK_READ_BLOCK(sd->data_start, io_len);
-        ret = sd->data[sd->data_offset ++];
-
-        if (sd->data_offset >= io_len) {
-            sd->data_start += io_len;
-            sd->data_offset = 0;
-            if (sd->data_start + io_len > sd->size) {
-                sd->card_status |= ADDRESS_ERROR;
-                break;
-            }
-        }
         break;
 
     case 13:	/* ACMD13: SD_STATUS */
@@ -1931,6 +2065,28 @@ uint8_t sd_read_data(SDState *sd)
                 sd->card_status |= ADDRESS_ERROR;
                 break;
             }
+        }
+        break;
+
+    case 19:
+        if (sd->data_offset >= SD_TUNING_BLOCK_SIZE - 1) {
+            sd->state = sd_transfer_state;
+        }
+        ret = ((uint8_t *)(&sd_tunning_data))[sd->data_offset++];
+        break;
+
+    case 21:
+        if (sd->data_offset >= MMC_TUNING_BLOCK_SIZE - 1) {
+            sd->state = sd_transfer_state;
+        }
+        if (sd->ext_csd[EXCSD_BUS_WIDTH_OFFSET] & BUS_WIDTH_8_MASK) {
+            ret = emmc_tunning_data_8bit[sd->data_offset++];
+        } else {
+            /* Return LSB Nibbles of two byte from the 8bit tuning block
+             * for 4bit mode
+             */
+            ret = emmc_tunning_data_8bit[sd->data_offset++] & 0x0F;
+            ret |= (emmc_tunning_data_8bit[sd->data_offset++] & 0x0F) << 4;
         }
         break;
 
@@ -2025,6 +2181,7 @@ static Property sd_properties[] = {
      * board to ensure that ssi transfers only occur when the chip select
      * is asserted.  */
     DEFINE_PROP_BOOL("spi", SDState, spi, false),
+    DEFINE_PROP_BOOL("mmc", SDState, mmc, false),
     DEFINE_PROP_END_OF_LIST()
 };
 
