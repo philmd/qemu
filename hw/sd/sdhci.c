@@ -912,6 +912,9 @@ static uint64_t sdhci_read(void *opaque, hwaddr offset, unsigned size)
         break;
     case SDHC_PRNSTS:
         ret = s->prnsts;
+        ret = deposit32(ret, SDHC_DAT_LVL_SHIFT, SDHC_DAT_LVL_LENGTH,
+                        sdbus_get_dat_lines(&s->sdbus));
+        ret = deposit32(ret, SDHC_CMD_LVL_SHIFT, 1, sdbus_get_cmd_line(&s->sdbus));
         break;
     case SDHC_HOSTCTL:
         ret = s->hostctl | (s->pwrcon << 8) | (s->blkgap << 16) |
@@ -930,10 +933,13 @@ static uint64_t sdhci_read(void *opaque, hwaddr offset, unsigned size)
         ret = s->norintsigen | (s->errintsigen << 16);
         break;
     case SDHC_ACMD12ERRSTS:
-        ret = s->acmd12errsts;
+        ret = s->acmd12errsts | (s->hostctl2 << 16);
         break;
+    case SDHC_CAPAREG_HI:
+	ret = extract64(s->capareg, 32, 32);
+	break;
     case SDHC_CAPAREG:
-        ret = s->capareg;
+	ret = extract64(s->capareg, 0, 32);
         break;
     case SDHC_MAXCURR:
         ret = s->maxcurr;
@@ -1084,6 +1090,18 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
                 !(s->capareg & (1 << (31 - ((s->pwrcon >> 1) & 0x7))))) {
             s->pwrcon &= ~SDHC_POWER_ON;
         }
+        break;
+    case SDHC_ACMD12ERRSTS:
+        /* This implements a very simplified view.  */
+        if (value & SDHC_CTRL2_EXECUTE_TUNING) {
+            /* Signal immediate completition of tuning.  */
+            value &= ~SDHC_CTRL2_EXECUTE_TUNING;
+            value |= SDHC_CTRL2_SAMPLING_CLKSEL;
+        }
+        s->acmd12errsts = value;
+        MASKED_WRITE(s->hostctl2, mask >> 16, value >> 16);
+        sdbus_set_voltage(&s->sdbus, s->hostctl2 & SDHC_CTRL2_VOLTAGE_SWITCH ?
+                                     SD_VOLTAGE_18 : SD_VOLTAGE_33);
         break;
     case SDHC_CLKCON:
         if (!(mask & 0xFF000000)) {

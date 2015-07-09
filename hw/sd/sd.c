@@ -124,9 +124,41 @@ struct SDState {
     qemu_irq readonly_cb;
     qemu_irq inserted_cb;
     BlockBackend *blk;
+    uint8_t *buf;
+
+    bool uhs;
+    uint8_t dat_lines;
+    bool cmd_line;
 
     bool enable;
 };
+
+uint8_t sd_get_dat_lines(SDState *sd)
+{
+    return sd->dat_lines;
+}
+
+bool sd_get_cmd_line(SDState *sd)
+{
+    return sd->cmd_line;
+}
+
+void sd_set_voltage(SDState *sd, int v)
+{
+    switch (v) {
+    case SD_VOLTAGE_18:
+        if (!sd->uhs) {
+            qemu_log_mask(LOG_GUEST_ERROR, "SD card not in correct state for"
+                          "1.8V switch\n");
+        } else {
+            sd->cmd_line = true;
+            sd->dat_lines = 0xf;
+        }
+    default:
+        qemu_log_mask(LOG_UNIMP, "SD card voltage switch not implemented: %d\n",
+                      v);
+    }
+}
 
 static void sd_set_mode(SDState *sd)
 {
@@ -205,8 +237,8 @@ static uint16_t sd_crc16(void *message, size_t width)
 
 static void sd_set_ocr(SDState *sd)
 {
-    /* All voltages OK, Standard Capacity SD Memory Card, not yet powered up */
-    sd->ocr = 0x00ffff00;
+    /* All voltages OK, card power-up OK, Standard Capacity SD Memory Card */
+    sd->ocr = 0xc0ffff00;
 }
 
 static void sd_ocr_powerup(void *opaque)
@@ -445,6 +477,8 @@ static void sd_reset(DeviceState *dev)
     sd->blk_len = 0x200;
     sd->pwd_len = 0;
     sd->expecting_acmd = false;
+    sd->dat_lines = 0xf;
+    sd->cmd_line = true;
     sd->multi_blk_cnt = 0;
 }
 
@@ -639,30 +673,112 @@ static uint32_t sd_wpbits(SDState *sd, uint64_t addr)
     return ret;
 }
 
+enum {
+    SD_FN_ACCESS_MODE = 1,
+    SD_FN_COMMAND_SYSTEM,
+    SD_FN_DRIVER_STRENGTH,
+    SD_FN_CURRENT_LIMIT,
+    SD_FN_RSVD_5,
+    SD_FN_RSVD_6,
+};
+
+typedef struct sd_fn_support {
+    const char *name;
+    bool uhs_only;
+    bool unimp;
+} sd_fn_support;
+
+static const sd_fn_support *sd_fn_support_defs [] = {
+    [SD_FN_ACCESS_MODE] = (sd_fn_support [15]) {
+        [0] = { .name = "default/SDR12" },
+        [1] = { .name = "high-speed/SDR25" },
+        [2] = { .name = "SDR50",    .uhs_only = true },
+        [3] = { .name = "SDR104",   .uhs_only = true },
+        [4] = { .name = "DDR50",    .uhs_only = true },
+    },
+    [SD_FN_COMMAND_SYSTEM] = (sd_fn_support [15]) {
+        [0] = { .name = "default" },
+        [1] = { .name = "For eC" },
+        [3] = { .name = "OTP",      .unimp = true },
+        [4] = { .name = "ASSD",     .unimp = true },
+    },
+    [SD_FN_DRIVER_STRENGTH] = (sd_fn_support [15]) {
+        [0] = { .name = "default/Type B" },
+        [1] = { .name = "Type A",   .uhs_only = true },
+        [2] = { .name = "Type C",   .uhs_only = true },
+        [3] = { .name = "Type D",   .uhs_only = true },
+    },
+    [SD_FN_CURRENT_LIMIT] = (sd_fn_support [15]) {
+        [0] = { .name = "default/200mA" },
+        [1] = { .name = "400mA",    .uhs_only = true },
+        [2] = { .name = "600mA",    .uhs_only = true },
+        [3] = { .name = "800mA",    .uhs_only = true },
+    },
+    [SD_FN_RSVD_5] = (sd_fn_support [15]) {
+        [0] = { .name = "default" },
+    },
+    [SD_FN_RSVD_6] = (sd_fn_support [15]) {
+        [0] = { .name = "default" },
+    },
+};
+
+#define SD_FN_NO_INFLUENCE          (1 << 15)
+
 static void sd_function_switch(SDState *sd, uint32_t arg)
 {
-    int i, mode, new_func, crc;
-    mode = !!(arg & 0x80000000);
+    int fn_grp, new_func, crc, i;
+    uint8_t *data_p;
+    bool mode = arg & 0x80000000;
 
     sd->data[0] = 0x00;		/* Maximum current consumption */
     sd->data[1] = 0x01;
-    sd->data[2] = 0x80;		/* Supported group 6 functions */
-    sd->data[3] = 0x01;
-    sd->data[4] = 0x80;		/* Supported group 5 functions */
-    sd->data[5] = 0x01;
-    sd->data[6] = 0x80;		/* Supported group 4 functions */
-    sd->data[7] = 0x01;
-    sd->data[8] = 0x80;		/* Supported group 3 functions */
-    sd->data[9] = 0x01;
-    sd->data[10] = 0x80;	/* Supported group 2 functions */
-    sd->data[11] = 0x43;
-    sd->data[12] = 0x80;	/* Supported group 1 functions */
-    sd->data[13] = 0x03;
-    for (i = 0; i < 6; i ++) {
-        new_func = (arg >> (i * 4)) & 0x0f;
-        if (mode && new_func != 0x0f)
-            sd->function_group[i] = new_func;
-        sd->data[14 + (i >> 1)] = new_func << ((i * 4) & 4);
+
+    data_p = &sd->data[2];
+    for (fn_grp = 6; fn_grp >= 1; fn_grp--) {
+        uint16_t supported_fns = SD_FN_NO_INFLUENCE;
+        for (i = 0; i < 15; ++i) {
+            const sd_fn_support *def = &sd_fn_support_defs[fn_grp][i];
+
+            if (def->name && !def->unimp && !(def->uhs_only && !sd->uhs)) {
+                supported_fns |= 1 << i;
+            }
+        }
+        *(data_p++) = supported_fns >> 8;
+        *(data_p++) = supported_fns;
+    }
+
+    assert(data_p == &sd->data[14]);
+
+    for (fn_grp = 6; fn_grp >= 1; fn_grp--) {
+        new_func = (arg >> ((fn_grp - 1) * 4)) & 0x0f;
+        if (new_func == 0xf) {
+            new_func = sd->function_group[fn_grp - 1];
+        } else if (mode) {
+            const sd_fn_support *def = &sd_fn_support_defs[fn_grp][new_func];
+
+            if (!def->name) {
+                qemu_log_mask(LOG_GUEST_ERROR, "Function %d not a valid for "
+                              "function group %d\n", new_func, fn_grp);
+                new_func = 0xf;
+            } else if (def->unimp) {
+                qemu_log_mask(LOG_UNIMP, "Function %s (fn grp %d) is not "
+                              "implemented\n", def->name, fn_grp);
+                new_func = 0xf;
+            } else if (def->uhs_only && !sd->uhs) {
+                qemu_log_mask(LOG_GUEST_ERROR, "Function %s (fn grp %d) only "
+                              "valid in UHS mode\n", def->name, fn_grp);
+                new_func = 0xf;
+            } else {
+                DPRINTF("Function %s selected (fn grp %d)\n",
+                        def->name, fn_grp);
+                sd->function_group[fn_grp - 1] = new_func;
+            }
+        }
+        if (!(fn_grp & 0x1)) { /* evens go in high nibble */
+            *data_p = new_func << 4;
+        } else { /* odds go in low nibble */
+            *(data_p++) |= new_func;
+        }
     }
     memset(&sd->data[17], 0, 47);
     crc = sd_crc16(sd->data, 64);
@@ -948,23 +1064,16 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
         }
         break;
 
-    case 11:	/* CMD11:  READ_DAT_UNTIL_STOP */
-        if (sd->spi)
-            goto bad_cmd;
+    case 11:    /* CMD11: VOLTAGE_SWITCH */
         switch (sd->state) {
-        case sd_transfer_state:
-            sd->state = sd_sendingdata_state;
-            sd->data_start = req.arg;
-            sd->data_offset = 0;
-
-            if (sd->data_start + sd->blk_len > sd->size)
-                sd->card_status |= ADDRESS_ERROR;
-            return sd_r0;
-
+        case sd_ready_state:
+            sd->uhs = true;
+            sd->dat_lines = 0;
+            sd->cmd_line = false;
+            return sd_r1;
         default:
             break;
         }
-        break;
 
     case 12:	/* CMD12:  STOP_TRANSMISSION */
         switch (sd->state) {
@@ -1930,6 +2039,9 @@ static void sd_class_init(ObjectClass *klass, void *data)
     dc->reset = sd_reset;
     dc->bus_type = TYPE_SD_BUS;
 
+    sc->get_dat_lines = sd_get_dat_lines;
+    sc->get_cmd_line = sd_get_cmd_line;
+    sc->set_voltage = sd_set_voltage;
     sc->do_command = sd_do_command;
     sc->write_data = sd_write_data;
     sc->read_data = sd_read_data;

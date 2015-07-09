@@ -69,6 +69,9 @@ typedef struct {
     uint8_t crc;
 } SDRequest;
 
+#define SD_VOLTAGE_33 33
+#define SD_VOLTAGE_18 18
+
 typedef struct SDState SDState;
 typedef struct SDBus SDBus;
 
@@ -84,6 +87,9 @@ typedef struct {
     DeviceClass parent_class;
     /*< public >*/
 
+    uint8_t (*get_dat_lines)(SDState *sd);
+    bool (*get_cmd_line)(SDState *sd);
+    void (*set_voltage)(SDState *sd, int v);
     int (*do_command)(SDState *sd, SDRequest *req, uint8_t *response);
     void (*write_data)(SDState *sd, uint8_t value);
     uint8_t (*read_data)(SDState *sd);
@@ -130,10 +136,16 @@ bool sd_data_ready(SDState *sd);
  * second slot is always empty).
  */
 void sd_enable(SDState *sd, bool enable);
+uint8_t sd_get_dat_lines(SDState *sd);
+bool sd_get_cmd_line(SDState *sd);
+void sd_set_voltage(SDState *sd, int v);
 
 /* Functions to be used by qdevified callers (working via
  * an SDBus rather than directly with SDState)
  */
+uint8_t sdbus_get_dat_lines(SDBus *sdbus);
+bool sdbus_get_cmd_line(SDBus *sdbus);
+void sdbus_set_voltage(SDBus *sdbus, int v);
 int sdbus_do_command(SDBus *sd, SDRequest *req, uint8_t *response);
 void sdbus_write_data(SDBus *sd, uint8_t value);
 uint8_t sdbus_read_data(SDBus *sd);
