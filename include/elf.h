@@ -112,6 +112,8 @@ typedef int64_t  Elf64_Sxword;
 
 #define EM_UNICORE32    110     /* UniCore32 */
 
+#define EM_TI_C6000	140	/* Texas Instruments TMS320C6000 DSP family */
+
 /*
  * This is an interim value that we will use until the committee comes
  * up with a final number.

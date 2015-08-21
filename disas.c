@@ -266,6 +266,8 @@ void target_disas(FILE *out, CPUState *cpu, target_ulong code,
 #elif defined(TARGET_LM32)
     s.info.mach = bfd_mach_lm32;
     s.info.print_insn = print_insn_lm32;
+#elif defined(TARGET_C6X)
+    s.info.print_insn = print_insn_tic6x;
 #endif
     if (s.info.print_insn == NULL) {
         s.info.print_insn = print_insn_od_target;

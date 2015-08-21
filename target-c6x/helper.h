@@ -1,0 +1,10 @@
+DEF_HELPER_1(tb_restore_context, void, env)
+DEF_HELPER_4(tb_save_context, void, env, i32, i32, i32)
+DEF_HELPER_5(tb_save_context_cond, void, env, i32, i32, i32, i32)
+DEF_HELPER_4(tb_save_context_pc, void, env, i32, i32, i32)
+DEF_HELPER_4(tb_save_prologue, void, env, i32, i32, i32)
+DEF_HELPER_2(tb_save_pc_prologue, void, env, i32)
+
+DEF_HELPER_2(exception, void, env, i32)
+DEF_HELPER_2(lmbd, i32, i32, i32)
+DEF_HELPER_2(subc, i32, i32, i32)
