@@ -587,6 +587,7 @@ static MemTxResult access_with_adjusted_size(hwaddr addr,
         r = access(mr, access_addr, value, access_size,
                     0, access_mask, attrs);
     }
+    adjust_endianness(mr, value, size);
 
     return r;
 }
