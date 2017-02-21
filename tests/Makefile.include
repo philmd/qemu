@@ -272,12 +272,14 @@ gcov-files-x86_64-y = $(subst i386-softmmu/,x86_64-softmmu/,$(gcov-files-i386-y)
 check-qtest-alpha-y = tests/boot-serial-test$(EXESUF)
 
 check-qtest-mips-y = tests/endianness-test$(EXESUF)
+check-qtest-mips-y = tests/test-memory-adjust$(EXESUF)
 
 check-qtest-mipsel-y = tests/endianness-test$(EXESUF)
 
 check-qtest-mips64-y = tests/endianness-test$(EXESUF)
 
 check-qtest-mips64el-y = tests/endianness-test$(EXESUF)
+check-qtest-mips64el-y = tests/test-memory-adjust$(EXESUF)
 
 check-qtest-ppc-y = tests/endianness-test$(EXESUF)
 check-qtest-ppc-y += tests/boot-order-test$(EXESUF)
@@ -331,6 +333,7 @@ check-qtest-arm-y += tests/virtio-blk-test$(EXESUF)
 gcov-files-arm-y += arm-softmmu/hw/block/virtio-blk.c
 check-qtest-arm-y += tests/test-arm-mptimer$(EXESUF)
 gcov-files-arm-y += hw/timer/arm_mptimer.c
+check-qtest-arm-y = tests/test-memory-adjust$(EXESUF)
 
 check-qtest-aarch64-y = tests/numa-test$(EXESUF)
 
