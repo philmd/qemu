@@ -298,6 +298,8 @@ check-qtest-alpha-y = tests/boot-serial-test$(EXESUF)
 
 check-qtest-mips-y = tests/endianness-test$(EXESUF)
 
+check-qtest-mipsel-y = tests/endianness-test$(EXESUF)
+
 check-qtest-mips64-y = tests/endianness-test$(EXESUF)
 
 check-qtest-mips64el-y = tests/endianness-test$(EXESUF)
