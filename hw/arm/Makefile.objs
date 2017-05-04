@@ -1,5 +1,5 @@
 obj-y += boot.o collie.o exynos4_boards.o highbank.o
-obj-y += integratorcp.o musicpal.o nseries.o
+obj-y += integratorcp.o musicpal.o
 obj-y += omap_sx1.o palm.o realview.o stellaris.o
 obj-y += versatilepb.o vexpress.o virt.o xilinx_zynq.o
 obj-$(CONFIG_ACPI) += virt-acpi-build.o
@@ -11,6 +11,7 @@ obj-$(CONFIG_DIGIC) += digic.o digic_boards.o
 obj-y += omap1.o omap2.o strongarm.o
 obj-$(CONFIG_PXA2XX) += pxa2xx.o pxa2xx_gpio.o pxa2xx_pic.o
 obj-$(CONFIG_PXA2XX) += gumstix.o spitz.o tosa.o z2.o
+obj-$(CONFIG_NSERIES) += nseries.o
 obj-$(CONFIG_MAINSTONE) += mainstone.o
 obj-$(CONFIG_ALLWINNER_A10) += allwinner-a10.o cubieboard.o
 obj-$(CONFIG_RASPI) += bcm2835_peripherals.o bcm2836.o raspi.o
