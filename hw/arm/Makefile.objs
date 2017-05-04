@@ -1,8 +1,10 @@
 obj-y += boot.o collie.o highbank.o
 obj-y += integratorcp.o musicpal.o
 obj-$(CONFIG_REALVIEW) += realview.o
-obj-y += versatilepb.o vexpress.o virt.o xilinx_zynq.o
+obj-y += versatilepb.o vexpress.o
+obj-$(CONFIG_SMBIOS) += virt.o
 obj-$(CONFIG_ACPI) += virt-acpi-build.o
+obj-$(CONFIG_ZYNQ) += xilinx_zynq.o
 obj-y += netduino2.o
 obj-y += sysbus-fdt.o
 
