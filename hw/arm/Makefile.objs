@@ -1,4 +1,4 @@
-obj-y += boot.o collie.o exynos4_boards.o highbank.o
+obj-y += boot.o collie.o highbank.o
 obj-y += integratorcp.o musicpal.o
 obj-y += realview.o stellaris.o
 obj-y += versatilepb.o vexpress.o virt.o xilinx_zynq.o
@@ -6,7 +6,8 @@ obj-$(CONFIG_ACPI) += virt-acpi-build.o
 obj-y += netduino2.o
 obj-y += sysbus-fdt.o
 
-obj-y += armv7m.o exynos4210.o
+obj-y += armv7m.o
+obj-$(CONFIG_EXYNOS4) += exynos4210.o exynos4_boards.o
 obj-$(CONFIG_DIGIC) += digic.o digic_boards.o
 obj-y += strongarm.o
 obj-$(CONFIG_OMAP) += omap1.o omap2.o omap_sx1.o palm.o
