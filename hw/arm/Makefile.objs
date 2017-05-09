@@ -1,4 +1,5 @@
-obj-y += boot.o highbank.o
+obj-y += boot.o
+obj-$(CONFIG_HIGHBANK) += highbank.o
 obj-y += integratorcp.o musicpal.o
 obj-$(CONFIG_REALVIEW) += realview.o
 obj-y += versatilepb.o vexpress.o
