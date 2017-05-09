@@ -1,8 +1,8 @@
 obj-y += boot.o
 obj-$(CONFIG_HIGHBANK) += highbank.o
-obj-y += integratorcp.o musicpal.o
-obj-$(CONFIG_REALVIEW) += realview.o
-obj-y += versatilepb.o vexpress.o
+obj-$(CONFIG_MARVELL_88W8618) += musicpal.o
+obj-$(CONFIG_REALVIEW) += realview.o versatilepb.o
+obj-$(CONFIG_A9MPCORE) += vexpress.o
 obj-$(CONFIG_SMBIOS) += virt.o
 obj-$(CONFIG_ACPI) += virt-acpi-build.o
 obj-$(CONFIG_ZYNQ) += xilinx_zynq.o
