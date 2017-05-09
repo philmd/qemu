@@ -1,5 +1,6 @@
 obj-y += boot.o
 obj-$(CONFIG_HIGHBANK) += highbank.o
+obj-$(CONFIG_INTEGRATOR) += integratorcp.o
 obj-$(CONFIG_MARVELL_88W8618) += musicpal.o
 obj-$(CONFIG_REALVIEW) += realview.o versatilepb.o
 obj-$(CONFIG_A9MPCORE) += vexpress.o
