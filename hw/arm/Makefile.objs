@@ -1,4 +1,4 @@
-obj-y += boot.o collie.o highbank.o
+obj-y += boot.o highbank.o
 obj-y += integratorcp.o musicpal.o
 obj-$(CONFIG_REALVIEW) += realview.o
 obj-y += versatilepb.o vexpress.o
@@ -12,7 +12,7 @@ obj-y += armv7m.o
 obj-$(CONFIG_STELLARIS) += stellaris.o
 obj-$(CONFIG_EXYNOS4) += exynos4210.o exynos4_boards.o
 obj-$(CONFIG_DIGIC) += digic.o digic_boards.o
-obj-y += strongarm.o
+obj-$(CONFIG_STRONGARM) += strongarm.o collie.o
 obj-$(CONFIG_OMAP) += omap1.o omap2.o omap_sx1.o palm.o
 obj-$(CONFIG_PXA2XX) += pxa2xx.o pxa2xx_gpio.o pxa2xx_pic.o
 obj-$(CONFIG_PXA2XX) += gumstix.o spitz.o tosa.o z2.o
