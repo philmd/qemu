@@ -7,6 +7,8 @@ compiler:
 cache:
   ccache: true
   timeout: 1200 # https://docs.travis-ci.com/user/caching#setting-the-timeout
+  directories:
+  - $HOME/qemu/.git/modules
 addons:
   apt:
     packages:
@@ -80,7 +82,6 @@ before_install:
         travis_retry brew install libffi gettext glib pixman texinfo ;
         brew link texinfo --force ;
     fi
-  - wget -O - http://people.linaro.org/~alex.bennee/qemu-submodule-git-seed.tar.xz | tar -xvJ
   - travis_retry git submodule update --init --recursive
 before_script:
   - ./configure ${CONFIG} || (cat config.log; exit 1)
@@ -125,7 +126,6 @@ matrix:
       before_install:
         - sudo apt-get update -qq
         - sudo apt-get build-dep -qq qemu
-        - wget -O - http://people.linaro.org/~alex.bennee/qemu-submodule-git-seed.tar.xz | tar -xvJ
         - travis_retry git submodule update --init --recursive
     # Plain Trusty Linux User Build
     - env: CONFIG="--disable-system"
@@ -136,7 +136,6 @@ matrix:
       before_install:
         - sudo apt-get update -qq
         - sudo apt-get build-dep -qq qemu
-        - wget -O - http://people.linaro.org/~alex.bennee/qemu-submodule-git-seed.tar.xz | tar -xvJ
         - travis_retry git submodule update --init --recursive
     # Trusty System build with latest stable clang
     - sudo: required
@@ -153,7 +152,6 @@ matrix:
         - travis_retry sudo apt-get update -qq
         - travis_retry sudo apt-get install -qq -y clang-3.9
         - sudo apt-get build-dep -qq qemu
-        - wget -O - http://people.linaro.org/~alex.bennee/qemu-submodule-git-seed.tar.xz | tar -xvJ
         - travis_retry git submodule update --init --recursive
     # Trusty Linux User build with latest stable clang
     - sudo: required
@@ -170,7 +168,6 @@ matrix:
         - travis_retry sudo apt-get update -qq
         - travis_retry sudo apt-get install -qq -y clang-3.9
         - sudo apt-get build-dep -qq qemu
-        - wget -O - http://people.linaro.org/~alex.bennee/qemu-submodule-git-seed.tar.xz | tar -xvJ
         - travis_retry git submodule update --init --recursive
     # Using newer GCC with sanitizers
     - addons:
