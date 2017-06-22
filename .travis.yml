@@ -132,6 +132,7 @@ matrix:
     - sudo: required
       addons:
       dist: trusty
+      group: deprecated-2017Q2
       language: generic
       compiler: none
       env:
@@ -151,6 +152,7 @@ matrix:
     - sudo: required
       addons:
       dist: trusty
+      group: deprecated-2017Q2
       language: generic
       compiler: none
       env:
