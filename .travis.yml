@@ -78,7 +78,6 @@ git:
 before_install:
   # silent texinfo warnings (https://github.com/xiaohanyu/oh-my-emacs/blob/c664894e2f1c1cb0f95a9f2da88d41b00f190856/core/ome-basic.org#homebrew)
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-        travis_retry brew update ;
         travis_retry brew install libffi gettext glib pixman texinfo ;
         brew link texinfo --force ;
     fi
