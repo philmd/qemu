@@ -63,11 +63,11 @@ env:
     - TEST_CMD="make check"
   matrix:
     - CONFIG=""
-    - CONFIG="--enable-debug --enable-debug-tcg --enable-trace-backends=log"
     - CONFIG="--disable-linux-aio --disable-cap-ng --disable-attr --disable-brlapi --disable-uuid --disable-libusb"
     - CONFIG="--enable-modules"
     - CONFIG="--with-coroutine=ucontext"
     - CONFIG="--with-coroutine=sigaltstack"
+    - CONFIG="--enable-debug --enable-debug-tcg --enable-trace-backends=log"
 git:
   # we want to do this ourselves
   submodules: false
@@ -88,14 +88,6 @@ script:
   - make -j3 && ${TEST_CMD}
 matrix:
   include:
-    # Test with CLang for compile portability
-    - env: CONFIG=""
-      compiler: clang
-    # gprof/gcov are GCC features
-    - env: CONFIG="--enable-gprof --disable-pie"
-      compiler: gcc
-    - env: CONFIG="--enable-gcov --disable-pie"
-      compiler: gcc
     # We manually include builds which we disable "make check" for
     - env: CONFIG="--enable-debug --enable-tcg-interpreter"
            TEST_CMD=""
@@ -108,6 +100,14 @@ matrix:
       compiler: gcc
     - env: CONFIG="--enable-trace-backends=ust"
            TEST_CMD=""
+      compiler: gcc
+    # Test with CLang for compile portability
+    - env: CONFIG=""
+      compiler: clang
+    # gprof/gcov are GCC features
+    - env: CONFIG="--enable-gprof --disable-pie"
+      compiler: gcc
+    - env: CONFIG="--enable-gcov --disable-pie"
       compiler: gcc
     - env: CONFIG=""
       os: osx
