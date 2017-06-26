@@ -564,7 +564,7 @@ void decimal64Show(const decimal64 *d64) {
 /* is used.  decimal128.h must not be included in this module, so, as */
 /* a very special case, that number is defined as a literal here. */
 #define DECMAX754   34
-#define DECMAXUNITS ((DECMAX754+DECDPUN-1)/DECDPUN)
+#define DECMAXUNITS DIV_ROUND_UP(DECMAX754, DECDPUN)
 
 /* ------------------------------------------------------------------ */
 /* Combination field lookup tables (uInts to save measurable work)    */

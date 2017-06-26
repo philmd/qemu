@@ -4998,8 +4998,8 @@ static decNumber * decMultiplyOp(decNumber *res, const decNumber *lhs,
     #define NEEDTWO (DECDPUN*2)	   /* within two decUnitAddSub calls */
     if (rhs->digits>NEEDTWO) {	   /* use fastpath... */
       /* calculate the number of elements in each array */
-      ilhs=(lhs->digits+FASTDIGS-1)/FASTDIGS; /* [ceiling] */
-      irhs=(rhs->digits+FASTDIGS-1)/FASTDIGS; /* .. */
+      ilhs=DIV_ROUND_UP(lhs->digits, FASTDIGS); /* [ceiling] */
+      irhs=DIV_ROUND_UP(rhs->digits, FASTDIGS); /* .. */
       iacc=ilhs+irhs;
 
       /* allocate buffers if required, as usual */
