@@ -291,8 +291,7 @@ static inline bool is_snapshot(struct SheepdogInode *inode)
 
 static inline size_t count_data_objs(const struct SheepdogInode *inode)
 {
-    return DIV_ROUND_UP(inode->vdi_size,
-                        (1UL << inode->block_size_shift));
+    return DIV_ROUND_UP(inode->vdi_size, (1UL << inode->block_size_shift));
 }
 
 #undef DPRINTF
@@ -2973,8 +2972,8 @@ sd_co_get_block_status(BlockDriverState *bs, int64_t sector_num, int nb_sectors,
     uint32_t object_size = (UINT32_C(1) << inode->block_size_shift);
     uint64_t offset = sector_num * BDRV_SECTOR_SIZE;
     unsigned long start = offset / object_size,
-                  end = DIV_ROUND_UP((sector_num + nb_sectors) *
-                                     BDRV_SECTOR_SIZE, object_size);
+                  end = DIV_ROUND_UP((sector_num + nb_sectors) * BDRV_SECTOR_SIZE,
+                                     object_size);
     unsigned long idx;
     int64_t ret = BDRV_BLOCK_DATA | BDRV_BLOCK_OFFSET_VALID | offset;
 

@@ -486,8 +486,7 @@ static int alloc_refcount_block(BlockDriverState *bs,
      * cluster index than cluster_index, so it needs to be taken into account
      * here (and 1 needs to be added to its value because that cluster is used).
      */
-    uint64_t blocks_used = DIV_ROUND_UP(MAX(cluster_index + 1,
-                                            (new_block >> s->cluster_bits) + 1),
+    uint64_t blocks_used = DIV_ROUND_UP(MAX(cluster_index + 1, (new_block >> s->cluster_bits) + 1),
                                         s->refcount_block_size);
 
     if (blocks_used > QCOW_MAX_REFTABLE_SIZE / sizeof(uint64_t)) {

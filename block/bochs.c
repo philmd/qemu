@@ -181,8 +181,7 @@ static int bochs_open(BlockDriverState *bs, QDict *options, int flags,
         goto fail;
     }
 
-    if (s->catalog_size < DIV_ROUND_UP(bs->total_sectors,
-                                       s->extent_size / BDRV_SECTOR_SIZE))
+    if (s->catalog_size < DIV_ROUND_UP(bs->total_sectors, s->extent_size / BDRV_SECTOR_SIZE))
     {
         error_setg(errp, "Catalog size is too small for this disk size");
         ret = -EINVAL;

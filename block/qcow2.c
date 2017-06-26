@@ -2532,8 +2532,7 @@ static coroutine_fn int qcow2_co_pwrite_zeroes(BlockDriverState *bs,
         if (!(is_zero_sectors(bs, cl_start,
                               DIV_ROUND_UP(head, BDRV_SECTOR_SIZE)) &&
               is_zero_sectors(bs, (offset + bytes) >> BDRV_SECTOR_BITS,
-                              DIV_ROUND_UP(-tail & (s->cluster_size - 1),
-                                           BDRV_SECTOR_SIZE)))) {
+                              DIV_ROUND_UP(-tail & (s->cluster_size - 1), BDRV_SECTOR_SIZE)))) {
             return -ENOTSUP;
         }
 
