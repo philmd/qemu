@@ -82,6 +82,7 @@ before_script:
 script:
   - make ${MAKEFLAGS} && ${TEST_CMD}
 matrix:
+  fast_finish: true
   include:
     # Test with CLang for compile portability
     - env: CONFIG=""
@@ -226,3 +227,8 @@ matrix:
         - TEST_CMD=""
       before_script:
         - ./configure ${CONFIG} --extra-cflags="-g3 -O0 -fsanitize=thread -fuse-ld=gold" || (cat config.log; exit 1)
+  allow_failures:
+    - env: CONFIG="--enable-gprof --disable-pie"
+      compiler: gcc
+    - env: CONFIG="--enable-gcov --disable-pie"
+      compiler: gcc
