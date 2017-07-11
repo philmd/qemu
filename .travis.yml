@@ -87,6 +87,7 @@ before_install:
 before_script:
   - ./configure ${CONFIG}
 script:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" && $(($TRAVIS_BUILD_NUMBER % 3)) -ne $OSX_RUNNER_ID ]]; then exit 0 ; fi
   - make -j3 && ${TEST_CMD}
 matrix:
   fast_finish: true
@@ -113,16 +114,19 @@ matrix:
     - env: CONFIG="--enable-gcov --disable-pie"
       compiler: gcc
     - env: CONFIG=""
+           OSX_RUNNER_ID="0"
            CCACHE_SLOPPINESS="file_macro,time_macros,include_file_ctime,include_file_mtime"
       os: osx
       osx_image: xcode6.4
       compiler: clang
     - env: CONFIG=""
+           OSX_RUNNER_ID="1"
            CCACHE_SLOPPINESS="file_macro,time_macros,include_file_ctime,include_file_mtime"
       os: osx
       osx_image: xcode7.3
       compiler: clang
     - env: CONFIG=""
+           OSX_RUNNER_ID="2"
            CCACHE_SLOPPINESS="file_macro,time_macros,include_file_ctime,include_file_mtime"
       os: osx
       osx_image: xcode8.3
