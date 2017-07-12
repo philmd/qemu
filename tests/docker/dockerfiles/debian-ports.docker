@@ -1,0 +1,33 @@
+# Docker sh4 cross-compiler target
+#
+# This docker target builds on the debian Stretch base image.
+#
+FROM debian:unstable
+MAINTAINER Philippe Mathieu-Daudé <f4bug@amsat.org>
+
+RUN echo "deb [arch=amd64] http://deb.debian.org/debian unstable main" > /etc/apt/sources.list
+RUN apt-get update
+
+# Duplicate deb line as deb-src
+RUN cat /etc/apt/sources.list | sed -ne "s/^deb\ \(\[.*\]\ \)\?\(.*\)/deb-src \2/p" >> /etc/apt/sources.list
+
+# Setup some basic tools we need
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -yy eatmydata
+RUN DEBIAN_FRONTEND=noninteractive eatmydata \
+    apt-get install -y --no-install-recommends \
+        bison \
+        build-essential \
+        ca-certificates \
+        curl \
+        flex \
+        git \
+        pkg-config \
+        python-minimal
+RUN DEBIAN_FRONTEND=noninteractive eatmydata \
+    apt-get install -y --no-install-recommends \
+        dirmngr \
+        gpg
+
+RUN gpg --keyserver pgp.mit.edu --recv-keys 8BC3A7D46F930576 && \
+    gpg --armor --export 8BC3A7D46F930576 | apt-key add -
