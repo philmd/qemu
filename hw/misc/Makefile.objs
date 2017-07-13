@@ -7,6 +7,7 @@ common-obj-$(CONFIG_SGA) += sga.o
 common-obj-$(CONFIG_ISA_TESTDEV) += pc-testdev.o
 common-obj-$(CONFIG_PCI_TESTDEV) += pci-testdev.o
 common-obj-$(CONFIG_EDU) += edu.o
+common-obj-$(CONFIG_MEMADJUST_TESTDEV) += memadjust-testdev.o
 
 common-obj-y += unimp.o
 common-obj-y += vmcoreinfo.o
