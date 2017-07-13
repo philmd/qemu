@@ -14,11 +14,12 @@ FROM debian:stretch-slim
 RUN cat /etc/apt/sources.list | sed "s/^deb\ /deb-src /" >> /etc/apt/sources.list
 
 # Install common build utilities
-RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -yy eatmydata
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt install -yy eatmydata
 RUN DEBIAN_FRONTEND=noninteractive eatmydata \
     apt install -y --no-install-recommends \
         bison \
+        binutils-multiarch \
         build-essential \
         ca-certificates \
         clang \
@@ -30,19 +31,19 @@ RUN DEBIAN_FRONTEND=noninteractive eatmydata \
 MAINTAINER Philippe Mathieu-Daudé <f4bug@amsat.org>
 
 # Add the foreign architecture we want and install dependencies
-RUN dpkg --add-architecture mips
-RUN apt-get update
+RUN dpkg --add-architecture mips && \
+    apt-get update
 RUN DEBIAN_FRONTEND=noninteractive eatmydata \
     apt-get install -y --no-install-recommends \
-        binutils-multiarch \
         gcc-mips-linux-gnu
-
-# Specify the cross prefix for this image (see tests/docker/common.rc)
-ENV QEMU_CONFIGURE_OPTS --cross-prefix=mips-linux-gnu-
 
 RUN DEBIAN_FRONTEND=noninteractive eatmydata \
     apt-get build-dep -yy -a mips qemu
 
+# Specify the cross prefix for this image (see tests/docker/common.rc)
+ENV QEMU_CONFIGURE_OPTS --cross-prefix=mips-linux-gnu-
+
+# Install optional libraries to increase code coverage
 RUN DEBIAN_FRONTEND=noninteractive eatmydata \
     apt-get install -y --no-install-recommends \
         libbz2-dev:mips \
