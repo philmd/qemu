@@ -46,6 +46,7 @@ notifications:
 env:
   global:
     - TEST_CMD="make check"
+    - QTEST_LOG="1"
   matrix:
     - CONFIG=""
     - CONFIG="--enable-debug --enable-debug-tcg --enable-trace-backends=log"
