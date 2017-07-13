@@ -394,7 +394,7 @@ static MemTxResult memory_region_oldmmio_read_accessor(MemoryRegion *mr,
                                                        hwaddr addr,
                                                        uint64_t *value,
                                                        unsigned size,
-                                                       unsigned shift,
+                                                       signed shift,
                                                        uint64_t mask,
                                                        MemTxAttrs attrs)
 {
@@ -420,7 +420,7 @@ static MemTxResult  memory_region_read_accessor(MemoryRegion *mr,
                                                 hwaddr addr,
                                                 uint64_t *value,
                                                 unsigned size,
-                                                unsigned shift,
+                                                signed shift,
                                                 uint64_t mask,
                                                 MemTxAttrs attrs)
 {
@@ -438,7 +438,11 @@ static MemTxResult  memory_region_read_accessor(MemoryRegion *mr,
         hwaddr abs_addr = memory_region_to_absolute_addr(mr, addr);
         trace_memory_region_ops_read(get_cpu_index(), mr, abs_addr, tmp, size);
     }
-    *value |= (tmp & mask) << shift;
+    if (unlikely(shift < 0)) {
+        *value |= (tmp >> -shift) & mask;
+    } else {
+        *value |= (tmp & mask) << shift;
+    }
     return MEMTX_OK;
 }
 
@@ -446,7 +450,7 @@ static MemTxResult memory_region_read_with_attrs_accessor(MemoryRegion *mr,
                                                           hwaddr addr,
                                                           uint64_t *value,
                                                           unsigned size,
-                                                          unsigned shift,
+                                                          signed shift,
                                                           uint64_t mask,
                                                           MemTxAttrs attrs)
 {
@@ -465,7 +469,11 @@ static MemTxResult memory_region_read_with_attrs_accessor(MemoryRegion *mr,
         hwaddr abs_addr = memory_region_to_absolute_addr(mr, addr);
         trace_memory_region_ops_read(get_cpu_index(), mr, abs_addr, tmp, size);
     }
-    *value |= (tmp & mask) << shift;
+    if (unlikely(shift < 0)) {
+        *value |= (tmp >> -shift) & mask;
+    } else {
+        *value |= (tmp & mask) << shift;
+    }
     return r;
 }
 
@@ -473,7 +481,7 @@ static MemTxResult memory_region_oldmmio_write_accessor(MemoryRegion *mr,
                                                         hwaddr addr,
                                                         uint64_t *value,
                                                         unsigned size,
-                                                        unsigned shift,
+                                                        signed shift,
                                                         uint64_t mask,
                                                         MemTxAttrs attrs)
 {
@@ -555,7 +563,7 @@ static MemTxResult access_with_adjusted_size(hwaddr addr,
                                                             hwaddr addr,
                                                             uint64_t *value,
                                                             unsigned size,
-                                                            unsigned shift,
+                                                            signed shift,
                                                             uint64_t mask,
                                                             MemTxAttrs attrs),
                                       MemoryRegion *mr,
@@ -576,18 +584,17 @@ static MemTxResult access_with_adjusted_size(hwaddr addr,
 
     /* FIXME: support unaligned access? */
     access_size = MAX(MIN(size, access_size_max), access_size_min);
-    access_mask = -1ULL >> (64 - access_size * 8);
+    access_mask = -1ULL >> (64 - size * 8);
     access_addr = addr & ~(access_size - 1);
-    if (access_size < size) {
+    if (unlikely(access_size < size)) {
         for (offset = 0; offset < size; offset += access_size) {
             r |= access(mr, access_addr + offset, value, access_size,
                         offset * 8, access_mask, attrs);
         }
     } else {
         r = access(mr, access_addr, value, access_size,
-                    0, access_mask, attrs);
+                   -8 * (addr & (access_size - 1)), access_mask, attrs);
     }
-    adjust_endianness(mr, value, size);
 
     return r;
 }
