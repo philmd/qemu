@@ -268,18 +268,20 @@ check-qtest-i386-y += tests/numa-test$(EXESUF)
 check-qtest-x86_64-y += $(check-qtest-i386-y)
 gcov-files-i386-y += i386-softmmu/hw/timer/mc146818rtc.c
 gcov-files-x86_64-y = $(subst i386-softmmu/,x86_64-softmmu/,$(gcov-files-i386-y))
+check-qtest-i386-y = tests/test-mmio$(EXESUF)
 
 check-qtest-alpha-y = tests/boot-serial-test$(EXESUF)
 
 check-qtest-mips-y = tests/endianness-test$(EXESUF)
-check-qtest-mips-y = tests/test-memory-adjust$(EXESUF)
+check-qtest-mips-y = tests/test-mmio$(EXESUF)
 
 check-qtest-mipsel-y = tests/endianness-test$(EXESUF)
+#check-qtest-mipsel-y = tests/test-mmio$(EXESUF)
 
 check-qtest-mips64-y = tests/endianness-test$(EXESUF)
 
 check-qtest-mips64el-y = tests/endianness-test$(EXESUF)
-check-qtest-mips64el-y = tests/test-memory-adjust$(EXESUF)
+check-qtest-mips64el-y = tests/test-mmio$(EXESUF)
 
 check-qtest-ppc-y = tests/endianness-test$(EXESUF)
 check-qtest-ppc-y += tests/boot-order-test$(EXESUF)
@@ -342,6 +344,7 @@ check-qtest-microblazeel-y = $(check-qtest-microblaze-y)
 check-qtest-xtensaeb-y = $(check-qtest-xtensa-y)
 
 check-qtest-s390x-y = tests/boot-serial-test$(EXESUF)
+check-qtest-s390x-y = tests/test-mmio$(EXESUF)
 
 check-qtest-generic-y += tests/qom-test$(EXESUF)
 check-qtest-generic-y += tests/test-hmp$(EXESUF)
