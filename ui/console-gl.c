@@ -80,7 +80,7 @@ void surface_gl_create_texture(ConsoleGLState *gls,
                                DisplaySurface *surface)
 {
     assert(gls);
-    assert(surface_stride(surface) % surface_bytes_per_pixel(surface) == 0);
+    assert(QEMU_IS_ALIGNED(surface_stride(surface), surface_bytes_per_pixel(surface)));
 
     switch (surface->format) {
     case PIXMAN_BE_b8g8r8x8:
