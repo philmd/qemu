@@ -105,7 +105,7 @@ static void glue(draw_hwc_line_, PIXEL_NAME)(uint8_t *d, const uint8_t *s,
 
     for (i = 0; i < SM501_HWC_WIDTH && c_x + i < width; i++) {
         /* get pixel value */
-        if (i % 4 == 0) {
+        if (QEMU_IS_ALIGNED(i, 4)) {
             bitset = ldub_p(s);
             s++;
         }
