@@ -77,7 +77,7 @@ int main (void)
 {
   int i;
 
-  for (i = 0; i < sizeof (vectors)/sizeof(vectors[0]); i++)
+  for (i = 0; i < ARRAY_SIZE(vectors); i++)
     if ((*vectors[i].func)(vectors[i].v) != vectors[i].r) {
       write(1, "Failed\n", 7);
       return 1;
