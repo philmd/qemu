@@ -63,8 +63,8 @@ static const char *iotest_type[] = {
 
 #define IOTEST_TEST(i) (iotest_test[((i) % ARRAY_SIZE(iotest_test))])
 #define IOTEST_TYPE(i) (iotest_type[((i) / ARRAY_SIZE(iotest_test))])
-#define IOTEST_MAX_TEST (ARRAY_SIZE(iotest_test))
-#define IOTEST_MAX_TYPE (ARRAY_SIZE(iotest_type))
+#define IOTEST_MAX_TEST ARRAY_SIZE(iotest_test)
+#define IOTEST_MAX_TYPE ARRAY_SIZE(iotest_type)
 #define IOTEST_MAX (IOTEST_MAX_TEST * IOTEST_MAX_TYPE)
 
 enum {
