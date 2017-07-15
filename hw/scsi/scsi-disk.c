@@ -2625,8 +2625,8 @@ static BlockAIOCB *scsi_block_do_sgio(SCSIBlockReq *req,
      * reads and writes that are not aligned to one logical sectors
      * _and_ cover multiple MemoryRegions.
      */
-    assert(offset % s->qdev.blocksize == 0);
-    assert(iov->size % s->qdev.blocksize == 0);
+    assert(QEMU_IS_ALIGNED(offset, s->qdev.blocksize));
+    assert(QEMU_IS_ALIGNED(iov->size, s->qdev.blocksize));
 
     io_header->interface_id = 'S';
 
