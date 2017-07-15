@@ -58,7 +58,7 @@ typedef struct {
     } while (0);
 
 #define ACPI_READ_ARRAY(arr, addr)                               \
-    ACPI_READ_ARRAY_PTR(arr, sizeof(arr) / sizeof(arr[0]), addr)
+    ACPI_READ_ARRAY_PTR(arr, ARRAY_SIZE(arr), addr)
 
 #define ACPI_READ_TABLE_HEADER(table, addr)                      \
     do {                                                         \
