@@ -157,7 +157,7 @@ static void page_table_config_init(void)
     v_l2_levels = v_l1_shift / V_L2_BITS - 1;
 
     assert(v_l1_bits <= V_L1_MAX_BITS);
-    assert(v_l1_shift % V_L2_BITS == 0);
+    assert(QEMU_IS_ALIGNED(v_l1_shift, V_L2_BITS));
     assert(v_l2_levels >= 0);
 }
 
