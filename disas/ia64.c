@@ -385,7 +385,7 @@ struct ia64_operand
 /* Disassemble as unsigned decimal (instead of hex): */
 #define IA64_OPND_FLAG_DECIMAL_UNSIGNED	(1<<1)
 
-#define NELEMS(a)	((int) (sizeof (a) / sizeof (a[0])))
+#define NELEMS(a) ((int) ARRAY_SIZE(a))
 
 static const char*
 ins_rsvd (const struct ia64_operand *self ATTRIBUTE_UNUSED,
@@ -2857,7 +2857,7 @@ static const unsigned short dep257[] = {
   2170, 2173, 2274, 2284, 2327, 4135, 20616, 28866, 29018,
 };
 
-#define NELS(X) (sizeof(X)/sizeof(X[0]))
+#define NELS(X) ARRAY_SIZE(X)
 static const struct ia64_opcode_dependency
 op_dependencies[] = {
   { NELS(dep1), dep1, NELS(dep0), dep0, },

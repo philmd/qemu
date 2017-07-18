@@ -4197,7 +4197,7 @@ TBL("tblunb", "tblunw", "tblunl", 0, 0),
 {"wdebug", 4,	two(0175750, 03),	two(0177770, 0xffff), "ds", mcfisa_a },
 };
 
-const int m68k_numopcodes = sizeof m68k_opcodes / sizeof m68k_opcodes[0];
+const int m68k_numopcodes = ARRAY_SIZE(m68k_opcodes);
 
 /* These aliases used to be in the above table, each one duplicating
    all of the entries for its primary exactly.  This table was
@@ -4450,8 +4450,7 @@ const struct m68k_opcode_alias m68k_opcode_aliases[] =
 
 };
 
-const int m68k_numaliases =
-  sizeof m68k_opcode_aliases / sizeof m68k_opcode_aliases[0];
+const int m68k_numaliases = ARRAY_SIZE(m68k_opcode_aliases);
 /* **** End of m68k-opc.c */
 /* **** floatformat.c from sourceware.org CVS 2005-08-14.  */
 /* IEEE floating point support routines, for GDB, the GNU Debugger.

@@ -893,8 +893,7 @@ const struct powerpc_operand powerpc_operands[] =
   { 0x1, 25, NULL, NULL, PPC_OPERAND_OPTIONAL},
 };
 
-const unsigned int num_powerpc_operands = (sizeof (powerpc_operands)
-					   / sizeof (powerpc_operands[0]));
+const unsigned int num_powerpc_operands = ARRAY_SIZE(powerpc_operands);
 
 /* The functions used to insert and extract complicated operands.  */
 
@@ -5029,10 +5028,8 @@ const struct powerpc_opcode powerpc_opcodes[] = {
 
 };
 
-const int powerpc_num_opcodes =
-  sizeof (powerpc_opcodes) / sizeof (powerpc_opcodes[0]);
-
-/* The macro table.  This is only used by the assembler.  */
+const int powerpc_num_opcodes = ARRAY_SIZE(powerpc_opcodes);
+/* The macro table.  This is only used by the assembler. */
 
 /* The expressions of the form (-x ! 31) & (x | 31) have the value 0
    when x=0; 32-x when x is between 1 and 31; are negative if x is
@@ -5086,8 +5083,7 @@ const struct powerpc_macro powerpc_macros[] = {
 { "clrlslwi.",4,  PPCCOM,	"rlwinm. %0,%1,%3,(%2)-(%3),31-(%3)" },
 };
 
-const int powerpc_num_macros =
-  sizeof (powerpc_macros) / sizeof (powerpc_macros[0]);
+const int powerpc_num_macros = ARRAY_SIZE(powerpc_macros);
 
 
 /* This file provides several disassembler functions, all of which use

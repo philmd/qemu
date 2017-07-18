@@ -1893,5 +1893,4 @@ static const struct s390_opcode s390_opcodes[] =
   { "pr", OP16(0x0101LL), MASK_E, INSTR_E, 3, 0},
 };
 
-static const int s390_num_opcodes =
-  sizeof (s390_opcodes) / sizeof (s390_opcodes[0]);
+static const int s390_num_opcodes = ARRAY_SIZE(s390_opcodes);
