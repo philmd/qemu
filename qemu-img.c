@@ -3810,7 +3810,7 @@ static void bench_cb(void *opaque, int ret)
         b->in_flight--;
 
         /* Time for flush? Drain queue if requested, then flush */
-        if (b->flush_interval && remaining % b->flush_interval == 0) {
+        if (b->flush_interval && QEMU_IS_ALIGNED(remaining, b->flush_interval)) {
             if (!b->in_flight || !b->drain_on_flush) {
                 BlockCompletionFunc *cb;
 
