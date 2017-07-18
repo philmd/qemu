@@ -933,7 +933,7 @@ static int block_load(QEMUFile *f, void *opaque, int version_id)
                 ret = bdrv_get_info(blk_bs(blk), &bdi);
                 if (ret == 0 && bdi.cluster_size > 0 &&
                     bdi.cluster_size <= BLOCK_SIZE &&
-                    BLOCK_SIZE % bdi.cluster_size == 0) {
+                    QEMU_IS_ALIGNED(BLOCK_SIZE, bdi.cluster_size)) {
                     cluster_size = bdi.cluster_size;
                 } else {
                     cluster_size = BLOCK_SIZE;
