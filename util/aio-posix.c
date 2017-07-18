@@ -118,8 +118,7 @@ static int aio_epoll(AioContext *ctx, GPollFD *pfds,
         ret = qemu_poll_ns(pfds, npfd, timeout);
     }
     if (timeout <= 0 || ret > 0) {
-        ret = epoll_wait(ctx->epollfd, events,
-                         sizeof(events) / sizeof(events[0]),
+        ret = epoll_wait(ctx->epollfd, events, ARRAY_SIZE(events),
                          timeout);
         if (ret <= 0) {
             goto out;
