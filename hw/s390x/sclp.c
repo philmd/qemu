@@ -237,7 +237,7 @@ static void assign_storage(SCLPDevice *sclp, SCCB *sccb)
     }
     assign_addr = (assign_info->rn - 1) * mhd->rzm;
 
-    if ((assign_addr % MEM_SECTION_SIZE == 0) &&
+    if (QEMU_IS_ALIGNED(assign_addr, MEM_SECTION_SIZE) &&
         (assign_addr >= mhd->padded_ram_size)) {
         /* Re-use existing memory region if found */
         mr = memory_region_find(sysmem, assign_addr, 1).mr;
@@ -297,7 +297,7 @@ static void unassign_storage(SCLPDevice *sclp, SCCB *sccb)
     unassign_addr = (assign_info->rn - 1) * mhd->rzm;
 
     /* if the addr is a multiple of 256 MB */
-    if ((unassign_addr % MEM_SECTION_SIZE == 0) &&
+    if (QEMU_IS_ALIGNED(unassign_addr, MEM_SECTION_SIZE) &&
         (unassign_addr >= mhd->padded_ram_size)) {
         mhd->standby_state_map[(unassign_addr -
                            mhd->padded_ram_size) / MEM_SECTION_SIZE] = 0;
