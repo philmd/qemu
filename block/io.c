@@ -1232,7 +1232,7 @@ static int coroutine_fn bdrv_co_do_pwrite_zeroes(BlockDriverState *bs,
     int max_transfer = MIN_NON_ZERO(bs->bl.max_transfer,
                                     MAX_WRITE_ZEROES_BOUNCE_BUFFER);
 
-    assert(alignment % bs->bl.request_alignment == 0);
+    assert(QEMU_IS_ALIGNED(alignment, bs->bl.request_alignment));
     head = offset % alignment;
     tail = (offset + bytes) % alignment;
     max_write_zeroes = QEMU_ALIGN_DOWN(max_write_zeroes, alignment);
@@ -2342,7 +2342,7 @@ int coroutine_fn bdrv_co_pdiscard(BlockDriverState *bs, int64_t offset,
      * unaligned requests (by returning -ENOTSUP), so we must fragment
      * the request accordingly.  */
     align = MAX(bs->bl.pdiscard_alignment, bs->bl.request_alignment);
-    assert(align % bs->bl.request_alignment == 0);
+    assert(QEMU_IS_ALIGNED(align, bs->bl.request_alignment));
     head = offset % align;
     tail = (offset + bytes) % align;
 

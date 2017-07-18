@@ -282,7 +282,7 @@ static bool vhdx_log_desc_is_valid(VHDXLogDescriptor *desc,
     }
 
     if (desc->signature == VHDX_LOG_ZERO_SIGNATURE) {
-        if (desc->zero_length % VHDX_LOG_SECTOR_SIZE == 0) {
+        if (QEMU_IS_ALIGNED(desc->zero_length, VHDX_LOG_SECTOR_SIZE)) {
             /* valid */
             ret = true;
         }
