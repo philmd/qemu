@@ -258,7 +258,7 @@ void generate_pattern(void *buffer, size_t len, size_t cycle_len)
     p = rand() % 256;
     for (i = 0; i < len; i++) {
         tx[i] = p++ % 256;
-        if (i % cycle_len == 0) {
+        if (QEMU_IS_ALIGNED(i, cycle_len)) {
             p = rand() % 256;
         }
     }
