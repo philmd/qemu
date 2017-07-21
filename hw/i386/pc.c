@@ -422,7 +422,7 @@ static void pc_cmos_init_late(void *opaque)
             ide_get_geometry(arg->idebus[i / 2], i % 2,
                              &cylinders, &heads, &sectors) >= 0) {
             trans = ide_get_bios_chs_trans(arg->idebus[i / 2], i % 2) - 1;
-            assert((trans & ~3) == 0);
+            assert(QEMU_IS_ALIGNED(trans, 4));
             val |= trans << (i * 2);
         }
     }
