@@ -333,7 +333,7 @@ eth_setup_ip4_fragmentation(const void *l2hdr, size_t l2hdr_len,
         uint16_t new_ip_off;
 
         assert(QEMU_IS_ALIGNED(frag_offset, IP_FRAG_UNIT_SIZE));
-        assert((frag_off_units & ~IP_OFFMASK) == 0);
+        assert(QEMU_IS_ALIGNED(frag_off_units, IP_OFFMASK + 1));
 
         orig_flags = be16_to_cpu(iphdr->ip_off) & ~(IP_OFFMASK|IP_MF);
         new_ip_off = frag_off_units | orig_flags  | (more_frags ? IP_MF : 0);
