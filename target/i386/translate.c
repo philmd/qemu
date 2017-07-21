@@ -8513,7 +8513,7 @@ void gen_intermediate_code(CPUState *cs, TranslationBlock *tb)
         if ((tb->cflags & CF_USE_ICOUNT)
             && ((pc_ptr & TARGET_PAGE_MASK)
                 != ((pc_ptr + TARGET_MAX_INSN_SIZE - 1) & TARGET_PAGE_MASK)
-                || (pc_ptr & ~TARGET_PAGE_MASK) == 0)) {
+                || QEMU_IS_ALIGNED(pc_ptr, TARGET_PAGE_SIZE))) {
             gen_jmp_im(pc_ptr - dc->cs_base);
             gen_eob(dc);
             break;
