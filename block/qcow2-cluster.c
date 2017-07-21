@@ -400,8 +400,8 @@ static bool coroutine_fn do_perform_cow_encrypt(BlockDriverState *bs,
                           (cluster_offset + offset_in_cluster) :
                           (src_cluster_offset + offset_in_cluster))
                          >> BDRV_SECTOR_BITS;
-        assert((offset_in_cluster & ~BDRV_SECTOR_MASK) == 0);
-        assert((bytes & ~BDRV_SECTOR_MASK) == 0);
+        assert(QEMU_IS_ALIGNED(offset_in_cluster, BDRV_SECTOR_SIZE));
+        assert(QEMU_IS_ALIGNED(bytes, BDRV_SECTOR_SIZE));
         assert(s->crypto);
         if (qcrypto_block_encrypt(s->crypto, sector, buffer,
                                   bytes, NULL) < 0) {
