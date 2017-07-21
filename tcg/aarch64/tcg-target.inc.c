@@ -596,7 +596,7 @@ static void tcg_out_movi(TCGContext *s, TCGType type, TCGReg rd,
        values within [2**31, 2**32-1], we can create smaller sequences by
        interpreting this as a negative 32-bit number, while ensuring that
        the high 32 bits are cleared by setting SF=0.  */
-    if (type == TCG_TYPE_I32 || (value & ~0xffffffffull) == 0) {
+    if (type == TCG_TYPE_I32 || QEMU_IS_ALIGNED(value, BIT(32))) {
         svalue = (int32_t)value;
         value = (uint32_t)value;
         ivalue = (uint32_t)ivalue;
@@ -605,10 +605,10 @@ static void tcg_out_movi(TCGContext *s, TCGType type, TCGReg rd,
 
     /* Speed things up by handling the common case of small positive
        and negative values specially.  */
-    if ((value & ~0xffffull) == 0) {
+    if (QEMU_IS_ALIGNED(value, BIT(16))) {
         tcg_out_insn(s, 3405, MOVZ, type, rd, value, 0);
         return;
-    } else if ((ivalue & ~0xffffull) == 0) {
+    } else if (QEMU_IS_ALIGNED(ivalue, BIT(16))) {
         tcg_out_insn(s, 3405, MOVN, type, rd, ivalue, 0);
         return;
     }

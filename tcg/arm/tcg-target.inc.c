@@ -187,18 +187,18 @@ static inline int encode_imm(uint32_t imm)
     int shift;
 
     /* simple case, only lower bits */
-    if ((imm & ~0xff) == 0)
+    if (QEMU_IS_ALIGNED(imm, BIT(8)))
         return 0;
     /* then try a simple even shift */
     shift = ctz32(imm) & ~1;
-    if (((imm >> shift) & ~0xff) == 0)
+    if (QEMU_IS_ALIGNED(imm >> shift, BIT(8)))
         return 32 - shift;
     /* now try harder with rotations */
-    if ((rotl(imm, 2) & ~0xff) == 0)
+    if (QEMU_IS_ALIGNED(rotl(imm, 2), BIT(8)))
         return 2;
-    if ((rotl(imm, 4) & ~0xff) == 0)
+    if (QEMU_IS_ALIGNED(rotl(imm, 4), BIT(8)))
         return 4;
-    if ((rotl(imm, 6) & ~0xff) == 0)
+    if (QEMU_IS_ALIGNED(rotl(imm, 6), BIT(8)))
         return 6;
     /* imm can't be encoded */
     return -1;
