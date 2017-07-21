@@ -541,14 +541,13 @@ static int xen_pt_exp_rom_bar_reg_write(XenPCIPassthroughState *s,
 {
     XenPTRegInfo *reg = cfg_entry->reg;
     XenPTRegion *base = NULL;
-    PCIDevice *d = (PCIDevice *)&s->dev;
     uint32_t writable_mask = 0;
     uint32_t throughable_mask = get_throughable_mask(s, reg, valid_mask);
     pcibus_t r_size = 0;
     uint32_t bar_ro_mask = 0;
     uint32_t *data = cfg_entry->ptr.word;
 
-    r_size = d->io_regions[PCI_ROM_SLOT].size;
+    r_size = s->dev.io_regions[PCI_ROM_SLOT].size;
     base = &s->bases[PCI_ROM_SLOT];
     /* align memory type resource size */
     r_size = xen_pt_get_emul_size(base->bar_flag, r_size);
