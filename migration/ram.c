@@ -2436,6 +2436,7 @@ static int ram_load_postcopy(QEMUFile *f)
         switch (flags & ~RAM_SAVE_FLAG_CONTINUE) {
         case RAM_SAVE_FLAG_ZERO:
             ch = qemu_get_byte(f);
+            assert(page_buffer);
             memset(page_buffer, ch, TARGET_PAGE_SIZE);
             if (ch) {
                 all_zero = false;
