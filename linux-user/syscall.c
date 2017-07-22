@@ -5545,6 +5545,9 @@ static abi_long do_ioctl_rt(const IOCTLEntry *ie, uint8_t *buf_temp,
     arg_type++;
     assert(*arg_type == (int)STRUCT_rtentry);
     se = struct_entries + *arg_type++;
+    if (se->nb_fields <= 0) {
+        return -TARGET_EFAULT;
+    }
     assert(se->convert[0] == NULL);
     /* convert struct here to be able to catch rt_dev string */
     field_types = se->field_types;
