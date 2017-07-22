@@ -252,7 +252,9 @@ int translate_dnssearch(Slirp *s, const char **names)
     domains = g_malloc(num_domains * sizeof(*domains));
 
     for (i = 0; i < num_domains; i++) {
-        size_t nlen = strlen(names[i]);
+        size_t nlen;
+        QEMU_STATIC_ANALYSIS_ASSERT(names[i] != NULL);
+        nlen = strlen(names[i]);
         memreq += nlen + 2; /* 1 zero octet + 1 label length octet */
         domains[i].self = domains + i;
         domains[i].len = nlen;
