@@ -98,6 +98,7 @@ static void cleanup_infolist(CommandLineParameterInfoList *head)
 {
     CommandLineParameterInfoList *pre_entry, *cur, *del_entry;
 
+    QEMU_STATIC_ANALYSIS_ASSERT(head != NULL);
     cur = head;
     while (cur->next) {
         pre_entry = head;
