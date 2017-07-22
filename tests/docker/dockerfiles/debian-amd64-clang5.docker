@@ -18,5 +18,8 @@ RUN curl http://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
 RUN DEBIAN_FRONTEND=noninteractive eatmydata \
     apt-get install -y --no-install-recommends \
 		clang-5.0
+RUN DEBIAN_FRONTEND=noninteractive eatmydata \
+	apt-get remove --auto-remove --purge \
+		libclang1-3.8
 
 ENV QEMU_CONFIGURE_OPTS --host-cc=clang-5.0 --cc=clang-5.0 --cxx=clang++-5.0
