@@ -13,6 +13,9 @@
 #else
 # define QEMU_STATIC_ANALYSIS_ASSERT(expression)
 #endif
+#ifndef __has_feature
+# define __has_feature(x) 0 /* Compatibility with non-clang compilers. */
+#endif
 
 /*----------------------------------------------------------------------------
 | The macro QEMU_GNUC_PREREQ tests for minimum version of the GNU C compiler.
