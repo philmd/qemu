@@ -61,6 +61,7 @@ docker-image-debian-powerpc-cross: EXTRA_FILES:=tests/docker/dockerfiles/debian-
 docker-image-debian: docker-image-debian9
 docker-image-debian8-mxe: docker-image-debian8
 docker-image-debian-amd64: docker-image-debian9
+docker-image-debian-amd64-clang5: docker-image-debian-amd64
 docker-image-debian-armel-cross: docker-image-debian9
 docker-image-debian-armhf-cross: docker-image-debian9
 docker-image-debian-arm64-cross: docker-image-debian9

@@ -1,0 +1,22 @@
+#
+# Docker x86_64 target with Clang 5
+#
+# This docker target builds on the debian Stretch base image.
+#
+FROM qemu:debian-amd64
+
+MAINTAINER Philippe Mathieu-Daudé <f4bug@amsat.org>
+
+# Install instructions from http://apt.llvm.org/
+RUN DEBIAN_FRONTEND=noninteractive eatmydata \
+    apt-get install -y --no-install-recommends \
+		curl gnupg
+RUN curl http://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
+	echo 'deb http://apt.llvm.org/unstable/ llvm-toolchain main' \
+		> /etc/apt/sources.list.d/llvm.list && \
+	apt-get update
+RUN DEBIAN_FRONTEND=noninteractive eatmydata \
+    apt-get install -y --no-install-recommends \
+		clang-5.0
+
+ENV QEMU_CONFIGURE_OPTS --host-cc=clang-5.0 --cc=clang-5.0 --cxx=clang++-5.0
