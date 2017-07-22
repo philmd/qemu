@@ -53,18 +53,18 @@ struct tpm_resp_hdr {
     uint32_t errcode;
 } QEMU_PACKED;
 
-#define TPM_TAG_RQU_COMMAND       0xc1
-#define TPM_TAG_RQU_AUTH1_COMMAND 0xc2
-#define TPM_TAG_RQU_AUTH2_COMMAND 0xc3
+#define TPM_TAG_RQU_COMMAND       0x00c1
+#define TPM_TAG_RQU_AUTH1_COMMAND 0x00c2
+#define TPM_TAG_RQU_AUTH2_COMMAND 0x00c3
 
-#define TPM_TAG_RSP_COMMAND       0xc4
-#define TPM_TAG_RSP_AUTH1_COMMAND 0xc5
-#define TPM_TAG_RSP_AUTH2_COMMAND 0xc6
+#define TPM_TAG_RSP_COMMAND       0x00c4
+#define TPM_TAG_RSP_AUTH1_COMMAND 0x00c5
+#define TPM_TAG_RSP_AUTH2_COMMAND 0x00c6
 
-#define TPM_FAIL                  9
+#define TPM_FAIL                  0x00000009
 
-#define TPM_ORD_ContinueSelfTest  0x53
-#define TPM_ORD_GetTicks          0xf1
+#define TPM_ORD_ContinueSelfTest  0x00000053
+#define TPM_ORD_GetTicks          0x000000f1
 
 
 /* TPM2 defines */
