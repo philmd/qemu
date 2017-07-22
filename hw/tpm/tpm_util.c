@@ -89,16 +89,16 @@ int tpm_util_test_tpmdev(int tpm_fd, TPMVersion *tpm_version)
      * Sending a TPM2 command to a TPM 1.2 will give a TPM 1.2 tag
      * in the header and an error code.
      */
-    const struct tpm_req_hdr test_req = {
-        .tag = cpu_to_be16(TPM_TAG_RQU_COMMAND),
-        .len = cpu_to_be32(sizeof(test_req)),
-        .ordinal = cpu_to_be32(TPM_ORD_GetTicks),
+    static const struct tpm_req_hdr test_req = {
+        .tag = const_be16(TPM_TAG_RQU_COMMAND),
+        .len = const_be32(sizeof(test_req)),
+        .ordinal = const_be32(TPM_ORD_GetTicks),
     };
 
-    const struct tpm_req_hdr test_req_tpm2 = {
-        .tag = cpu_to_be16(TPM2_ST_NO_SESSIONS),
-        .len = cpu_to_be32(sizeof(test_req_tpm2)),
-        .ordinal = cpu_to_be32(TPM2_CC_ReadClock),
+    static const struct tpm_req_hdr test_req_tpm2 = {
+        .tag = const_be16(TPM2_ST_NO_SESSIONS),
+        .len = const_be32(sizeof(test_req_tpm2)),
+        .ordinal = const_be32(TPM2_CC_ReadClock),
     };
     uint16_t return_tag;
     int ret;
