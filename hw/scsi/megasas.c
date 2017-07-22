@@ -1216,7 +1216,7 @@ static int megasas_dcmd_ld_list_query(MegasasState *s, MegasasCmd *cmd)
 static int megasas_ld_get_info_submit(SCSIDevice *sdev, int lun,
                                       MegasasCmd *cmd)
 {
-    struct mfi_ld_info *info = cmd->iov_buf;
+    struct mfi_ld_info *info;
     size_t dcmd_size = sizeof(struct mfi_ld_info);
     uint8_t cdb[6];
     ssize_t len, resid;
@@ -1225,7 +1225,6 @@ static int megasas_ld_get_info_submit(SCSIDevice *sdev, int lun,
 
     if (!cmd->iov_buf) {
         cmd->iov_buf = g_malloc0(dcmd_size);
-        info = cmd->iov_buf;
         megasas_setup_inquiry(cdb, 0x83, sizeof(info->vpd_page83));
         cmd->req = scsi_req_new(sdev, cmd->index, lun, cdb, cmd);
         if (!cmd->req) {
@@ -1245,6 +1244,7 @@ static int megasas_ld_get_info_submit(SCSIDevice *sdev, int lun,
         return MFI_STAT_INVALID_STATUS;
     }
 
+    info = cmd->iov_buf;
     info->ld_config.params.state = MFI_LD_STATE_OPTIMAL;
     info->ld_config.properties.ld.v.target_id = lun;
     info->ld_config.params.stripe_size = 3;
