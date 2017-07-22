@@ -28,7 +28,7 @@
  * (error response is fine) within one second.
  */
 static int tpm_util_test(int fd,
-                         unsigned char *request,
+                         const void *request,
                          size_t requestlen,
                          uint16_t *return_tag)
 {
@@ -104,7 +104,7 @@ int tpm_util_test_tpmdev(int tpm_fd, TPMVersion *tpm_version)
     int ret;
 
     /* Send TPM 2 command */
-    ret = tpm_util_test(tpm_fd, (unsigned char *)&test_req_tpm2,
+    ret = tpm_util_test(tpm_fd, &test_req_tpm2,
                         sizeof(test_req_tpm2), &return_tag);
     /* TPM 2 would respond with a tag of TPM2_ST_NO_SESSIONS */
     if (!ret && return_tag == TPM2_ST_NO_SESSIONS) {
@@ -113,7 +113,7 @@ int tpm_util_test_tpmdev(int tpm_fd, TPMVersion *tpm_version)
     }
 
     /* Send TPM 1.2 command */
-    ret = tpm_util_test(tpm_fd, (unsigned char *)&test_req,
+    ret = tpm_util_test(tpm_fd, &test_req,
                         sizeof(test_req), &return_tag);
     if (!ret && return_tag == TPM_TAG_RSP_COMMAND) {
         *tpm_version = TPM_VERSION_1_2;
