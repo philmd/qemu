@@ -654,6 +654,7 @@ static int rdma_delete_block(RDMAContext *rdma, RDMALocalBlock *block)
     RDMALocalBlock *old = local->block;
     int x;
 
+    QEMU_STATIC_ANALYSIS_ASSERT(block != NULL);
     if (rdma->blockmap) {
         g_hash_table_remove(rdma->blockmap, (void *)(uintptr_t)block->offset);
     }
@@ -1092,7 +1093,7 @@ static int qemu_rdma_alloc_qp(RDMAContext *rdma)
     if (ret) {
         return -1;
     }
-
+    QEMU_STATIC_ANALYSIS_ASSERT(rdma->cm_id != NULL);
     rdma->qp = rdma->cm_id->qp;
     return 0;
 }
@@ -3722,6 +3723,7 @@ void rdma_start_incoming_migration(const char *host_port, Error **errp)
 
     trace_rdma_start_incoming_migration_after_rdma_listen();
 
+    QEMU_STATIC_ANALYSIS_ASSERT(rdma->channel != NULL);
     qemu_set_fd_handler(rdma->channel->fd, rdma_accept_incoming_migration,
                         NULL, (void *)(intptr_t)rdma);
     return;
