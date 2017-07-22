@@ -2436,7 +2436,7 @@ static int ram_load_postcopy(QEMUFile *f)
         switch (flags & ~RAM_SAVE_FLAG_CONTINUE) {
         case RAM_SAVE_FLAG_ZERO:
             ch = qemu_get_byte(f);
-            assert(page_buffer);
+            QEMU_STATIC_ANALYSIS_ASSERT(page_buffer != NULL);
             memset(page_buffer, ch, TARGET_PAGE_SIZE);
             if (ch) {
                 all_zero = false;
@@ -2600,6 +2600,7 @@ static int ram_load(QEMUFile *f, void *opaque, int version_id)
 
         case RAM_SAVE_FLAG_ZERO:
             ch = qemu_get_byte(f);
+            assert(host != NULL); /* static analyzer hint (not possible) */
             ram_handle_compressed(host, ch, TARGET_PAGE_SIZE);
             break;
 
