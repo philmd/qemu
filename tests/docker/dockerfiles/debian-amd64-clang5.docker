@@ -10,16 +10,17 @@ MAINTAINER Philippe Mathieu-Daudé <f4bug@amsat.org>
 # Install instructions from http://apt.llvm.org/
 RUN DEBIAN_FRONTEND=noninteractive eatmydata \
     apt-get install -y --no-install-recommends \
-		curl gnupg
+        curl gnupg
 RUN curl http://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
-	echo 'deb http://apt.llvm.org/unstable/ llvm-toolchain main' \
-		> /etc/apt/sources.list.d/llvm.list && \
-	apt-get update
+    echo 'deb http://apt.llvm.org/unstable/ llvm-toolchain main' \
+        > /etc/apt/sources.list.d/llvm.list && \
+    apt-get update
 RUN DEBIAN_FRONTEND=noninteractive eatmydata \
     apt-get install -y --no-install-recommends \
-		clang-5.0
+        clang-5.0
 RUN DEBIAN_FRONTEND=noninteractive eatmydata \
-	apt-get remove --auto-remove --purge \
-		libclang1-3.8
+    apt-get remove -y --auto-remove --purge \
+        libclang1-3.8 && \
+    ln -s clang-5.0 /usr/bin/clang
 
 ENV QEMU_CONFIGURE_OPTS --host-cc=clang-5.0 --cc=clang-5.0 --cxx=clang++-5.0
