@@ -256,8 +256,7 @@ static uint64_t ipmi_kcs_ioport_read(void *opaque, hwaddr addr, unsigned size)
     IPMIKCS *ik = iic->get_backend_data(ii);
     uint32_t ret;
 
-    switch (addr & 1) {
-    case 0:
+    if ((addr & 1) == 0) {
         ret = ik->data_out_reg;
         IPMI_KCS_SET_OBF(ik->status_reg, 0);
         if (ik->obf_irq_set) {
@@ -266,8 +265,7 @@ static uint64_t ipmi_kcs_ioport_read(void *opaque, hwaddr addr, unsigned size)
                 qemu_irq_lower(ik->irq);
             }
         }
-        break;
-    case 1:
+    } else {
         ret = ik->status_reg;
         if (ik->atn_irq_set) {
             ik->atn_irq_set = 0;
@@ -275,7 +273,6 @@ static uint64_t ipmi_kcs_ioport_read(void *opaque, hwaddr addr, unsigned size)
                 qemu_irq_lower(ik->irq);
             }
         }
-        break;
     }
     return ret;
 }
@@ -291,14 +288,10 @@ static void ipmi_kcs_ioport_write(void *opaque, hwaddr addr, uint64_t val,
         return;
     }
 
-    switch (addr & 1) {
-    case 0:
+    if ((addr & 1) == 0) {
         ik->data_in_reg = val;
-        break;
-
-    case 1:
+    } else {
         ik->cmd_reg = val;
-        break;
     }
     IPMI_KCS_SET_IBF(ik->status_reg, 1);
     ipmi_kcs_signal(ik, ii);
