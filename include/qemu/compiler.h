@@ -8,8 +8,11 @@
 #define COMPILER_H
 
 #if defined __clang_analyzer__ || defined __COVERITY__
-#define QEMU_STATIC_ANALYSIS 1
-#endif
+# define QEMU_STATIC_ANALYSIS 1
+# define QEMU_STATIC_ANALYSIS_ASSERT(expression) assert(expression)
+#else
+# define QEMU_STATIC_ANALYSIS_ASSERT(expression)
+#endif /* __clang_analyzer__ || __COVERITY__ */
 
 /*----------------------------------------------------------------------------
 | The macro QEMU_GNUC_PREREQ tests for minimum version of the GNU C compiler.
