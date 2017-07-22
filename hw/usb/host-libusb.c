@@ -1306,6 +1306,7 @@ static void usb_host_handle_control(USBDevice *udev, USBPacket *p,
     r = usb_host_req_alloc(s, p, (request >> 8) & USB_DIR_IN, length + 8);
     r->cbuf = data;
     r->clen = length;
+    QEMU_STATIC_ANALYSIS_ASSERT(r->buffer != NULL);
     memcpy(r->buffer, udev->setup_buf, 8);
     if (!r->in) {
         memcpy(r->buffer + 8, r->cbuf, r->clen);
