@@ -86,9 +86,7 @@ bool qnum_get_try_int(const QNum *qn, int64_t *val)
     case QNUM_DOUBLE:
         return false;
     }
-
-    assert(0);
-    return false;
+    g_assert_not_reached();
 }
 
 /**
@@ -124,9 +122,7 @@ bool qnum_get_try_uint(const QNum *qn, uint64_t *val)
     case QNUM_DOUBLE:
         return false;
     }
-
-    assert(0);
-    return false;
+    g_assert_not_reached();
 }
 
 /**
@@ -157,9 +153,7 @@ double qnum_get_double(QNum *qn)
     case QNUM_DOUBLE:
         return qn->u.dbl;
     }
-
-    assert(0);
-    return 0.0;
+    g_assert_not_reached();
 }
 
 char *qnum_to_string(QNum *qn)
@@ -196,9 +190,7 @@ char *qnum_to_string(QNum *qn)
 
         return buffer;
     }
-
-    assert(0);
-    return NULL;
+    g_assert_not_reached();
 }
 
 /**
