@@ -409,6 +409,8 @@ static MemTxResult memory_region_oldmmio_read_accessor(MemoryRegion *mr,
 {
     uint64_t tmp;
 
+    QEMU_STATIC_ANALYSIS_ASSERT(ctz32(size) <
+                                ARRAY_SIZE(mr->ops->old_mmio.read));
     tmp = mr->ops->old_mmio.read[ctz32(size)](mr->opaque, addr);
     if (mr->subpage) {
         trace_memory_region_subpage_read(get_cpu_index(), mr, addr, tmp, size);
