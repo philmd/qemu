@@ -114,7 +114,7 @@ e1000x_grow_8reg_if_not_full(uint32_t *mac, int index, int size)
     } else {
         sum += size;
     }
-    mac[index] = sum;
+    mac[index] = sum & UINT32_MAX;
     mac[index + 1] = sum >> 32;
 }
 
