@@ -107,22 +107,34 @@ static inline void bswap64s(uint64_t *s)
  * the specified format by byteswapping if necessary, and return
  * the converted value.
  *
- * void le16_to_cpus(uint16_t *v);
- * void le32_to_cpus(uint32_t *v);
- * void le64_to_cpus(uint64_t *v);
- * void be16_to_cpus(uint16_t *v);
- * void be32_to_cpus(uint32_t *v);
- * void be64_to_cpus(uint64_t *v);
+ * void le16_to_cpus(void *v);
+ * void le32_to_cpus(void *v);
+ * void le64_to_cpus(void *v);
+ * void be16_to_cpus(void *v);
+ * void be32_to_cpus(void *v);
+ * void be64_to_cpus(void *v);
+ * void le16_to_cpus_aligned(uint16_t *v);
+ * void le32_to_cpus_aligned(uint32_t *v);
+ * void le64_to_cpus_aligned(uint64_t *v);
+ * void be16_to_cpus_aligned(uint16_t *v);
+ * void be32_to_cpus_aligned(uint32_t *v);
+ * void be64_to_cpus_aligned(uint64_t *v);
  *
  * Do an in-place conversion of the value pointed to by @v from the
  * specified format to the native endianness of the host CPU.
  *
- * void cpu_to_le16s(uint16_t *v);
- * void cpu_to_le32s(uint32_t *v);
- * void cpu_to_le64s(uint64_t *v);
- * void cpu_to_be16s(uint16_t *v);
- * void cpu_to_be32s(uint32_t *v);
- * void cpu_to_be64s(uint64_t *v);
+ * void cpu_to_le16s(void *v);
+ * void cpu_to_le32s(void *v);
+ * void cpu_to_le64s(void *v);
+ * void cpu_to_be16s(void *v);
+ * void cpu_to_be32s(void *v);
+ * void cpu_to_be64s(void *v);
+ * void cpu_to_le16s_aligned(uint16_t *v);
+ * void cpu_to_le32s_aligned(uint32_t *v);
+ * void cpu_to_le64s_aligned(uint64_t *v);
+ * void cpu_to_be16s_aligned(uint16_t *v);
+ * void cpu_to_be32s_aligned(uint32_t *v);
+ * void cpu_to_be64s_aligned(uint64_t *v);
  *
  * Do an in-place conversion of the value pointed to by @v from the
  * native endianness of the host CPU to the specified format.
@@ -149,15 +161,30 @@ static inline type cpu_to_ ## endian ## size(type v)\
     return glue(endian, _bswap)(v, size);\
 }\
 \
-static inline void endian ## size ## _to_cpus(type *p)\
+static inline void endian ## size ## _to_cpus_aligned(type *p)\
 {\
-    glue(endian, _bswaps)(p, size);\
+    glue(endian, _bswaps)((type *)p, size);\
 }\
-\
-static inline void cpu_to_ ## endian ## size ## s(type *p)\
+static inline void endian ## size ## _to_cpus(void *p)\
 {\
-    glue(endian, _bswaps)(p, size);\
+    if (likely(QEMU_PTR_IS_ALIGNED(p, sizeof(type)))) {\
+        endian ## size ## _to_cpus_aligned((type *)p);\
+    } else {\
+        type t;\
+        memcpy(&t, p, sizeof(type));\
+        glue(endian, _bswaps)(&t, size);\
+        memcpy(p, &t, sizeof(type));\
+    } \
+} \
+static inline void cpu_to_ ## endian ## size ## s_aligned(type *p)\
+{\
+    glue(endian, _bswaps)((type *)p, size);\
+} \
+static inline void cpu_to_ ## endian ## size ## s(void *p)\
+{\
+    endian ## size ## _to_cpus(p);\
 }
+
 
 CPU_CONVERT(be, 16, uint16_t)
 CPU_CONVERT(be, 32, uint32_t)
