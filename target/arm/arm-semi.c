@@ -130,7 +130,7 @@ static void arm_semi_cb(CPUState *cs, target_ulong ret, target_ulong err)
 #ifdef CONFIG_USER_ONLY
     TaskState *ts = cs->opaque;
 #endif
-    target_ulong reg0 = is_a64(env) ? env->xregs[0] : env->regs[0];
+    uint64_t reg0 = is_a64(env) ? env->xregs[0] : env->regs[0];
 
     if (ret == (target_ulong)-1) {
 #ifdef CONFIG_USER_ONLY
@@ -157,7 +157,7 @@ static void arm_semi_cb(CPUState *cs, target_ulong ret, target_ulong err)
     if (is_a64(env)) {
         env->xregs[0] = reg0;
     } else {
-        env->regs[0] = reg0;
+        env->regs[0] = (uint32_t)reg0;
     }
 }
 
