@@ -176,7 +176,8 @@ void error_setg_internal(Error **errp,
 #define error_setg_errno(errp, os_error, fmt, ...)                      \
     error_setg_errno_internal((errp), __FILE__, __LINE__, __func__,     \
                               (os_error), (fmt), ## __VA_ARGS__)
-void error_setg_errno_internal(Error **errp,
+void QEMU_STATIC_ANALYZER_NORETURN
+     error_setg_errno_internal(Error **errp,
                                const char *fname, int line, const char *func,
                                int os_error, const char *fmt, ...)
     GCC_FMT_ATTR(6, 7);
