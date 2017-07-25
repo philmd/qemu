@@ -243,7 +243,7 @@ static void exynos4210_i2c_write(void *opaque, hwaddr offset,
         break;
     case I2CADD_ADDR:
         if ((s->i2cstat & I2CSTAT_OUTPUT_EN) == 0) {
-            s->i2cadd = v;
+            s->i2cadd = v & ~1;
         }
         break;
     case I2CDS_ADDR:
