@@ -711,7 +711,7 @@ static void sdp_service_record_build(struct sdp_service_record_s *record,
                 struct sdp_def_service_s *def, int handle)
 {
     int len = 0;
-    uint8_t *data;
+    uint8_t *buf, *data;
     int *uuid;
 
     record->uuids = 0;
@@ -727,7 +727,8 @@ static void sdp_service_record_build(struct sdp_service_record_s *record,
             g_malloc0(record->attributes * sizeof(*record->attribute_list));
     record->uuid =
             g_malloc0(record->uuids * sizeof(*record->uuid));
-    data = g_malloc(len);
+    buf = g_malloc(len);
+    data = buf;
 
     record->attributes = 0;
     uuid = record->uuid;
@@ -752,6 +753,7 @@ static void sdp_service_record_build(struct sdp_service_record_s *record,
         record->attribute_list[record->attributes ++].len = len;
         data += len;
     }
+    g_free(buf);
 
     /* Sort the attribute list by the AttributeID.  The first must be
      * SDP_ATTR_RECORD_HANDLE so that bt_l2cap_sdp_close_ch can free
