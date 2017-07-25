@@ -29,6 +29,11 @@
 #endif
 
 #define QEMU_NORETURN __attribute__ ((__noreturn__))
+#if __has_feature(attribute_analyzer_noreturn)
+# define QEMU_STATIC_ANALYZER_NORETURN __attribute__((analyzer_noreturn))
+#else
+# define QEMU_STATIC_ANALYZER_NORETURN
+#endif /* attribute_analyzer_noreturn */
 
 #define QEMU_WARN_UNUSED_RESULT __attribute__((warn_unused_result))
 
