@@ -323,14 +323,34 @@ static void sdhci_end_transfer(SDHCIState *s)
 static void sdhci_read_block_from_card(SDHCIState *s)
 {
     int index = 0;
+    uint8_t data;
+    uint16_t blk_size;
+
+    blk_size = s->blksize & 0x0fff;
 
     if ((s->trnmod & SDHC_TRNS_MULTI) &&
             (s->trnmod & SDHC_TRNS_BLK_CNT_EN) && (s->blkcnt == 0)) {
         return;
     }
 
-    for (index = 0; index < (s->blksize & 0x0fff); index++) {
-        s->fifo_buffer[index] = sdbus_read_data(s->sdbus);
+    for (index = 0; index < blk_size; index++) {
+        data = sdbus_read_data(s->sdbus);
+        if (!FIELD_EX32(s->hostctl2, SDHC_HOSTCTL2, EXECUTE_TUNING)) {
+            /* Device is not in tunning */
+            s->fifo_buffer[index] = data;
+        }
+    }
+
+    if (FIELD_EX32(s->hostctl2, SDHC_HOSTCTL2, EXECUTE_TUNING)) {
+        uint16_t val = s->hostctl2;
+
+        /* Device is in tunning */
+        val = FIELD_DP32(val, SDHC_HOSTCTL2, EXECUTE_TUNING, 0);
+        s->hostctl2 = FIELD_DP32(val, SDHC_HOSTCTL2, SAMPLING_CLKSEL, 1);
+
+        s->prnsts &= ~(SDHC_DAT_LINE_ACTIVE | SDHC_DOING_READ |
+                       SDHC_DATA_INHIBIT);
+        goto read_done;
     }
 
     /* New data now available for READ through Buffer Port Register */
@@ -355,6 +375,7 @@ static void sdhci_read_block_from_card(SDHCIState *s)
         }
     }
 
+read_done:
     sdhci_update_irq(s);
 }
 
