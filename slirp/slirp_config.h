@@ -70,9 +70,6 @@
 /* Define if you have sys/stropts.h */
 #undef HAVE_SYS_STROPTS_H
 
-/* Define to sizeof(char *) */
-#define SIZEOF_CHAR_P (HOST_LONG_BITS / 8)
-
 /* Define if you have inet_aton */
 #undef HAVE_INET_ATON
 #ifndef _WIN32
