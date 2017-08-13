@@ -53,7 +53,7 @@ struct udphdr {
 struct udpiphdr {
 	        struct  ipovly ui_i;            /* overlaid ip structure */
 	        struct  udphdr ui_u;            /* udp header */
-};
+} QEMU_PACKED /* FIXME kernel */;
 #define ui_mbuf         ui_i.ih_mbuf.mptr
 #define ui_x1           ui_i.ih_x1
 #define ui_pr           ui_i.ih_pr

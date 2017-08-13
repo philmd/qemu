@@ -193,7 +193,7 @@ struct ipovly {
 	uint16_t	ih_len;			/* protocol length */
 	struct	in_addr ih_src;		/* source internet address */
 	struct	in_addr ih_dst;		/* destination internet address */
-} QEMU_PACKED;
+} QEMU_PACKED /* FIXME kernel */;
 
 /*
  * Ip reassembly queue structure.  Each fragment
