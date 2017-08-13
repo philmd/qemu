@@ -175,16 +175,10 @@ struct	ip_timestamp {
 
 #define	IP_MSS		576		/* default maximum segment size */
 
-#if SIZEOF_CHAR_P == 4
 struct mbuf_ptr {
-	struct mbuf *mptr;
-	uint32_t dummy;
-};
-#else
-struct mbuf_ptr {
-	struct mbuf *mptr;
-};
-#endif
+    struct mbuf *mptr;
+} QEMU_ALIGNED(sizeof(uintptr_t));
+
 struct qlink {
 	void *next, *prev;
 };
