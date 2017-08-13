@@ -136,11 +136,11 @@ typedef struct rocker_desc {
  * Rocker TLV type fields
  */
 
-typedef struct rocker_tlv {
+typedef struct QEMU_ALIGNED(8) rocker_tlv {
     __le32 type;
     __le16 len;
     __le16 rsvd;
-} __attribute__((packed, aligned(8))) RockerTlv;
+} RockerTlv;
 
 /* cmd msg */
 enum {
