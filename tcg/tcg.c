@@ -68,8 +68,8 @@ static void patch_reloc(tcg_insn_unit *code_ptr, int type,
                         intptr_t value, intptr_t addend);
 
 /* The CIE and FDE header definitions will be common to all hosts.  */
-typedef struct {
-    uint32_t len __attribute__((aligned((sizeof(void *)))));
+typedef struct QEMU_ALIGNED(sizeof(void *)) {
+    uint32_t len;
     uint32_t id;
     uint8_t version;
     char augmentation[1];
@@ -78,8 +78,8 @@ typedef struct {
     uint8_t return_column;
 } DebugFrameCIE;
 
-typedef struct QEMU_PACKED {
-    uint32_t len __attribute__((aligned((sizeof(void *)))));
+typedef struct QEMU_PACKED QEMU_ALIGNED(sizeof(void *)) {
+    uint32_t len;
     uint32_t cie_offset;
     uintptr_t func_start;
     uintptr_t func_len;
