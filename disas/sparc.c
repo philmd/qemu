@@ -2685,7 +2685,7 @@ print_insn_sparc (bfd_vma memaddr, disassemble_info *info)
 
       if (!opcodes_initialized)
         sorted_opcodes =
-          malloc (sparc_num_opcodes * sizeof (sparc_opcode *));
+          g_new(sparc_opcode *, sparc_num_opcodes);
       /* Reset the sorted table so we can resort it.  */
       for (i = 0; i < sparc_num_opcodes; ++i)
         sorted_opcodes[i] = &sparc_opcodes[i];
