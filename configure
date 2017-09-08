@@ -5571,6 +5571,9 @@ fi
 if test "$vnc_png" = "yes" ; then
   echo "CONFIG_VNC_PNG=y" >> $config_host_mak
 fi
+if test "$glib_datetime" = "yes" ; then
+  echo "CONFIG_VNC_WS=y" >> $config_host_mak
+fi
 if test "$fnmatch" = "yes" ; then
   echo "CONFIG_FNMATCH=y" >> $config_host_mak
 fi
