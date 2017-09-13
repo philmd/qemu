@@ -164,9 +164,6 @@ static void xen_remap_bucket(MapCacheEntry *entry,
 
     trace_xen_remap_bucket(address_index);
 
-    pfns = g_new0(xen_pfn_t, nb_pfn);
-    err = g_new0(int, nb_pfn);
-
     if (entry->vaddr_base != NULL) {
         if (!(entry->flags & XEN_MAPCACHE_ENTRY_DUMMY)) {
             ram_block_notify_remove(entry->vaddr_base, entry->size);
@@ -179,10 +176,12 @@ static void xen_remap_bucket(MapCacheEntry *entry,
     g_free(entry->valid_mapping);
     entry->valid_mapping = NULL;
 
+    pfns = g_new(xen_pfn_t, nb_pfn);
     for (i = 0; i < nb_pfn; i++) {
         pfns[i] = (address_index << (MCACHE_BUCKET_SHIFT-XC_PAGE_SHIFT)) + i;
     }
 
+    err = g_new0(int, nb_pfn);
     if (!dummy) {
         vaddr_base = xenforeignmemory_map2(xen_fmem, xen_domid, vaddr,
                                            PROT_READ | PROT_WRITE, 0,
@@ -203,6 +202,7 @@ static void xen_remap_bucket(MapCacheEntry *entry,
             exit(-1);
         }
     }
+    g_free(pfns);
 
     if (!(entry->flags & XEN_MAPCACHE_ENTRY_DUMMY)) {
         ram_block_notify_add(vaddr_base, size);
@@ -225,8 +225,6 @@ static void xen_remap_bucket(MapCacheEntry *entry,
             bitmap_set(entry->valid_mapping, i, 1);
         }
     }
-
-    g_free(pfns);
     g_free(err);
 }
 
