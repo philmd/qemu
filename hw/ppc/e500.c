@@ -741,8 +741,6 @@ static qemu_irq *ppce500_init_mpic(MachineState *machine, PPCE500Params *params,
     SysBusDevice *s;
     int i;
 
-    mpic = g_new0(qemu_irq, 256);
-
     if (kvm_enabled()) {
         Error *err = NULL;
 
@@ -760,6 +758,7 @@ static qemu_irq *ppce500_init_mpic(MachineState *machine, PPCE500Params *params,
         dev = ppce500_init_mpic_qemu(params, irqs);
     }
 
+    mpic = g_new(qemu_irq, 256);
     for (i = 0; i < 256; i++) {
         mpic[i] = qdev_get_gpio_in(dev, i);
     }
