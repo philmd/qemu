@@ -12,6 +12,7 @@
 #include "hw/hw.h"
 #include "hw/devices.h"
 #include "hw/pci/pci_host.h"
+#include "hw/intc/i8259_pic.h"
 #include "sysemu/sysemu.h"
 #include "alpha_sys.h"
 

@@ -23,12 +23,12 @@
  */
 #include "qemu/osdep.h"
 #include "hw/hw.h"
-#include "hw/i386/pc.h"
 #include "hw/isa/isa.h"
 #include "monitor/monitor.h"
 #include "qemu/timer.h"
 #include "qemu/log.h"
-#include "hw/isa/i8259_internal.h"
+#include "hw/intc/i8259_pic.h"
+#include "hw/intc/i8259_pic_internal.h"
 #include "hw/intc/intc.h"
 
 /* debug PIC */

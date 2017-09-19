@@ -23,8 +23,8 @@
  * THE SOFTWARE.
  */
 #include "qemu/osdep.h"
-#include "hw/i386/pc.h"
-#include "hw/isa/i8259_internal.h"
+#include "migration/vmstate.h"
+#include "hw/intc/i8259_pic_internal.h"
 
 void pic_reset_common(PICCommonState *s)
 {

@@ -10,7 +10,8 @@
  * See the COPYING file in the top-level directory.
  */
 #include "qemu/osdep.h"
-#include "hw/isa/i8259_internal.h"
+#include "hw/intc/i8259_pic.h"
+#include "hw/intc/i8259_pic_internal.h"
 #include "hw/i386/apic_internal.h"
 #include "sysemu/kvm.h"
 

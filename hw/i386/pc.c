@@ -39,6 +39,7 @@
 #include "hw/loader.h"
 #include "elf.h"
 #include "multiboot.h"
+#include "hw/intc/i8259_pic.h"
 #include "hw/timer/mc146818rtc.h"
 #include "hw/dma/i8257_dma.h"
 #include "hw/timer/i8254.h"

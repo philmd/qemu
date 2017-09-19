@@ -41,6 +41,7 @@
 #include "hw/sysbus.h"
 #include "sysemu/arch_init.h"
 #include "sysemu/block-backend.h"
+#include "hw/intc/i8259_pic.h"
 #include "hw/i2c/smbus.h"
 #include "hw/xen/xen.h"
 #include "exec/memory.h"

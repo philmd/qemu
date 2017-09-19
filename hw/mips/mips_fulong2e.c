@@ -42,6 +42,7 @@
 #include "hw/ide.h"
 #include "elf.h"
 #include "hw/isa/vt82c686.h"
+#include "hw/intc/i8259_pic.h"
 #include "hw/timer/mc146818rtc.h"
 #include "hw/timer/i8254.h"
 #include "hw/input/i8042.h"

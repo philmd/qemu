@@ -28,6 +28,7 @@
 #include "trace.h"
 #include "hw/i386/pc.h"
 #include "hw/i386/apic-msidef.h"
+#include "hw/intc/i8259_pic.h"
 #include "qapi/error.h"
 
 #define MAX_APICS 255

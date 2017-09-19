@@ -27,6 +27,7 @@
 #include "hw/ide.h"
 #include "hw/loader.h"
 #include "elf.h"
+#include "hw/intc/i8259_pic.h"
 #include "hw/timer/mc146818rtc.h"
 #include "hw/input/i8042.h"
 #include "hw/timer/i8254.h"
