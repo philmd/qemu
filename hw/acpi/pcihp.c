@@ -28,8 +28,8 @@
 #include "hw/acpi/pcihp.h"
 
 #include "hw/hw.h"
-#include "hw/i386/pc.h"
 #include "hw/pci/pci.h"
+#include "hw/pci-host/i440fx.h"
 #include "hw/acpi/acpi.h"
 #include "sysemu/sysemu.h"
 #include "exec/ioport.h"

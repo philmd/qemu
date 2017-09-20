@@ -27,6 +27,7 @@
 #include "hw/i386/pc.h"
 #include "hw/pci/pci.h"
 #include "hw/pci/pci_host.h"
+#include "hw/pci-host/i440fx.h"
 #include "hw/southbridge/i82371_piix.h"
 #include "hw/isa/isa.h"
 #include "hw/sysbus.h"
