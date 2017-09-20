@@ -28,6 +28,7 @@
 #include "hw/pci/pci.h"
 #include "hw/pci/pci_host.h"
 #include "hw/i386/pc.h"
+#include "hw/southbridge/i82371_piix.h"
 #include "exec/address-spaces.h"
 
 //#define DEBUG

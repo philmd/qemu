@@ -28,6 +28,7 @@
 #include "hw/i386/pc.h"
 #include "hw/pci/pci.h"
 #include "hw/isa/isa.h"
+#include "hw/southbridge/i82371_piix.h"
 #include "hw/sysbus.h"
 
 PCIDevice *piix4_dev;
