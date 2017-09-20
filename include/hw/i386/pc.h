@@ -236,12 +236,6 @@ int cmos_get_fd_drive_type(FloppyDriveType fd0);
 
 #define PORT92_A20_LINE "a20"
 
-/* acpi_piix.c */
-
-I2CBus *piix4_pm_init(PCIBus *bus, int devfn, uint32_t smb_io_base,
-                      qemu_irq sci_irq, qemu_irq smi_irq,
-                      int smm_enabled, DeviceState **piix4_pm);
-
 /* hpet.c */
 extern int no_hpet;
 
@@ -253,12 +247,6 @@ typedef struct PCII440FXState PCII440FXState;
 #define TYPE_I440FX_PCI_DEVICE "i440FX"
 
 #define TYPE_IGD_PASSTHROUGH_I440FX_PCI_DEVICE "igd-passthrough-i440FX"
-
-/*
- * Reset Control Register: PCI-accessible ISA-Compatible Register at address
- * 0xcf9, provided by the PCI/ISA bridge (PIIX3 PCI function 0, 8086:7000).
- */
-#define RCR_IOPORT 0xcf9
 
 PCIBus *i440fx_init(const char *host_type, const char *pci_type,
                     PCII440FXState **pi440fx_state, int *piix_devfn,

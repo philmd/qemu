@@ -31,6 +31,7 @@
 #include "hw/smbios/smbios.h"
 #include "hw/pci/pci.h"
 #include "hw/pci/pci_ids.h"
+#include "hw/southbridge/i82371_piix.h"
 #include "hw/usb.h"
 #include "net/net.h"
 #include "hw/boards.h"

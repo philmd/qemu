@@ -48,7 +48,7 @@
 #include "sysemu/numa.h"
 
 /* Supported chipsets: */
-#include "hw/acpi/piix4.h"
+#include "hw/southbridge/i82371_piix.h"
 #include "hw/acpi/pcihp.h"
 #include "hw/i386/ich9.h"
 #include "hw/pci/pci_bus.h"

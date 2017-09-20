@@ -55,7 +55,6 @@ typedef struct I440FXState {
 } I440FXState;
 
 #define PIIX_NUM_PIC_IRQS       16      /* i8259 * 2 */
-#define PIIX_NUM_PIRQS          4ULL    /* PIRQ[A-D] */
 #define XEN_PIIX_NUM_PIRQS      128ULL
 #define PIIX_PIRQC              0x60
 
