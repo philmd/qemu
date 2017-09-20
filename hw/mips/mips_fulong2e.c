@@ -44,6 +44,7 @@
 #include "hw/timer/mc146818rtc.h"
 #include "hw/timer/i8254.h"
 #include "hw/input/i8042.h"
+#include "hw/net/pci.h"
 #include "sysemu/blockdev.h"
 #include "exec/address-spaces.h"
 #include "sysemu/qtest.h"
@@ -253,7 +254,7 @@ static void network_init (PCIBus *pci_bus)
             default_devaddr = "07";
         }
 
-        pci_nic_init_nofail(nd, pci_bus, "rtl8139", default_devaddr);
+        pci_nic_init_nofail(nd, pci_bus, TYPE_PCI_RTL8139, default_devaddr);
     }
 }
 

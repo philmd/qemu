@@ -39,6 +39,7 @@
 #include "hw/ide.h"
 #include "hw/loader.h"
 #include "hw/usb.h"
+#include "hw/net/pci.h"
 #include "hw/block/flash.h"
 #include "sysemu/block-backend.h"
 #include "exec/address-spaces.h"
@@ -303,8 +304,8 @@ static void r2d_init(MachineState *machine)
 
     /* NIC: rtl8139 on-board, and 2 slots. */
     for (i = 0; i < nb_nics; i++)
-        pci_nic_init_nofail(&nd_table[i], pci_bus,
-                            "rtl8139", i==0 ? "2" : NULL);
+        pci_nic_init_nofail(&nd_table[i], pci_bus, TYPE_PCI_RTL8139,
+                            i == 0 ? "2" : NULL);
 
     /* USB keyboard */
     usb_create_simple(usb_bus_find(-1), "usb-kbd");

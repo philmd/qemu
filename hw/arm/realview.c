@@ -20,6 +20,7 @@
 #include "sysemu/sysemu.h"
 #include "hw/boards.h"
 #include "hw/i2c/i2c.h"
+#include "hw/net/pci.h"
 #include "sysemu/block-backend.h"
 #include "exec/address-spaces.h"
 #include "qemu/error-report.h"
@@ -269,7 +270,7 @@ static void realview_init(MachineState *machine,
             done_nic = 1;
         } else {
             if (pci_bus) {
-                pci_nic_init_nofail(nd, pci_bus, "rtl8139", NULL);
+                pci_nic_init_nofail(nd, pci_bus, TYPE_PCI_RTL8139, NULL);
             }
         }
     }
