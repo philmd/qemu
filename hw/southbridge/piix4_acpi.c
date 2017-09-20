@@ -36,6 +36,7 @@
 #include "hw/acpi/pcihp.h"
 #include "hw/acpi/cpu_hotplug.h"
 #include "hw/acpi/cpu.h"
+#include "hw/acpi/pc-hotplug.h"
 #include "hw/hotplug.h"
 #include "hw/mem/pc-dimm.h"
 #include "hw/acpi/memory_hotplug.h"

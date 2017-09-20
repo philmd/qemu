@@ -14,10 +14,17 @@
 #define HW_ACPI_CPU_HOTPLUG_H
 
 #include "hw/acpi/acpi.h"
-#include "hw/acpi/pc-hotplug.h"
 #include "hw/acpi/aml-build.h"
 #include "hw/hotplug.h"
 #include "hw/acpi/cpu.h"
+
+/* Limit for CPU arch IDs for CPU hotplug. All hotpluggable CPUs should
+ * have CPUClass.get_arch_id() < ACPI_CPU_HOTPLUG_ID_LIMIT.
+ */
+#define ACPI_CPU_HOTPLUG_ID_LIMIT 256
+
+/* 256 CPU IDs, 8 bits per entry: */
+#define ACPI_GPE_PROC_LEN 32
 
 typedef struct AcpiCpuHotplug {
     Object *device;
@@ -37,4 +44,7 @@ void acpi_switch_to_modern_cphp(AcpiCpuHotplug *gpe_cpu,
 
 void build_legacy_cpu_hotplug_aml(Aml *ctx, MachineState *machine,
                                   uint16_t io_base);
+
+uint32_t acpi_cpu_apic_id_limit(MachineState *machine);
+
 #endif

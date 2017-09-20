@@ -1088,6 +1088,13 @@ DeviceState *cpu_get_current_apic(void)
     }
 }
 
+uint32_t acpi_cpu_apic_id_limit(MachineState *ms)
+{
+    PCMachineState *pcms = PC_MACHINE(ms);
+
+    return pcms->apic_id_limit;
+}
+
 void pc_acpi_smi_interrupt(void *opaque, int irq, int level)
 {
     X86CPU *cpu = opaque;
