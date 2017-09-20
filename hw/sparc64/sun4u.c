@@ -30,6 +30,7 @@
 #include "hw/pci-host/apb.h"
 #include "hw/i386/pc.h"
 #include "hw/char/serial.h"
+#include "hw/char/parallel.h"
 #include "hw/timer/m48t59.h"
 #include "hw/input/i8042.h"
 #include "hw/net/pci.h"
