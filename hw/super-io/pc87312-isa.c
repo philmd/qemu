@@ -24,7 +24,7 @@
  */
 
 #include "qemu/osdep.h"
-#include "hw/isa/pc87312.h"
+#include "hw/super-io/pc87312-isa.h"
 #include "qapi/error.h"
 #include "qemu/error-report.h"
 #include "sysemu/block-backend.h"

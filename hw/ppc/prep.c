@@ -42,7 +42,7 @@
 #include "hw/loader.h"
 #include "hw/timer/mc146818rtc.h"
 #include "hw/input/i8042.h"
-#include "hw/isa/pc87312.h"
+#include "hw/super-io/pc87312-isa.h"
 #include "hw/net/ne2000-isa.h"
 #include "hw/net/pci.h"
 #include "sysemu/block-backend.h"
