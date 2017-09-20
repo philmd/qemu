@@ -59,6 +59,7 @@
 #include "net/net.h"
 #include "net/eth.h"
 #include "hw/loader.h"
+#include "hw/net/pci.h"
 #include "sysemu/sysemu.h"
 #include "qemu/iov.h"
 
@@ -90,10 +91,8 @@ static inline GCC_FMT_ATTR(1, 2) int DPRINTF(const char *fmt, ...)
 }
 #endif
 
-#define TYPE_RTL8139 "rtl8139"
-
 #define RTL8139(obj) \
-     OBJECT_CHECK(RTL8139State, (obj), TYPE_RTL8139)
+     OBJECT_CHECK(RTL8139State, (obj), TYPE_PCI_RTL8139)
 
 /* Symbolic offsets to registers. */
 enum RTL8139_registers {
@@ -3437,7 +3436,7 @@ static void rtl8139_class_init(ObjectClass *klass, void *data)
 }
 
 static const TypeInfo rtl8139_info = {
-    .name          = TYPE_RTL8139,
+    .name          = TYPE_PCI_RTL8139,
     .parent        = TYPE_PCI_DEVICE,
     .instance_size = sizeof(RTL8139State),
     .class_init    = rtl8139_class_init,

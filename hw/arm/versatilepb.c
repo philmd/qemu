@@ -18,6 +18,7 @@
 #include "sysemu/sysemu.h"
 #include "hw/pci/pci.h"
 #include "hw/i2c/i2c.h"
+#include "hw/net/pci.h"
 #include "hw/boards.h"
 #include "sysemu/block-backend.h"
 #include "exec/address-spaces.h"
@@ -271,7 +272,7 @@ static void versatile_init(MachineState *machine, int board_id)
             smc91c111_init(nd, 0x10010000, sic[25]);
             done_smc = 1;
         } else {
-            pci_nic_init_nofail(nd, pci_bus, "rtl8139", NULL);
+            pci_nic_init_nofail(nd, pci_bus, TYPE_PCI_RTL8139, NULL);
         }
     }
     if (machine_usb(machine)) {
