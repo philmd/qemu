@@ -24,7 +24,7 @@
 
 #include "qemu/osdep.h"
 #include "hw/hw.h"
-#include "hw/i386/pc.h"
+#include "hw/southbridge/piix4.h"
 #include "hw/pci/pci.h"
 #include "hw/isa/isa.h"
 #include "hw/sysbus.h"
@@ -35,7 +35,6 @@ typedef struct PIIX4State {
     PCIDevice dev;
 } PIIX4State;
 
-#define TYPE_PIIX4_PCI_DEVICE "PIIX4"
 #define PIIX4_PCI_DEVICE(obj) \
     OBJECT_CHECK(PIIX4State, (obj), TYPE_PIIX4_PCI_DEVICE)
 
@@ -103,7 +102,8 @@ int piix4_init(PCIBus *bus, ISABus **isa_bus, int devfn)
 {
     PCIDevice *d;
 
-    d = pci_create_simple_multifunction(bus, devfn, true, "PIIX4");
+    d = pci_create_simple_multifunction(bus, devfn, true,
+                                        TYPE_PIIX4_PCI_DEVICE);
     *isa_bus = ISA_BUS(qdev_get_child_bus(DEVICE(d), "isa.0"));
     return d->devfn;
 }

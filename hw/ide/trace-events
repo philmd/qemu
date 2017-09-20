@@ -33,10 +33,6 @@ bmdma_cmd_writeb(uint32_t val) "val: 0x%08x"
 bmdma_addr_read(uint64_t data) "data: 0x%016"PRIx64
 bmdma_addr_write(uint64_t data) "data: 0x%016"PRIx64
 
-# hw/ide/piix.c
-bmdma_read(uint64_t addr, uint8_t val) "bmdma: readb 0x%"PRIx64" : 0x%02x"
-bmdma_write(uint64_t addr, uint64_t val) "bmdma: writeb 0x%"PRIx64" : 0x%02"PRIx64
-
 # hw/ide/via.c
 bmdma_read_via(uint64_t addr, uint32_t val) "bmdma: readb 0x%"PRIx64" : 0x%02x"
 bmdma_write_via(uint64_t addr, uint64_t val) "bmdma: writeb 0x%"PRIx64" : 0x%02"PRIx64

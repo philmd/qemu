@@ -1,3 +1,9 @@
+ifeq ($(CONFIG_ACPI),y)
+common-obj-$(CONFIG_ACPI_X86) += piix4_acpi.o
+endif
+common-obj-$(CONFIG_PIIX4) += piix4_isa.o
+common-obj-$(CONFIG_IDE_PIIX) += piix_ide.o
+
 common-obj-$(CONFIG_AHCI) += ich9_ahci.o
 common-obj-$(CONFIG_ACPI_X86_ICH) += ich9_acpi.o ich9_tco.o
 common-obj-$(CONFIG_ACPI_X86) += ich9_smbus.o
