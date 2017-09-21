@@ -11,9 +11,9 @@
 #include "cpu.h"
 #include "hw/hw.h"
 #include "hw/devices.h"
+#include "hw/pci/pci_host.h"
 #include "sysemu/sysemu.h"
 #include "alpha_sys.h"
-#include "exec/address-spaces.h"
 
 
 #define TYPE_TYPHOON_PCI_HOST_BRIDGE "typhoon-pcihost"
