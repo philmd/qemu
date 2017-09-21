@@ -28,7 +28,7 @@
 #include "hw/audio/soundhw.h"
 #include "audio/audio.h"
 #include "qemu/timer.h"
-#include "hw/timer/i8254.h"
+#include "hw/timer/i8254.h" /* PIT_FREQ */
 #include "hw/audio/pcspk.h"
 #include "qapi/error.h"
 

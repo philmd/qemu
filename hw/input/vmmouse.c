@@ -25,7 +25,7 @@
 #include "hw/hw.h"
 #include "ui/console.h"
 #include "hw/input/i8042.h"
-#include "hw/i386/pc.h"
+#include "hw/i386/pc.h" /* vmport_register */
 #include "hw/qdev.h"
 
 /* debug only vmmouse */

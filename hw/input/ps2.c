@@ -25,7 +25,7 @@
 #include "qemu/log.h"
 #include "hw/hw.h"
 #include "hw/input/ps2.h"
-#include "ui/console.h"
+#include "ui/console.h" /* kbd_put_ledstate */
 #include "ui/input.h"
 #include "sysemu/sysemu.h"
 
