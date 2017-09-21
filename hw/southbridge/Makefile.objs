@@ -1,0 +1,4 @@
+common-obj-$(CONFIG_AHCI) += ich9_ahci.o
+common-obj-$(CONFIG_ACPI_X86_ICH) += ich9_acpi.o ich9_tco.o
+common-obj-$(CONFIG_ACPI_X86) += ich9_smbus.o
+obj-$(CONFIG_LPC_ICH9) += ich9_lpc.o

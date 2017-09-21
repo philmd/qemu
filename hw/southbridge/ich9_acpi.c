@@ -27,15 +27,15 @@
 #include "hw/hw.h"
 #include "qapi/error.h"
 #include "qapi/visitor.h"
-#include "hw/i386/pc.h"
+#include "hw/mem/nvdimm.h"
 #include "hw/pci/pci.h"
 #include "qemu/timer.h"
 #include "sysemu/sysemu.h"
 #include "hw/acpi/acpi.h"
 #include "hw/acpi/tco.h"
+#include "hw/acpi/pc-hotplug.h"
 #include "exec/address-spaces.h"
-
-#include "hw/i386/ich9.h"
+#include "hw/southbridge/ich9.h"
 #include "hw/mem/pc-dimm.h"
 
 //#define DEBUG

@@ -41,8 +41,8 @@
 #include "hw/kvm/clock.h"
 #include "hw/pci-host/q35.h"
 #include "exec/address-spaces.h"
-#include "hw/i386/pc.h"
-#include "hw/i386/ich9.h"
+
+#include "hw/southbridge/ich9.h"
 #include "hw/smbios/smbios.h"
 #include "hw/ide/pci.h"
 #include "hw/ide/ahci.h"

@@ -12,7 +12,7 @@
 #include "libqos/pci.h"
 #include "libqos/pci-pc.h"
 #include "hw/pci/pci_regs.h"
-#include "hw/i386/ich9.h"
+#include "hw/southbridge/ich9.h"
 #include "hw/acpi/ich9.h"
 #include "hw/acpi/tco.h"
 

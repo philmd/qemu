@@ -9,8 +9,8 @@
 #include "qemu/osdep.h"
 #include "qemu-common.h"
 #include "sysemu/watchdog.h"
-#include "hw/i386/ich9.h"
-
+#include "hw/hw.h"
+#include "hw/southbridge/ich9.h"
 #include "hw/acpi/tco.h"
 
 //#define DEBUG

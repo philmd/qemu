@@ -1,18 +1,15 @@
-#ifndef HW_ICH9_H
-#define HW_ICH9_H
+#ifndef HW_SOUTHBRIDGE_ICH9_H
+#define HW_SOUTHBRIDGE_ICH9_H
 
+#include "exec/memory.h"
 #include "hw/hw.h"
+#include "hw/irq.h"
 #include "hw/isa/isa.h"
-#include "hw/sysbus.h"
-#include "hw/i386/pc.h"
 #include "hw/isa/apm.h"
-#include "hw/i386/ioapic.h"
 #include "hw/pci/pci.h"
-#include "hw/pci/pcie_host.h"
-#include "hw/pci/pci_bridge.h"
-#include "hw/acpi/acpi.h"
-#include "hw/acpi/ich9.h"
+#include "hw/southbridge/ich9_acpi.h"
 #include "hw/pci/pci_bus.h"
+#include "hw/intc/ioapic.h"
 
 void ich9_lpc_set_irq(void *opaque, int irq_num, int level);
 int ich9_lpc_map_irq(PCIDevice *pci_dev, int intx);
@@ -252,4 +249,4 @@ Object *ich9_lpc_find(void);
 /* bit positions used in fw_cfg SMI feature negotiation */
 #define ICH9_LPC_SMI_F_BROADCAST_BIT            0
 
-#endif /* HW_ICH9_H */
+#endif /* HW_SOUTHBRIDGE_ICH9_H */

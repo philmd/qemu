@@ -25,14 +25,14 @@
  *
  */
 #include "qemu/osdep.h"
+#include "qemu/range.h"
 #include "hw/hw.h"
 #include "hw/i2c/pm_smbus.h"
 #include "hw/pci/pci.h"
-#include "sysemu/sysemu.h"
 #include "hw/i2c/i2c.h"
 #include "hw/i2c/smbus.h"
+#include "hw/southbridge/ich9.h"
 
-#include "hw/i386/ich9.h"
 
 #define ICH9_SMB_DEVICE(obj) \
      OBJECT_CHECK(ICH9SMBState, (obj), TYPE_ICH9_SMB_DEVICE)
