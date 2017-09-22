@@ -40,6 +40,7 @@
 #include "sysemu/sysemu.h"
 #include "hw/pci/msi.h"
 #include "hw/pci/msix.h"
+#include "hw/net/pci.h"
 
 #include "hw/net/e1000_regs.h"
 
@@ -49,8 +50,7 @@
 #include "trace.h"
 #include "qapi/error.h"
 
-#define TYPE_E1000E "e1000e"
-#define E1000E(obj) OBJECT_CHECK(E1000EState, (obj), TYPE_E1000E)
+#define E1000E(obj) OBJECT_CHECK(E1000EState, (obj), TYPE_PCI_E1000E)
 
 typedef struct E1000EState {
     PCIDevice parent_obj;
@@ -703,7 +703,7 @@ static void e1000e_instance_init(Object *obj)
 }
 
 static const TypeInfo e1000e_info = {
-    .name = TYPE_E1000E,
+    .name =   TYPE_PCI_E1000E,
     .parent = TYPE_PCI_DEVICE,
     .instance_size = sizeof(E1000EState),
     .class_init = e1000e_class_init,
