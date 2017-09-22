@@ -25,6 +25,8 @@ typedef struct NvramClass {
     void (*toggle_lock)(Nvram *obj, int lock);
 } NvramClass;
 
+#define TYPE_M48T59_ISA "isa-m48t59"
+
 Nvram *m48t59_init_isa(ISABus *bus, uint32_t io_base, uint16_t size,
                        int base_year, int type);
 Nvram *m48t59_init(qemu_irq IRQ, hwaddr mem_base,

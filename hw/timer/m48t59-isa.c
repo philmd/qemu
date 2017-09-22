@@ -49,7 +49,7 @@ typedef struct M48txxISADeviceClass {
 
 static M48txxInfo m48txx_isa_info[] = {
     {
-        .bus_name = "isa-m48t59",
+        .bus_name = TYPE_M48T59_ISA,
         .model = 59,
         .size = 0x2000,
     }
