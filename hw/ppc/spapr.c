@@ -56,6 +56,7 @@
 #include "hw/pci-host/spapr.h"
 #include "hw/ppc/xics.h"
 #include "hw/pci/msi.h"
+#include "hw/net/pci.h"
 
 #include "hw/pci/pci.h"
 #include "hw/scsi/scsi.h"
