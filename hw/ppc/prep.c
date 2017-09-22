@@ -44,6 +44,7 @@
 #include "hw/input/i8042.h"
 #include "hw/isa/pc87312.h"
 #include "hw/net/ne2000-isa.h"
+#include "hw/net/pci.h"
 #include "sysemu/block-backend.h"
 #include "sysemu/arch_init.h"
 #include "sysemu/kvm.h"
@@ -800,7 +801,7 @@ static void ibm_40p_init(MachineState *machine)
         pci_vga_init(pci_bus);
 
         for (i = 0; i < nb_nics; i++) {
-            pci_nic_init_nofail(&nd_table[i], pci_bus, "pcnet",
+            pci_nic_init_nofail(&nd_table[i], pci_bus, TYPE_PCI_PCNET,
                                 i == 0 ? "3" : NULL);
         }
     }
