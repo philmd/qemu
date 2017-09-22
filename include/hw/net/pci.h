@@ -13,6 +13,8 @@
 #include "hw/pci/pci.h"
 #include "hw/pci/pci_bus.h"
 
+#define TYPE_PCI_E1000      "e1000"
+
 PCIDevice *pci_nic_init_nofail(NICInfo *nd, PCIBus *rootbus,
                                const char *default_model,
                                const char *default_devaddr);

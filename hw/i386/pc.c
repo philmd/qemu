@@ -72,6 +72,7 @@
 #include "hw/nmi.h"
 #include "hw/i386/intel_iommu.h"
 #include "hw/net/ne2000-isa.h"
+#include "hw/net/pci.h"
 
 /* debug PC/ISA interrupts */
 //#define DEBUG_IRQ
@@ -1606,7 +1607,7 @@ void pc_nic_init(ISABus *isa_bus, PCIBus *pci_bus)
         if (!pci_bus || (nd->model && strcmp(nd->model, "ne2k_isa") == 0)) {
             pc_init_ne2k_isa(isa_bus, nd);
         } else {
-            pci_nic_init_nofail(nd, pci_bus, "e1000", NULL);
+            pci_nic_init_nofail(nd, pci_bus, TYPE_PCI_E1000, NULL);
         }
     }
     rom_reset_order_override();

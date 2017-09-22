@@ -24,6 +24,7 @@
 #include "elf.h"
 #include "exec/address-spaces.h"
 #include "hw/char/serial.h"
+#include "hw/net/pci.h"
 #include "hw/ppc/ppc.h"
 #include "ppc405.h"
 #include "sysemu/sysemu.h"
@@ -248,7 +249,7 @@ static void bamboo_init(MachineState *machine)
         for (i = 0; i < nb_nics; i++) {
             /* There are no PCI NICs on the Bamboo board, but there are
              * PCI slots, so we can pick whatever default model we want. */
-            pci_nic_init_nofail(&nd_table[i], pcibus, "e1000", NULL);
+            pci_nic_init_nofail(&nd_table[i], pcibus, TYPE_PCI_E1000, NULL);
         }
     }
 
