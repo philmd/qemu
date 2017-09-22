@@ -29,6 +29,7 @@
 
 #include "qemu/osdep.h"
 #include "hw/pci/pci.h"
+#include "hw/net/pci.h"
 #include "net/net.h"
 #include "hw/loader.h"
 #include "qemu/timer.h"
@@ -45,8 +46,6 @@
 //#define PCNET_DEBUG_RMD
 //#define PCNET_DEBUG_TMD
 //#define PCNET_DEBUG_MATCH
-
-#define TYPE_PCI_PCNET "pcnet"
 
 #define PCI_PCNET(obj) \
      OBJECT_CHECK(PCIPCNetState, (obj), TYPE_PCI_PCNET)
