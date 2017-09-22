@@ -34,6 +34,7 @@
 #include "net/net.h"
 #include "hw/isa/isa.h"
 #include "hw/pci/pci.h"
+#include "hw/net/pci.h"
 #include "hw/boards.h"
 #include "hw/nvram/fw_cfg.h"
 #include "hw/char/escc.h"
@@ -278,7 +279,7 @@ static void ppc_heathrow_init(MachineState *machine)
                              escc_mem, 0, memory_region_size(escc_mem));
 
     for(i = 0; i < nb_nics; i++)
-        pci_nic_init_nofail(&nd_table[i], pci_bus, "ne2k_pci", NULL);
+        pci_nic_init_nofail(&nd_table[i], pci_bus, TYPE_PCI_NE2000, NULL);
 
 
     ide_drive_get(hd, ARRAY_SIZE(hd));

@@ -15,6 +15,7 @@
 
 #define TYPE_PCI_E1000      "e1000"
 #define TYPE_PCI_E1000E     "e1000e"
+#define TYPE_PCI_NE2000     "ne2k_pci"
 #define TYPE_PCI_PCNET      "pcnet"
 #define TYPE_PCI_RTL8139    "rtl8139"
 
