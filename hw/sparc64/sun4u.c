@@ -32,6 +32,7 @@
 #include "hw/char/serial.h"
 #include "hw/timer/m48t59.h"
 #include "hw/input/i8042.h"
+#include "hw/net/pci.h"
 #include "hw/block/fdc.h"
 #include "net/net.h"
 #include "qemu/timer.h"
@@ -476,7 +477,7 @@ static void sun4uv_init(MemoryRegion *address_space_mem,
 
             onboard_nic_idx = i;
         } else {
-            pci_nic_init_nofail(nd, pci_bus, "ne2k_pci", NULL);
+            pci_nic_init_nofail(nd, pci_bus, TYPE_PCI_NE2000, NULL);
         }
     }
     onboard_nic_idx = MAX(onboard_nic_idx, 0);

@@ -55,6 +55,7 @@
 #include "hw/ppc/mac_dbdma.h"
 #include "hw/timer/m48t59.h"
 #include "hw/pci/pci.h"
+#include "hw/net/pci.h"
 #include "net/net.h"
 #include "sysemu/sysemu.h"
 #include "hw/boards.h"
@@ -435,7 +436,7 @@ static void ppc_core99_init(MachineState *machine)
     }
 
     for (i = 0; i < nb_nics; i++) {
-        pci_nic_init_nofail(&nd_table[i], pci_bus, "ne2k_pci", NULL);
+        pci_nic_init_nofail(&nd_table[i], pci_bus, TYPE_PCI_NE2000, NULL);
     }
 
     /* The NewWorld NVRAM is not located in the MacIO device */
