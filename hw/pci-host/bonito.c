@@ -40,8 +40,8 @@
 #include "qemu/osdep.h"
 
 #include "hw/hw.h"
+#include "hw/northbridge/bonito.h"
 #include "hw/pci/pci.h"
-#include "hw/i386/pc.h"
 #include "hw/mips/mips.h"
 #include "hw/pci/pci_host.h"
 #include "sysemu/sysemu.h"
