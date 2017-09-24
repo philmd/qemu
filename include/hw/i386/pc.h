@@ -191,19 +191,6 @@ void pc_acpi_init(const char *default_dsdt);
 
 void pc_guest_info_init(PCMachineState *pcms);
 
-#define PCI_HOST_PROP_PCI_HOLE_START   "pci-hole-start"
-#define PCI_HOST_PROP_PCI_HOLE_END     "pci-hole-end"
-#define PCI_HOST_PROP_PCI_HOLE64_START "pci-hole64-start"
-#define PCI_HOST_PROP_PCI_HOLE64_END   "pci-hole64-end"
-#define PCI_HOST_PROP_PCI_HOLE64_SIZE  "pci-hole64-size"
-#define PCI_HOST_BELOW_4G_MEM_SIZE     "below-4g-mem-size"
-#define PCI_HOST_ABOVE_4G_MEM_SIZE     "above-4g-mem-size"
-#define DEFAULT_PCI_HOLE64_SIZE (~0x0ULL)
-
-
-void pc_pci_as_mapping_init(Object *owner, MemoryRegion *system_memory,
-                            MemoryRegion *pci_address_space);
-
 void xen_load_linux(PCMachineState *pcms);
 void pc_memory_init(PCMachineState *pcms,
                     MemoryRegion *system_memory,
