@@ -27,6 +27,7 @@
 #include "hw/mips/mips.h"
 #include "hw/pci/pci.h"
 #include "hw/pci/pci_host.h"
+#include "hw/northbridge/gt641xx.h"
 #include "hw/southbridge/piix4.h"
 #include "hw/intc/i8259_pic.h"
 #include "exec/address-spaces.h"
