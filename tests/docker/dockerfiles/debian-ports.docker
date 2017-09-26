@@ -11,6 +11,8 @@ FROM debian:unstable
 
 MAINTAINER Philippe Mathieu-Daudé <f4bug@amsat.org>
 
+RUN echo 'Acquire::ForceIPv4 "true";' >> /etc/apt/apt.conf.d/99force-ipv4
+
 RUN echo "deb [arch=amd64] http://deb.debian.org/debian unstable main" > /etc/apt/sources.list
 
 # Duplicate deb line as deb-src
