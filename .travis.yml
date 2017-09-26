@@ -9,6 +9,8 @@ cache:
   timeout: 1200 # https://docs.travis-ci.com/user/caching#setting-the-timeout
   directories:
   - $HOME/qemu/.git/modules
+  - $HOME/qemu/dtc
+  - $HOME/qemu/roms
 addons:
   apt:
     packages:
@@ -81,7 +83,11 @@ before_install:
         travis_retry brew install libffi gettext glib pixman texinfo ;
         brew link texinfo --force ;
     fi
-  - travis_retry git submodule update --init --recursive
+  - if [ -d $HOME/qemu/.git/modules ]; then
+        travis_retry git submodule update --recursive ;
+    else
+        travis_retry git submodule update --init --recursive ;
+    fi
 before_script:
   - ./configure ${CONFIG} || (cat config.log; exit 1)
 script:
