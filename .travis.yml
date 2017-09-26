@@ -83,7 +83,7 @@ before_install:
         travis_retry brew install libffi gettext glib pixman texinfo ;
         brew link texinfo --force ;
     fi
-  - if [ -d $HOME/qemu/.git/modules ]; then
+  - if [ -d $HOME/qemu/.git/modules/dtc ]; then
         travis_retry git submodule update --recursive ;
     else
         travis_retry git submodule update --init --recursive ;
