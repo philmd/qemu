@@ -24,12 +24,9 @@
 #include "qemu/osdep.h"
 #include "hw/hw.h"
 #include "hw/i386/pc.h"
-#include "hw/char/serial.h"
-#include "hw/char/parallel.h"
 #include "hw/i386/apic.h"
 #include "hw/i386/topology.h"
 #include "sysemu/cpus.h"
-#include "hw/block/fdc.h"
 #include "hw/ide.h"
 #include "hw/pci/pci.h"
 #include "hw/pci/pci_bus.h"
@@ -41,6 +38,7 @@
 #include "multiboot.h"
 #include "hw/timer/mc146818rtc.h"
 #include "hw/dma/i8257.h"
+#include "hw/isa/superio.h"
 #include "hw/timer/i8254.h"
 #include "hw/input/i8042.h"
 #include "hw/audio/pcspk.h"
@@ -1523,7 +1521,6 @@ void pc_basic_device_init(ISABus *isa_bus, qemu_irq *gsi,
                           uint32_t hpet_irqs)
 {
     int i;
-    DriveInfo *fd[MAX_FD];
     DeviceState *hpet = NULL;
     int pit_isa_irq = 0;
     qemu_irq pit_alt_irq = NULL;
@@ -1586,11 +1583,9 @@ void pc_basic_device_init(ISABus *isa_bus, qemu_irq *gsi,
         pcspk_init(isa_bus, pit);
     }
 
-    serial_hds_isa_init(isa_bus, 0, MAX_SERIAL_PORTS);
-    parallel_hds_isa_init(isa_bus, MAX_PARALLEL_PORTS);
-
     a20_line = qemu_allocate_irqs(handle_a20_line_change, first_cpu, 2);
-    i8042 = isa_create_simple(isa_bus, "i8042");
+    i8042 = isa_superio_init(isa_bus, MAX_SERIAL_PORTS, 1,
+                             create_fdctrl ? MAX_FD : 0);
     i8042_setup_a20_line(i8042, a20_line[0]);
     if (!no_vmport) {
         vmport_init(isa_bus);
@@ -1608,14 +1603,6 @@ void pc_basic_device_init(ISABus *isa_bus, qemu_irq *gsi,
     g_free(a20_line);
 
     i8257_dma_init(isa_bus, 0);
-
-    for(i = 0; i < MAX_FD; i++) {
-        fd[i] = drive_get(IF_FLOPPY, 0, i);
-        create_fdctrl |= !!fd[i];
-    }
-    if (create_fdctrl) {
-        fdctrl_init_isa(isa_bus, fd);
-    }
 }
 
 void pc_nic_init(ISABus *isa_bus, PCIBus *pci_bus)
