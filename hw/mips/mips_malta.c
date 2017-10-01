@@ -27,14 +27,12 @@
 #include "cpu.h"
 #include "hw/hw.h"
 #include "hw/i386/pc.h"
+#include "hw/isa/superio.h"
 #include "hw/dma/i8257.h"
 #include "hw/char/serial.h"
-#include "hw/char/parallel.h"
-#include "hw/block/fdc.h"
 #include "net/net.h"
 #include "hw/boards.h"
 #include "hw/i2c/smbus.h"
-#include "sysemu/block-backend.h"
 #include "hw/block/flash.h"
 #include "hw/mips/mips.h"
 #include "hw/mips/cpudevs.h"
@@ -47,7 +45,6 @@
 #include "hw/loader.h"
 #include "elf.h"
 #include "hw/timer/mc146818rtc.h"
-#include "hw/input/i8042.h"
 #include "hw/timer/i8254.h"
 #include "sysemu/blockdev.h"
 #include "exec/address-spaces.h"
@@ -980,6 +977,16 @@ static void mips_create_cpu(MaltaState *s, const char *cpu_type,
     }
 }
 
+#define FDC37M81X_SERIAL_COUNT      2
+#define FDC37M81X_DRIVE_COUNT       2
+#define FDC37M81X_PARALLEL_COUNT    1
+
+static ISADevice *fdc37m81x_init(ISABus *isa_bus)
+{
+    return isa_superio_init(isa_bus, FDC37M81X_SERIAL_COUNT,
+                            FDC37M81X_PARALLEL_COUNT, FDC37M81X_DRIVE_COUNT);
+}
+
 static
 void mips_malta_init(MachineState *machine)
 {
@@ -1008,7 +1015,6 @@ void mips_malta_init(MachineState *machine)
     int i;
     DriveInfo *dinfo;
     DriveInfo *hd[MAX_IDE_BUS * MAX_IDE_DEVS];
-    DriveInfo *fd[MAX_FD];
     int fl_idx = 0;
     int fl_sectors = bios_size >> 16;
     int be;
@@ -1215,16 +1221,8 @@ void mips_malta_init(MachineState *machine)
     smbus_eeprom_init(smbus, 8, smbus_eeprom_buf, smbus_eeprom_size);
     g_free(smbus_eeprom_buf);
 
-    /* Super I/O */
-    isa_create_simple(isa_bus, TYPE_I8042);
-
-    serial_hds_isa_init(isa_bus, 0, 2);
-    parallel_hds_isa_init(isa_bus, 1);
-
-    for(i = 0; i < MAX_FD; i++) {
-        fd[i] = drive_get(IF_FLOPPY, 0, i);
-    }
-    fdctrl_init_isa(isa_bus, fd);
+    /* SuperI/O: SMS FDC37M817 */
+    fdc37m81x_init(isa_bus);
 
     /* Network card */
     network_init(pci_bus);
