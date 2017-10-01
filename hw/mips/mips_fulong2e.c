@@ -23,13 +23,10 @@
 #include "hw/hw.h"
 #include "hw/i386/pc.h"
 #include "hw/dma/i8257.h"
-#include "hw/char/serial.h"
-#include "hw/char/parallel.h"
-#include "hw/block/fdc.h"
+#include "hw/isa/superio.h"
 #include "net/net.h"
 #include "hw/boards.h"
 #include "hw/i2c/smbus.h"
-#include "sysemu/block-backend.h"
 #include "hw/block/flash.h"
 #include "hw/mips/mips.h"
 #include "hw/mips/cpudevs.h"
@@ -44,7 +41,6 @@
 #include "hw/isa/vt82c686.h"
 #include "hw/timer/mc146818rtc.h"
 #include "hw/timer/i8254.h"
-#include "hw/input/i8042.h"
 #include "sysemu/blockdev.h"
 #include "exec/address-spaces.h"
 #include "sysemu/qtest.h"
@@ -366,12 +362,9 @@ static void mips_fulong2e_init(MachineState *machine)
     i8257_dma_init(isa_bus, 0);
 
     /* Super I/O */
-    isa_create_simple(isa_bus, TYPE_I8042);
+    isa_superio_init(isa_bus, MAX_SERIAL_PORTS, 1, 0);
 
     mc146818_rtc_init(isa_bus, 2000, NULL);
-
-    serial_hds_isa_init(isa_bus, 0, MAX_SERIAL_PORTS);
-    parallel_hds_isa_init(isa_bus, 1);
 
     /* Sound card */
     audio_init(pci_bus);
