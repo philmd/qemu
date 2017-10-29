@@ -49,6 +49,7 @@ env:
     - MAKEFLAGS="-j3"
   matrix:
     - CONFIG=""
+    - CONFIG="--disable-tcg"
     - CONFIG="--enable-debug --enable-debug-tcg --enable-trace-backends=log"
     - CONFIG="--disable-linux-aio --disable-cap-ng --disable-attr --disable-brlapi --disable-uuid --disable-libusb"
     - CONFIG="--enable-modules"
