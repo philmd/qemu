@@ -1137,6 +1137,7 @@ static int virtio_pci_add_mem_cap(VirtIOPCIProxy *proxy,
                                 cap->cap_len, &error_abort);
 
     assert(cap->cap_len >= sizeof *cap);
+    assert(offset + cap->cap_len < pci_config_size(dev));
     memcpy(dev->config + offset + PCI_CAP_FLAGS, &cap->cap_len,
            cap->cap_len - PCI_CAP_FLAGS);
 
