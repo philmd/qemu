@@ -1559,6 +1559,11 @@ MachineInfoList *qmp_query_machines(Error **errp)
         info->cpu_max = !mc->max_cpus ? 1 : mc->max_cpus;
         info->hotpluggable_cpus = mc->has_hotpluggable_cpus;
 
+        if (mc->deprecation_reason) {
+            info->has_is_deprecated = true;
+            info->is_deprecated = true;
+        }
+
         entry = g_malloc0(sizeof(*entry));
         entry->value = info;
         entry->next = mach_list;
@@ -2710,7 +2715,8 @@ static gint machine_class_cmp(gconstpointer a, gconstpointer b)
             if (mc->alias) {
                 printf("%-20s %s (alias of %s)\n", mc->alias, mc->desc, mc->name);
             }
-            printf("%-20s %s%s\n", mc->name, mc->desc,
+            printf("%-20s %s%s%s\n", mc->name, mc->desc,
+                   mc->deprecation_reason ? " (deprecated)" : "",
                    mc->is_default ? " (default)" : "");
         }
     }
@@ -2816,6 +2822,10 @@ static MachineClass *select_machine(void)
         error_report("No machine specified, and there is no default");
         error_printf("Use -machine help to list supported machines\n");
         exit(1);
+    }
+    if (machine_class->deprecation_reason) {
+        warn_report("The %s machine is deprecated (%s)",
+                    machine_class->name, machine_class->deprecation_reason);
     }
 
     loc_pop(&loc);
