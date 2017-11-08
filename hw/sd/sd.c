@@ -159,6 +159,7 @@ void sd_set_voltage(SDState *sd, int v)
             sd->cmd_line = true;
             sd->dat_lines = 0xf;
         }
+        break;
     default:
         qemu_log_mask(LOG_UNIMP, "SD card voltage switch not implemented: %d\n",
                       v);
