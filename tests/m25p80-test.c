@@ -70,7 +70,7 @@ enum {
  */
 static inline uint32_t make_be32(uint32_t data)
 {
-    return bswap32(data);
+    return cpu_to_be32(data);
 }
 
 static void spi_conf(uint32_t value)
