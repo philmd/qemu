@@ -107,8 +107,8 @@ static void zynqmp_sdhci_realize(DeviceState *dev, Error **errp)
         index_offset++;
     }
 
-    qdev_prop_set_uint32(dev, "capareg",
-                         (uint32_t) SDHC_CAPAB_REG_DEFAULT | (1 << 28));
+    qdev_prop_set_uint64(dev, "capareg",
+                         SDHC_CAPAB_REG_DEFAULT | (1ull << 28));
     carddev_sd = qdev_create(qdev_get_child_bus(DEVICE(dev), "sd-bus"),
                              TYPE_SD_CARD);
     object_property_set_bool(OBJECT(carddev_sd), false, "spi", &error_fatal);
