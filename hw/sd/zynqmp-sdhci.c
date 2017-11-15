@@ -32,8 +32,6 @@
 #include "sysemu/blockdev.h"
 #include "sysemu/block-backend.h"
 
-#include "hw/fdt_generic_util.h"
-
 #include "hw/sd/sd.h"
 #include "hw/sd/sdhci.h"
 #include "qapi/error.h"
