@@ -108,7 +108,6 @@ typedef struct SDHCIState {
     };
     SDBus sdbus;
     MemoryRegion iomem;
-    BlockBackend *blk;
     MemoryRegion *dma_mr;
     AddressSpace *dma_as;
 
