@@ -980,16 +980,12 @@ static ssize_t rtl8139_do_receive(NetClientState *nc, const uint8_t *buf, size_t
             "%08x %08x = "DMA_ADDR_FMT"\n", descriptor, s->RxRingAddrHI,
             s->RxRingAddrLO, cplus_rx_ring_desc);
 
-        uint32_t val, rxdw0,rxdw1,rxbufLO,rxbufHI;
+        uint32_t rxdw0, rxdw1, rxbufLO, rxbufHI;
 
-        pci_dma_read(d, cplus_rx_ring_desc, &val, 4);
-        rxdw0 = le32_to_cpu(val);
-        pci_dma_read(d, cplus_rx_ring_desc+4, &val, 4);
-        rxdw1 = le32_to_cpu(val);
-        pci_dma_read(d, cplus_rx_ring_desc+8, &val, 4);
-        rxbufLO = le32_to_cpu(val);
-        pci_dma_read(d, cplus_rx_ring_desc+12, &val, 4);
-        rxbufHI = le32_to_cpu(val);
+        rxdw0 =   ldl_le_pci_dma(d, cplus_rx_ring_desc);
+        rxdw1 =   ldl_le_pci_dma(d, cplus_rx_ring_desc + 4);
+        rxbufLO = ldl_le_pci_dma(d, cplus_rx_ring_desc + 8);
+        rxbufHI = ldl_le_pci_dma(d, cplus_rx_ring_desc + 12);
 
         DPRINTF("+++ C+ mode RX descriptor %d %08x %08x %08x %08x\n",
             descriptor, rxdw0, rxdw1, rxbufLO, rxbufHI);
@@ -1069,8 +1065,7 @@ static ssize_t rtl8139_do_receive(NetClientState *nc, const uint8_t *buf, size_t
         }
 
         /* write checksum */
-        val = cpu_to_le32(crc32(0, buf, size_));
-        pci_dma_write(d, rx_addr+size, (uint8_t *)&val, 4);
+        stl_le_pci_dma(d, rx_addr + size, crc32(0, buf, size_));
 
 /* first segment of received packet flag */
 #define CP_RX_STATUS_FS (1<<29)
@@ -1115,10 +1110,8 @@ static ssize_t rtl8139_do_receive(NetClientState *nc, const uint8_t *buf, size_t
         rxdw0 |= (size+4);
 
         /* update ring data */
-        val = cpu_to_le32(rxdw0);
-        pci_dma_write(d, cplus_rx_ring_desc, (uint8_t *)&val, 4);
-        val = cpu_to_le32(rxdw1);
-        pci_dma_write(d, cplus_rx_ring_desc+4, (uint8_t *)&val, 4);
+        stl_le_pci_dma(d, cplus_rx_ring_desc, rxdw0);
+        stl_le_pci_dma(d, cplus_rx_ring_desc + 4, rxdw1);
 
         /* update tally counter */
         ++s->tally_counters.RxOk;
@@ -1310,48 +1303,20 @@ static void RTL8139TallyCounters_dma_write(RTL8139State *s, dma_addr_t tc_addr)
 {
     PCIDevice *d = PCI_DEVICE(s);
     RTL8139TallyCounters *tally_counters = &s->tally_counters;
-    uint16_t val16;
-    uint32_t val32;
-    uint64_t val64;
 
-    val64 = cpu_to_le64(tally_counters->TxOk);
-    pci_dma_write(d, tc_addr + 0,     (uint8_t *)&val64, 8);
-
-    val64 = cpu_to_le64(tally_counters->RxOk);
-    pci_dma_write(d, tc_addr + 8,     (uint8_t *)&val64, 8);
-
-    val64 = cpu_to_le64(tally_counters->TxERR);
-    pci_dma_write(d, tc_addr + 16,    (uint8_t *)&val64, 8);
-
-    val32 = cpu_to_le32(tally_counters->RxERR);
-    pci_dma_write(d, tc_addr + 24,    (uint8_t *)&val32, 4);
-
-    val16 = cpu_to_le16(tally_counters->MissPkt);
-    pci_dma_write(d, tc_addr + 28,    (uint8_t *)&val16, 2);
-
-    val16 = cpu_to_le16(tally_counters->FAE);
-    pci_dma_write(d, tc_addr + 30,    (uint8_t *)&val16, 2);
-
-    val32 = cpu_to_le32(tally_counters->Tx1Col);
-    pci_dma_write(d, tc_addr + 32,    (uint8_t *)&val32, 4);
-
-    val32 = cpu_to_le32(tally_counters->TxMCol);
-    pci_dma_write(d, tc_addr + 36,    (uint8_t *)&val32, 4);
-
-    val64 = cpu_to_le64(tally_counters->RxOkPhy);
-    pci_dma_write(d, tc_addr + 40,    (uint8_t *)&val64, 8);
-
-    val64 = cpu_to_le64(tally_counters->RxOkBrd);
-    pci_dma_write(d, tc_addr + 48,    (uint8_t *)&val64, 8);
-
-    val32 = cpu_to_le32(tally_counters->RxOkMul);
-    pci_dma_write(d, tc_addr + 56,    (uint8_t *)&val32, 4);
-
-    val16 = cpu_to_le16(tally_counters->TxAbt);
-    pci_dma_write(d, tc_addr + 60,    (uint8_t *)&val16, 2);
-
-    val16 = cpu_to_le16(tally_counters->TxUndrn);
-    pci_dma_write(d, tc_addr + 62,    (uint8_t *)&val16, 2);
+    stq_le_pci_dma(d, tc_addr +  0, tally_counters->TxOk);
+    stq_le_pci_dma(d, tc_addr +  8, tally_counters->RxOk);
+    stq_le_pci_dma(d, tc_addr + 16, tally_counters->TxERR);
+    stl_le_pci_dma(d, tc_addr + 24, tally_counters->RxERR);
+    stw_le_pci_dma(d, tc_addr + 28, tally_counters->MissPkt);
+    stw_le_pci_dma(d, tc_addr + 30, tally_counters->FAE);
+    stl_le_pci_dma(d, tc_addr + 32, tally_counters->Tx1Col);
+    stl_le_pci_dma(d, tc_addr + 36, tally_counters->TxMCol);
+    stq_le_pci_dma(d, tc_addr + 40, tally_counters->RxOkPhy);
+    stq_le_pci_dma(d, tc_addr + 48, tally_counters->RxOkBrd);
+    stl_le_pci_dma(d, tc_addr + 56, tally_counters->RxOkMul);
+    stw_le_pci_dma(d, tc_addr + 60, tally_counters->TxAbt);
+    stw_le_pci_dma(d, tc_addr + 62, tally_counters->TxUndrn);
 }
 
 static void rtl8139_ChipCmd_write(RTL8139State *s, uint32_t val)
@@ -1907,16 +1872,12 @@ static int rtl8139_cplus_transmit_one(RTL8139State *s)
         "%08x %08x = 0x"DMA_ADDR_FMT"\n", descriptor, s->TxAddr[1],
         s->TxAddr[0], cplus_tx_ring_desc);
 
-    uint32_t val, txdw0,txdw1,txbufLO,txbufHI;
+    uint32_t txdw0, txdw1, txbufLO, txbufHI;
 
-    pci_dma_read(d, cplus_tx_ring_desc,    (uint8_t *)&val, 4);
-    txdw0 = le32_to_cpu(val);
-    pci_dma_read(d, cplus_tx_ring_desc+4,  (uint8_t *)&val, 4);
-    txdw1 = le32_to_cpu(val);
-    pci_dma_read(d, cplus_tx_ring_desc+8,  (uint8_t *)&val, 4);
-    txbufLO = le32_to_cpu(val);
-    pci_dma_read(d, cplus_tx_ring_desc+12, (uint8_t *)&val, 4);
-    txbufHI = le32_to_cpu(val);
+    txdw0   = ldl_le_pci_dma(d, cplus_tx_ring_desc);
+    txdw1   = ldl_le_pci_dma(d, cplus_tx_ring_desc + 4);
+    txbufLO = ldl_le_pci_dma(d, cplus_tx_ring_desc + 8);
+    txbufHI = ldl_le_pci_dma(d, cplus_tx_ring_desc + 12);
 
     DPRINTF("+++ C+ mode TX descriptor %d %08x %08x %08x %08x\n", descriptor,
         txdw0, txdw1, txbufLO, txbufHI);
@@ -2035,8 +1996,7 @@ static int rtl8139_cplus_transmit_one(RTL8139State *s)
     txdw0 &= ~CP_TX_STATUS_EXC;
 
     /* update ring data */
-    val = cpu_to_le32(txdw0);
-    pci_dma_write(d, cplus_tx_ring_desc, (uint8_t *)&val, 4);
+    stl_le_pci_dma(d, cplus_tx_ring_desc, txdw0);
 
     /* Now decide if descriptor being processed is holding the last segment of packet */
     if (txdw0 & CP_TX_LS)

@@ -58,7 +58,7 @@ vmw_shmem_set(PCIDevice *d, hwaddr addr, uint8_t val, int len)
     VMW_SHPRN("SHMEM set: %" PRIx64 ", len: %d (value 0x%X)", addr, len, val);
 
     for (i = 0; i < len; i++) {
-        pci_dma_write(d, addr + i, &val, 1);
+        stb_pci_dma(d, addr + i, val);
     }
 }
 
@@ -66,7 +66,7 @@ static inline uint32_t
 vmw_shmem_ld8(PCIDevice *d, hwaddr addr)
 {
     uint8_t res;
-    pci_dma_read(d, addr, &res, 1);
+    res = ldub_pci_dma(d, addr);
     VMW_SHPRN("SHMEM load8: %" PRIx64 " (value 0x%X)", addr, res);
     return res;
 }
@@ -75,7 +75,7 @@ static inline void
 vmw_shmem_st8(PCIDevice *d, hwaddr addr, uint8_t value)
 {
     VMW_SHPRN("SHMEM store8: %" PRIx64 " (value 0x%X)", addr, value);
-    pci_dma_write(d, addr, &value, 1);
+    stb_pci_dma(d, addr, value);
 }
 
 static inline uint32_t

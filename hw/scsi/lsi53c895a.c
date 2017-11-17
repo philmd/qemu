@@ -430,14 +430,6 @@ static inline void lsi_mem_write(LSIState *s, dma_addr_t addr,
     }
 }
 
-static inline uint32_t read_dword(LSIState *s, uint32_t addr)
-{
-    uint32_t buf;
-
-    pci_dma_read(PCI_DEVICE(s), addr, &buf, 4);
-    return cpu_to_le32(buf);
-}
-
 static void lsi_stop_script(LSIState *s)
 {
     s->istat1 &= ~LSI_ISTAT1_SRUN;
@@ -857,7 +849,7 @@ static void lsi_do_status(LSIState *s)
     s->dbc = 1;
     status = s->status;
     s->sfbr = status;
-    pci_dma_write(PCI_DEVICE(s), s->dnad, &status, 1);
+    stb_pci_dma(PCI_DEVICE(s), s->dnad, status);
     lsi_set_phase(s, PHASE_MI);
     s->msg_action = 1;
     lsi_add_msg_byte(s, 0); /* COMMAND COMPLETE */
@@ -903,7 +895,7 @@ static void lsi_do_msgin(LSIState *s)
 static uint8_t lsi_get_msgbyte(LSIState *s)
 {
     uint8_t data;
-    pci_dma_read(PCI_DEVICE(s), s->dnad, &data, 1);
+    data = ldub_pci_dma(PCI_DEVICE(s), s->dnad);
     s->dnad++;
     s->dbc--;
     return data;
@@ -1085,14 +1077,14 @@ static void lsi_execute_script(LSIState *s)
     s->istat1 |= LSI_ISTAT1_SRUN;
 again:
     insn_processed++;
-    insn = read_dword(s, s->dsp);
+    insn = ldl_le_pci_dma(pci_dev, s->dsp);
     if (!insn) {
         /* If we receive an empty opcode increment the DSP by 4 bytes
            instead of 8 and execute the next opcode at that location */
         s->dsp += 4;
         goto again;
     }
-    addr = read_dword(s, s->dsp + 4);
+    addr = ldl_le_pci_dma(pci_dev, s->dsp + 4);
     addr_high = 0;
     DPRINTF("SCRIPTS dsp=%08x opcode %08x arg %08x\n", s->dsp, insn, addr);
     s->dsps = addr;
@@ -1111,7 +1103,7 @@ again:
         s->ia = s->dsp - 8;
         if (insn & (1 << 29)) {
             /* Indirect addressing.  */
-            addr = read_dword(s, addr);
+            addr = ldl_le_pci_dma(pci_dev, addr);
         } else if (insn & (1 << 28)) {
             uint32_t buf[2];
             int32_t offset;
@@ -1164,7 +1156,7 @@ again:
         } else if (lsi_dma_64bit(s)) {
             /* fetch a 3rd dword if 64-bit direct move is enabled and
                only if we're not doing table indirect or indirect addressing */
-            s->dbms = read_dword(s, s->dsp);
+            s->dbms = ldl_le_pci_dma(pci_dev, s->dsp);
             s->dsp += 4;
             s->ia = s->dsp - 12;
         }
@@ -1218,7 +1210,7 @@ again:
             uint32_t id;
 
             if (insn & (1 << 25)) {
-                id = read_dword(s, s->dsa + sextract32(insn, 0, 24));
+                id = ldl_le_pci_dma(pci_dev, s->dsa + sextract32(insn, 0, 24));
             } else {
                 id = insn;
             }
@@ -1464,7 +1456,7 @@ again:
             /* ??? The docs imply the destination address is loaded into
                the TEMP register.  However the Linux drivers rely on
                the value being presrved.  */
-            dest = read_dword(s, s->dsp);
+            dest = ldl_le_pci_dma(pci_dev, s->dsp);
             s->dsp += 4;
             lsi_memcpy(s, dest, addr, insn & 0xffffff);
         } else {

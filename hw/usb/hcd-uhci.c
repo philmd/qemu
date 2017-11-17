@@ -999,7 +999,7 @@ static void uhci_queue_fill(UHCIQueue *q, UHCI_TD *td)
 
 static void uhci_process_frame(UHCIState *s)
 {
-    uint32_t frame_addr, link, old_td_ctrl, val, int_mask;
+    uint32_t frame_addr, link, old_td_ctrl, int_mask;
     uint32_t curr_qh, td_count = 0;
     int cnt, ret;
     UHCI_TD td;
@@ -1007,9 +1007,7 @@ static void uhci_process_frame(UHCIState *s)
     QhDb qhdb;
 
     frame_addr = s->fl_base_addr + ((s->frnum & 0x3ff) << 2);
-
-    pci_dma_read(&s->dev, frame_addr, &link, 4);
-    le32_to_cpus(&link);
+    link = ldl_le_pci_dma(&s->dev, frame_addr);
 
     int_mask = 0;
     curr_qh  = 0;
@@ -1070,8 +1068,7 @@ static void uhci_process_frame(UHCIState *s)
         ret = uhci_handle_td(s, NULL, curr_qh, &td, link, &int_mask);
         if (old_td_ctrl != td.ctrl) {
             /* update the status bits of the TD */
-            val = cpu_to_le32(td.ctrl);
-            pci_dma_write(&s->dev, (link & ~0xf) + 4, &val, sizeof(val));
+            stl_le_pci_dma(&s->dev, (link & ~0xf) + 4, td.ctrl);
         }
 
         switch (ret) {
@@ -1098,8 +1095,7 @@ static void uhci_process_frame(UHCIState *s)
             if (curr_qh) {
                 /* update QH element link */
                 qh.el_link = link;
-                val = cpu_to_le32(qh.el_link);
-                pci_dma_write(&s->dev, (curr_qh & ~0xf) + 4, &val, sizeof(val));
+                stl_le_pci_dma(&s->dev, (curr_qh & ~0xf) + 4, qh.el_link);
 
                 if (!depth_first(link)) {
                     /* done with this QH */
