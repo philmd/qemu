@@ -128,7 +128,7 @@ struct SDState {
     bool enable;
 };
 
-static void sd_set_mode(SDState *sd)
+static void sd_update_mode(SDState *sd)
 {
     switch (sd->state) {
     case sd_inactive_state:
@@ -1470,7 +1470,7 @@ int sd_do_command(SDState *sd, SDRequest *req, uint8_t *response)
     }
 
     last_state = sd->state;
-    sd_set_mode(sd);
+    sd_update_mode(sd);
 
     if (sd->expecting_acmd) {
         sd->expecting_acmd = false;
