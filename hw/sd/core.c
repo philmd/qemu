@@ -187,6 +187,20 @@ static void sd_bus_register_types(void)
 
 type_init(sd_bus_register_types)
 
+DeviceState *sdbus_create_slave_no_init(SDBus *bus, const char *name)
+{
+    assert(bus);
+    return qdev_create(BUS(bus), name);
+}
+
+DeviceState *sdbus_create_slave(SDBus *bus, const char *name)
+{
+    DeviceState *dev = sdbus_create_slave_no_init(bus, name);
+
+    qdev_init_nofail(dev);
+    return dev;
+}
+
 SDBus *sdbus_create_bus(DeviceState *parent, const char *name)
 {
     return SD_BUS(qbus_create(TYPE_SD_BUS, parent, name));
