@@ -15,6 +15,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu-common.h"
+#include "qemu/cutils.h"
 
 void qemu_hexdump(const char *buf, FILE *fp, const char *prefix, size_t size)
 {
@@ -46,4 +47,22 @@ void qemu_hexdump(const char *buf, FILE *fp, const char *prefix, size_t size)
         }
         fprintf(fp, "\n");
     }
+}
+
+char *qemu_hexbuf_strdup(const void *buf, size_t size,
+                         const char *str_hdr, const char *desc_if_empty)
+{
+    const uint8_t *u8 = (uint8_t *)buf;
+    GString *s;
+    int i;
+
+    if (!size) {
+        return g_strdup(desc_if_empty ? desc_if_empty : "");
+    }
+    s = g_string_new(str_hdr ? : "");
+    for (i = 0; i < size; i++) {
+        g_string_append_printf(s, "%02x ", u8[i]);
+    }
+
+    return g_string_free(s, FALSE);
 }

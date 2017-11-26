@@ -164,4 +164,7 @@ bool test_buffer_is_zero_next_accel(void);
 int uleb128_encode_small(uint8_t *out, uint32_t n);
 int uleb128_decode_small(const uint8_t *in, uint32_t *n);
 
+char *qemu_hexbuf_strdup(const void *buf, size_t size,
+                         const char *str_hdr, const char *desc_if_empty);
+
 #endif
