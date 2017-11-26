@@ -26,6 +26,7 @@ sdcard_set_mode(const char *current_mode, const char *new_mode, const char *stat
 sdcard_set_state(const char *current_state, const char *new_state, const char *mode) "%s -> %s (mode: %s)"
 sdcard_normal_command(uint8_t cmd, uint32_t arg, const char *state) "CMD%d arg 0x%08x (state %s)"
 sdcard_app_command(uint8_t acmd, uint32_t arg) "ACMD%d arg 0x%08x"
+sdcard_command_response(const char *hexdump, const char *state) "%s (state %s)"
 sdcard_reset(void) ""
 sdcard_inserted(bool readonly) "read_only: %d"
 sdcard_ejected(void) ""

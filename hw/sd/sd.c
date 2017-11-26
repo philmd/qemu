@@ -35,21 +35,13 @@
 #include "hw/sd/sd.h"
 #include "qapi/error.h"
 #include "qemu/bitmap.h"
+#include "qemu/cutils.h"
 #include "hw/qdev-properties.h"
 #include "qemu/error-report.h"
 #include "qemu/timer.h"
 #include "qemu/log.h"
 #include "sd-internal.h"
 #include "trace.h"
-
-//#define DEBUG_SD 1
-
-#ifdef DEBUG_SD
-#define DPRINTF(fmt, ...) \
-do { fprintf(stderr, "SD: " fmt , ## __VA_ARGS__); } while (0)
-#else
-#define DPRINTF(fmt, ...) do {} while(0)
-#endif
 
 #define ACMD41_ENQUIRY_MASK     0x00ffffff
 #define OCR_POWER_UP            0x80000000
@@ -1595,17 +1587,13 @@ send_response:
         sd->card_status &= ~CARD_STATUS_B;
     }
 
-#ifdef DEBUG_SD
-    if (rsplen) {
-        int i;
-        DPRINTF("Response:");
-        for (i = 0; i < rsplen; i++)
-            fprintf(stderr, " %02x", response[i]);
-        fprintf(stderr, " state %d\n", sd->state);
-    } else {
-        DPRINTF("No response %d\n", sd->state);
+    if (trace_event_get_state_backends(TRACE_SDCARD_COMMAND_RESPONSE)) {
+        char *hexbuf;
+
+        hexbuf = qemu_hexbuf_strdup(response, rsplen, NULL, "(no response)");
+        trace_sdcard_command_response(hexbuf, sd_state_name(sd->state));
+        g_free(hexbuf);
     }
-#endif
 
     return rsplen;
 }
