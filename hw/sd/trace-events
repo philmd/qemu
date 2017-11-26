@@ -22,8 +22,8 @@ sdhci_write_dataport(uint16_t data_count) "write buffer filled with %u bytes of 
 sdhci_led(bool state) "LED: %u"
 
 # hw/sd/sd.c
-sdcard_set_mode(const char *current_mode, const char *new_mode) "%s -> %s"
-sdcard_set_state(const char *current_state, const char *new_state) "%s -> %s"
+sdcard_set_mode(const char *current_mode, const char *new_mode, const char *state) "%s -> %s (state: %s)"
+sdcard_set_state(const char *current_state, const char *new_state, const char *mode) "%s -> %s (mode: %s)"
 
 # hw/sd/milkymist-memcard.c
 milkymist_memcard_memory_read(uint32_t addr, uint32_t value) "addr 0x%08x value 0x%08x"

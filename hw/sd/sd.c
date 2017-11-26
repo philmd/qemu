@@ -161,7 +161,8 @@ static const char *sd_state_name(enum SDCardStates state)
 static void sd_set_mode(SDState *sd, enum SDCardModes mode)
 {
     if (sd->mode != mode) {
-        trace_sdcard_set_mode(sd_mode_name(sd->mode), sd_mode_name(mode));
+        trace_sdcard_set_mode(sd_mode_name(sd->mode), sd_mode_name(mode),
+                              sd_state_name(sd->state));
         sd->mode = mode;
     }
 }
@@ -193,7 +194,8 @@ static void sd_update_mode(SDState *sd)
 static void sd_set_state(SDState *sd, enum SDCardStates state)
 {
     if (sd->state != state) {
-        trace_sdcard_set_state(sd_state_name(sd->state), sd_state_name(state));
+        trace_sdcard_set_state(sd_state_name(sd->state), sd_state_name(state),
+                               sd_mode_name(sd->mode));
         sd->state = state;
     }
 }
