@@ -40,6 +40,7 @@
 #include "qemu/timer.h"
 #include "qemu/log.h"
 #include "sd-internal.h"
+#include "trace.h"
 
 //#define DEBUG_SD 1
 
@@ -128,9 +129,22 @@ struct SDState {
     bool enable;
 };
 
+static const char *sd_mode_name(enum SDCardModes mode)
+{
+    static const char *mode_name[] = {
+        [sd_inactive]                   = "inactive",
+        [sd_card_identification_mode]   = "card_identification",
+        [sd_data_transfer_mode]         = "data_transfer",
+    };
+    return mode_name[mode];
+}
+
 static void sd_set_mode(SDState *sd, enum SDCardModes mode)
 {
-    sd->mode = mode;
+    if (sd->mode != mode) {
+        trace_sdcard_set_mode(sd_mode_name(sd->mode), sd_mode_name(mode));
+        sd->mode = mode;
+    }
 }
 
 static void sd_update_mode(SDState *sd)
