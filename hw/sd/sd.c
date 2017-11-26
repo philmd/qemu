@@ -139,6 +139,25 @@ static const char *sd_mode_name(enum SDCardModes mode)
     return mode_name[mode];
 }
 
+static const char *sd_state_name(enum SDCardStates state)
+{
+    static const char *state_name[] = {
+        [sd_idle_state]             = "idle",
+        [sd_ready_state]            = "ready",
+        [sd_identification_state]   = "identification",
+        [sd_standby_state]          = "standby",
+        [sd_transfer_state]         = "transfer",
+        [sd_sendingdata_state]      = "sendingdata",
+        [sd_receivingdata_state]    = "receivingdata",
+        [sd_programming_state]      = "programming",
+        [sd_disconnect_state]       = "disconnect",
+    };
+    if (state == sd_inactive_state) {
+        return "inactive";
+    }
+    return state_name[state];
+}
+
 static void sd_set_mode(SDState *sd, enum SDCardModes mode)
 {
     if (sd->mode != mode) {
@@ -173,7 +192,10 @@ static void sd_update_mode(SDState *sd)
 
 static void sd_set_state(SDState *sd, enum SDCardStates state)
 {
-    sd->state = state;
+    if (sd->state != state) {
+        trace_sdcard_set_state(sd_state_name(sd->state), sd_state_name(state));
+        sd->state = state;
+    }
 }
 
 static const sd_cmd_type_t sd_cmd_type[64] = {

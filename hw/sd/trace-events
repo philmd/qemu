@@ -23,6 +23,7 @@ sdhci_led(bool state) "LED: %u"
 
 # hw/sd/sd.c
 sdcard_set_mode(const char *current_mode, const char *new_mode) "%s -> %s"
+sdcard_set_state(const char *current_state, const char *new_state) "%s -> %s"
 
 # hw/sd/milkymist-memcard.c
 milkymist_memcard_memory_read(uint32_t addr, uint32_t value) "addr 0x%08x value 0x%08x"
