@@ -22,6 +22,7 @@
 #include "qemu/osdep.h"
 #include "hw/sd/sd.h"
 #include "qemu/cutils.h"
+#include "qmp-commands.h"
 #include "sd-internal.h"
 #include "trace.h"
 
@@ -219,4 +220,46 @@ DeviceState *sdbus_create_slave(SDBus *bus, const char *name)
 SDBus *sdbus_create_bus(DeviceState *parent, const char *name)
 {
     return SD_BUS(qbus_create(TYPE_SD_BUS, parent, name));
+}
+
+SDBusCommandResponse *qmp_sdbus_command(const char *qom_path,
+                                        uint8_t command,
+                                        bool has_arg, uint64_t arg,
+                                        bool has_crc, uint16_t crc,
+                                        Error **errp)
+{
+    uint8_t response[16 + 1];
+    SDBusCommandResponse *res;
+    bool ambiguous = false;
+    Object *obj;
+    SDBus *sdbus;
+    int sz;
+
+    obj = object_resolve_path(qom_path, &ambiguous);
+    if (obj == NULL) {
+        if (ambiguous) {
+            error_setg(errp, "Path '%s' is ambiguous", qom_path);
+        } else {
+            error_set(errp, ERROR_CLASS_DEVICE_NOT_FOUND,
+                      "Device '%s' not found", qom_path);
+        }
+        return NULL;
+    }
+    sdbus = (SDBus *)object_dynamic_cast(obj, TYPE_SD_BUS);
+    if (sdbus == NULL) {
+        error_set(errp, ERROR_CLASS_GENERIC_ERROR,
+                  "Device '%s' not a sd-bus", qom_path);
+        return NULL;
+    }
+
+    res = g_new0(SDBusCommandResponse, 1);
+    sz = sdbus_do_command(sdbus,
+                          &(SDRequest){ command, arg, has_crc ? crc : -1 },
+                          response);
+    if (sz > 0) {
+        res->has_base64 = true;
+        res->base64 = g_base64_encode(response, sz);
+    }
+
+    return res;
 }
