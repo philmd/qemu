@@ -52,6 +52,8 @@ struct SDBus {
 
 /* Functions to be used by qdevified callers */
 SDBus *sdbus_create_bus(DeviceState *parent, const char *name);
+DeviceState *sdbus_create_slave(SDBus *bus, const char *name);
+DeviceState *sdbus_create_slave_no_init(SDBus *bus, const char *name);
 int sdbus_do_command(SDBus *sd, SDRequest *req, uint8_t *response);
 void sdbus_write_data(SDBus *sd, uint8_t value);
 uint8_t sdbus_read_data(SDBus *sd);
