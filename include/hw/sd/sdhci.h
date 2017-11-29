@@ -48,6 +48,8 @@ typedef struct SDHCIState {
     qemu_irq eject_cb;
     qemu_irq ro_cb;
     qemu_irq irq;
+    qemu_irq access_led;
+    int access_led_level;
 
     /* Registers cleared on reset */
     /* 0x00 */
