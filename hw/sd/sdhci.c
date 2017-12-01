@@ -1064,7 +1064,11 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
             sdhci_write_dataport(s, value >> shift, size);
         }
         break;
-    case SDHC_HOSTCTL:
+    case SDHC_HOSTCTL: {
+        uint32_t bus_voltage_bits;
+        bool voltage_supported;
+        int bus_voltage;
+
         if (!(mask & 0xFF0000)) {
             sdhci_blkgap_write(s, value >> 16);
         }
@@ -1074,9 +1078,40 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
         if (!(s->prnsts & SDHC_CARD_PRESENT) || ((s->pwrcon >> 1) & 0x7) < 5 ||
                 !(s->capareg & (1 << (31 - ((s->pwrcon >> 1) & 0x7))))) {
             s->pwrcon &= ~SDHC_POWER_ON;
+        } // XXX
+        bus_voltage_bits = (s->pwrcon >> 1) & 0x7;
+        switch (bus_voltage_bits) {
+        case 0b111:
+            voltage_supported = FIELD_EX64(s->capareg, SDHC_CAPAB, V33);
+            bus_voltage = SD_VOLTAGE_3_3V;
+            break;
+        case 0b110:
+            voltage_supported = FIELD_EX64(s->capareg, SDHC_CAPAB, V30);
+            bus_voltage = SD_VOLTAGE_3_0V;
+            break;
+        case 0b101:
+            voltage_supported = FIELD_EX64(s->capareg, SDHC_CAPAB, V18);
+            bus_voltage = SD_VOLTAGE_1_8V;
+            break;
+        default:
+            /* unsupported */
+            qemu_log_mask(LOG_GUEST_ERROR, "SDHC wr_%ub @0x%02" HWADDR_PRIx
+                      " invalid voltage %u\n", size, offset, bus_voltage_bits);
+            bus_voltage = 0;
+        }
+        if (!voltage_supported) {
+            qemu_log_mask(LOG_GUEST_ERROR, "SDHC wr_%ub @0x%02" HWADDR_PRIx
+                      " voltage %.3f not supported\n", size, offset,
+                      bus_voltage / 1000.f);
+            s->pwrcon &= ~SDHC_POWER_ON;
+        } else if (!bus_voltage || !(s->prnsts & SDHC_CARD_PRESENT)) {
+            s->pwrcon &= ~SDHC_POWER_ON;
+        } else {
+            sdbus_set_voltage(s->sdbus, bus_voltage);
         }
         qemu_set_irq(s->access_led, s->hostctl1 & 1);
         break;
+    }
     case SDHC_CLKCON:
         if (!(mask & 0xFF000000)) {
             sdhci_reset_write(s, value >> 24);
