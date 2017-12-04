@@ -47,6 +47,8 @@
 #define OCR_POWER_UP            0x80000000
 #define OCR_POWER_DELAY_NS      500000 /* 0.5ms */
 
+#define PW_LEN 16
+
 typedef enum {
     sd_r0 = 0,    /* no response */
     sd_r1,        /* normal response command */
@@ -100,7 +102,7 @@ struct SDState {
     uint32_t multi_blk_cnt;
     uint32_t erase_start;
     uint32_t erase_end;
-    uint8_t pwd[16];
+    uint8_t pwd[PW_LEN];
     uint32_t pwd_len;
     uint8_t function_group[6];
 
@@ -571,7 +573,7 @@ static const VMStateDescription sd_vmstate = {
         VMSTATE_UINT32(multi_blk_cnt, SDState),
         VMSTATE_UINT32(erase_start, SDState),
         VMSTATE_UINT32(erase_end, SDState),
-        VMSTATE_UINT8_ARRAY(pwd, SDState, 16),
+        VMSTATE_UINT8_ARRAY(pwd, SDState, PW_LEN),
         VMSTATE_UINT32(pwd_len, SDState),
         VMSTATE_UINT8_ARRAY(function_group, SDState, 6),
         VMSTATE_UINT8(current_cmd, SDState),
@@ -733,7 +735,7 @@ static void sd_lock_command(SDState *sd)
 
     if (sd->blk_len < 2 + pwd_len ||
                     pwd_len <= sd->pwd_len ||
-                    pwd_len > sd->pwd_len + 16) {
+                    pwd_len > sd->pwd_len + sizeof(sd->pwd)) {
         sd->card_status |= LOCK_UNLOCK_FAILED;
         return;
     }
