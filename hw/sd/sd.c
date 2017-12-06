@@ -826,8 +826,10 @@ static sd_rsp_type_t sd_normal_command(SDState *sd,
     uint32_t rca = 0x0000;
     uint64_t addr = (sd->ocr & (1 << 30)) ? (uint64_t) req.arg << 9 : req.arg;
 
-    trace_sdcard_normal_command(req.cmd, req.arg, sd_state_name(sd->state),
-                                sd_cmd_abbreviation(req.cmd));
+    if (req.cmd != 55 || sd->expecting_acmd) {
+        trace_sdcard_normal_command(sd_cmd_abbreviation(req.cmd), req.cmd,
+                                    req.arg, sd_state_name(sd->state));
+    }
 
     /* Not interpreting this as an app command */
     sd->card_status &= ~APP_CMD;
