@@ -85,14 +85,17 @@ struct SDState {
 
     uint32_t mode;    /* current card mode, one of SDCardModes */
     int32_t state;    /* current card state, one of SDCardStates */
-    uint32_t ocr;
     QEMUTimer *ocr_power_timer;
-    uint8_t scr[8];
-    uint8_t cid[16];
-    uint8_t csd[16];
-    uint16_t rca;
-    uint32_t card_status;
-    uint8_t sd_status[64];
+
+    /* SD Memory Card Registers */
+    uint8_t cid[128 / BITS_PER_BYTE];       /* Card Identification Number */
+    uint16_t rca;                           /* Relative Card Address */
+    uint8_t csd[128 / BITS_PER_BYTE];       /* Card Specific Data */
+    uint8_t scr[64  / BITS_PER_BYTE];       /* SD Configuration */
+    uint32_t ocr;                           /* Operation Conditions */
+    uint8_t sd_status[512 / BITS_PER_BYTE]; /* SD Status */
+    uint32_t card_status;                   /* Card Status */
+
     uint32_t vhs;
     bool wp_switch;
     unsigned long *wp_groups;
