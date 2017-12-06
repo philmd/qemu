@@ -31,43 +31,13 @@
 #define HW_SD_H
 
 #include "hw/qdev.h"
-
-#define OUT_OF_RANGE		(1 << 31)
-#define ADDRESS_ERROR		(1 << 30)
-#define BLOCK_LEN_ERROR		(1 << 29)
-#define ERASE_SEQ_ERROR		(1 << 28)
-#define ERASE_PARAM		(1 << 27)
-#define WP_VIOLATION		(1 << 26)
-#define CARD_IS_LOCKED		(1 << 25)
-#define LOCK_UNLOCK_FAILED	(1 << 24)
-#define COM_CRC_ERROR		(1 << 23)
-#define ILLEGAL_COMMAND		(1 << 22)
-#define CARD_ECC_FAILED		(1 << 21)
-#define CC_ERROR		(1 << 20)
-#define SD_ERROR		(1 << 19)
-#define CID_CSD_OVERWRITE	(1 << 16)
-#define WP_ERASE_SKIP		(1 << 15)
-#define CARD_ECC_DISABLED	(1 << 14)
-#define ERASE_RESET		(1 << 13)
-#define CURRENT_STATE		(7 << 9)
-#define READY_FOR_DATA		(1 << 8)
-#define APP_CMD			(1 << 5)
-#define AKE_SEQ_ERROR		(1 << 3)
-#define OCR_CCS_BITN        30
-
-typedef enum {
-    sd_none = -1,
-    sd_bc = 0,	/* broadcast -- no response */
-    sd_bcr,	/* broadcast with response */
-    sd_ac,	/* addressed -- no data transfer */
-    sd_adtc,	/* addressed with data transfer */
-} sd_cmd_type_t;
+#include "sysemu/block-backend.h"
 
 typedef struct {
-    uint8_t cmd;
-    uint32_t arg;
-    uint8_t crc;
-} SDRequest;
+    uint8_t cmd;        /*  6 bits */
+    uint32_t arg;       /* 32 bits */
+    uint8_t crc;        /*  7 bits */
+} SDRequest;     /* total: 48 bits shifted */
 
 typedef struct SDState SDState;
 typedef struct SDBus SDBus;
@@ -154,6 +124,6 @@ void sdbus_reparent_card(SDBus *from, SDBus *to);
 
 /* Functions to be used by SD devices to report back to qdevified controllers */
 void sdbus_set_inserted(SDBus *sd, bool inserted);
-void sdbus_set_readonly(SDBus *sd, bool inserted);
+void sdbus_set_readonly(SDBus *sd, bool readonly);
 
 #endif /* HW_SD_H */
