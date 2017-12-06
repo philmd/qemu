@@ -274,11 +274,45 @@ static const sd_cmd_type_t sd_cmd_type[SD_CMD_MAX] = {
     sd_adtc, sd_none, sd_none, sd_none, sd_none, sd_none, sd_none, sd_none,
 };
 
-static const int sd_cmd_class[SD_CMD_MAX] = {
-    0,  0,  0,  0,  0,  9, 10,  0,  0,  0,  0,  1,  0,  0,  0,  0,
-    2,  2,  2,  2,  3,  3,  3,  3,  4,  4,  4,  4,  6,  6,  6,  6,
-    5,  5, 10, 10, 10, 10,  5,  9,  9,  9,  7,  7,  7,  7,  7,  7,
-    7,  7, 10,  7,  9,  9,  9,  8,  8, 10,  8,  8,  8,  8,  8,  8,
+enum SDCardCommandClass {
+    ccc_basic       = 1 << 0,
+    ccc_blk_read    = 1 << 2,
+    ccc_blk_write   = 1 << 4,
+    ccc_erase       = 1 << 5,
+    ccc_wp          = 1 << 6,
+    ccc_lock        = 1 << 7,
+    ccc_appspec     = 1 << 8,
+    ccc_io          = 1 << 9,
+    ccc_switch      = 1 << 10,
+    ccc_ext         = 1 << 11,
+};
+
+static const uint32_t sd_cmd_class[SD_CMD_MAX] = {
+    ccc_basic, 0, ccc_basic, ccc_basic,
+    ccc_basic, ccc_io, ccc_switch, ccc_basic,
+    ccc_basic, ccc_basic, ccc_basic, ccc_basic,
+    ccc_basic, ccc_basic, 0, ccc_basic,
+    /* 16 */
+    ccc_blk_read | ccc_blk_write | ccc_lock, ccc_blk_read,
+    ccc_blk_read, ccc_blk_read,
+    ccc_blk_read | ccc_blk_write, ccc_ext, 0,
+    ccc_blk_read | ccc_blk_write,
+    ccc_blk_write, ccc_blk_write,
+    0, ccc_blk_write,
+    ccc_wp, ccc_wp,
+    ccc_wp, 0,
+    /* 32 */
+    ccc_erase, ccc_erase,
+    ccc_switch, ccc_switch,
+    ccc_switch, ccc_switch,
+    ccc_erase, 0,
+    ccc_lock, 0, ccc_lock, 0, 0, 0, 0, 0,
+    /* 48 */
+    ccc_ext, ccc_ext, ccc_switch, 0,
+    ccc_io, ccc_io, 0, ccc_appspec,
+    ccc_appspec, ccc_switch,
+    ccc_ext, ccc_ext,
+    0, 0, 0, 0
 };
 
 static uint8_t sd_crc7(void *message, size_t width)
@@ -1565,8 +1599,8 @@ static bool cmd_valid_while_locked(SDState *sd, SDRequest *req)
     if (req->cmd == 16 || req->cmd == 55) {
         return true;
     }
-    return sd_cmd_class[req->cmd] == 0
-            || sd_cmd_class[req->cmd] == 7;
+    return sd_cmd_class[req->cmd] == ccc_basic
+        || sd_cmd_class[req->cmd] == ccc_lock;
 }
 
 int sd_do_command(SDState *sd, SDRequest *req, uint8_t *response)
