@@ -90,6 +90,7 @@ struct SDState {
     /* SD Memory Card Registers */
     uint8_t cid[128 / BITS_PER_BYTE];       /* Card Identification Number */
     uint16_t rca;                           /* Relative Card Address */
+    uint16_t dsr;                           /* Driver Stage */
     uint8_t csd[128 / BITS_PER_BYTE];       /* Card Specific Data */
     uint8_t scr[64  / BITS_PER_BYTE];       /* SD Configuration */
     uint32_t ocr;                           /* Operation Conditions */
@@ -458,6 +459,7 @@ static void sd_reset(DeviceState *dev)
 
     sd_set_state(sd, sd_idle_state);
     sd->rca = 0x0000;
+    sd->dsr = 0x0404;
     sd_reset_ocr(sd);
     sd_reset_scr(sd);
     sd_reset_cid(sd);
