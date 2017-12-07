@@ -37,7 +37,10 @@ typedef struct SDHCIState {
         PCIDevice pcidev;
         SysBusDevice busdev;
     };
-    SDBus sdbus;
+
+    /*< public >*/
+    char *bus_name;
+    SDBus *sdbus;
     MemoryRegion iomem;
 
     QEMUTimer *insert_timer;       /* timer for 'changing' sd card. */

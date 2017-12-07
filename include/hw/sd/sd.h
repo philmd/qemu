@@ -104,6 +104,7 @@ void sd_enable(SDState *sd, bool enable);
 /* Functions to be used by qdevified callers (working via
  * an SDBus rather than directly with SDState)
  */
+SDBus *sdbus_create_bus(DeviceState *parent, const char *name);
 int sdbus_do_command(SDBus *sd, SDRequest *req, uint8_t *response);
 void sdbus_write_data(SDBus *sd, uint8_t value);
 uint8_t sdbus_read_data(SDBus *sd);

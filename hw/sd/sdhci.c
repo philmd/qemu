@@ -200,8 +200,8 @@ static void sdhci_reset(SDHCIState *s)
     memset(&s->sdmasysad, 0, (uintptr_t)&s->capareg - (uintptr_t)&s->sdmasysad);
 
     /* Reset other state based on current card insertion/readonly status */
-    sdhci_set_inserted(dev, sdbus_get_inserted(&s->sdbus));
-    sdhci_set_readonly(dev, sdbus_get_readonly(&s->sdbus));
+    sdhci_set_inserted(dev, sdbus_get_inserted(s->sdbus));
+    sdhci_set_readonly(dev, sdbus_get_readonly(s->sdbus));
 
     s->data_count = 0;
     s->stopped_state = sdhc_not_stopped;
@@ -236,7 +236,7 @@ static void sdhci_send_command(SDHCIState *s)
     request.cmd = s->cmdreg >> 8;
     request.arg = s->argument;
     DPRINT_L1("sending CMD%u ARG[0x%08x]\n", request.cmd, request.arg);
-    rlen = sdbus_do_command(&s->sdbus, &request, response);
+    rlen = sdbus_do_command(s->sdbus, &request, response);
 
     if (s->cmdreg & SDHC_CMD_RESPONSE) {
         if (rlen == 4) {
@@ -292,7 +292,7 @@ static void sdhci_end_transfer(SDHCIState *s)
         request.cmd = 0x0C;
         request.arg = 0;
         DPRINT_L1("Automatically issue CMD%d %08x\n", request.cmd, request.arg);
-        sdbus_do_command(&s->sdbus, &request, response);
+        sdbus_do_command(s->sdbus, &request, response);
         /* Auto CMD12 response goes to the upper Response register */
         s->rspreg[3] = (response[0] << 24) | (response[1] << 16) |
                 (response[2] << 8) | response[3];
@@ -324,7 +324,7 @@ static void sdhci_read_block_from_card(SDHCIState *s)
     }
 
     for (index = 0; index < (s->blksize & 0x0fff); index++) {
-        s->fifo_buffer[index] = sdbus_read_data(&s->sdbus);
+        s->fifo_buffer[index] = sdbus_read_data(s->sdbus);
     }
 
     /* New data now available for READ through Buffer Port Register */
@@ -417,7 +417,7 @@ static void sdhci_write_block_to_card(SDHCIState *s)
     }
 
     for (index = 0; index < (s->blksize & 0x0fff); index++) {
-        sdbus_write_data(&s->sdbus, s->fifo_buffer[index]);
+        sdbus_write_data(s->sdbus, s->fifo_buffer[index]);
     }
 
     /* Next data can be written through BUFFER DATORT register */
@@ -504,7 +504,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
         while (s->blkcnt) {
             if (s->data_count == 0) {
                 for (n = 0; n < block_size; n++) {
-                    s->fifo_buffer[n] = sdbus_read_data(&s->sdbus);
+                    s->fifo_buffer[n] = sdbus_read_data(s->sdbus);
                 }
             }
             begin = s->data_count;
@@ -545,7 +545,7 @@ static void sdhci_sdma_transfer_multi_blocks(SDHCIState *s)
             s->sdmasysad += s->data_count - begin;
             if (s->data_count == block_size) {
                 for (n = 0; n < block_size; n++) {
-                    sdbus_write_data(&s->sdbus, s->fifo_buffer[n]);
+                    sdbus_write_data(s->sdbus, s->fifo_buffer[n]);
                 }
                 s->data_count = 0;
                 if (s->trnmod & SDHC_TRNS_BLK_CNT_EN) {
@@ -576,7 +576,7 @@ static void sdhci_sdma_transfer_single_block(SDHCIState *s)
 
     if (s->trnmod & SDHC_TRNS_READ) {
         for (n = 0; n < datacnt; n++) {
-            s->fifo_buffer[n] = sdbus_read_data(&s->sdbus);
+            s->fifo_buffer[n] = sdbus_read_data(s->sdbus);
         }
         dma_memory_write(&address_space_memory, s->sdmasysad, s->fifo_buffer,
                          datacnt);
@@ -584,7 +584,7 @@ static void sdhci_sdma_transfer_single_block(SDHCIState *s)
         dma_memory_read(&address_space_memory, s->sdmasysad, s->fifo_buffer,
                         datacnt);
         for (n = 0; n < datacnt; n++) {
-            sdbus_write_data(&s->sdbus, s->fifo_buffer[n]);
+            sdbus_write_data(s->sdbus, s->fifo_buffer[n]);
         }
     }
     s->blkcnt--;
@@ -685,7 +685,7 @@ static void sdhci_do_adma(SDHCIState *s)
                 while (length) {
                     if (s->data_count == 0) {
                         for (n = 0; n < block_size; n++) {
-                            s->fifo_buffer[n] = sdbus_read_data(&s->sdbus);
+                            s->fifo_buffer[n] = sdbus_read_data(s->sdbus);
                         }
                     }
                     begin = s->data_count;
@@ -726,7 +726,7 @@ static void sdhci_do_adma(SDHCIState *s)
                     dscr.addr += s->data_count - begin;
                     if (s->data_count == block_size) {
                         for (n = 0; n < block_size; n++) {
-                            sdbus_write_data(&s->sdbus, s->fifo_buffer[n]);
+                            sdbus_write_data(s->sdbus, s->fifo_buffer[n]);
                         }
                         s->data_count = 0;
                         if (s->trnmod & SDHC_TRNS_BLK_CNT_EN) {
@@ -835,7 +835,7 @@ static void sdhci_data_transfer(void *opaque)
             break;
         }
     } else {
-        if ((s->trnmod & SDHC_TRNS_READ) && sdbus_data_ready(&s->sdbus)) {
+        if ((s->trnmod & SDHC_TRNS_READ) && sdbus_data_ready(s->sdbus)) {
             s->prnsts |= SDHC_DOING_READ | SDHC_DATA_INHIBIT |
                     SDHC_DAT_LINE_ACTIVE;
             sdhci_read_block_from_card(s);
@@ -1185,11 +1185,20 @@ static inline unsigned int sdhci_get_fifolen(SDHCIState *s)
 
 static void sdhci_initfn(SDHCIState *s)
 {
-    qbus_create_inplace(&s->sdbus, sizeof(s->sdbus),
-                        TYPE_SDHCI_BUS, DEVICE(s), "sd-bus");
-
     s->insert_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, sdhci_raise_insertion_irq, s);
     s->transfer_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, sdhci_data_transfer, s);
+}
+
+static void sdhci_realizefn(SDHCIState *s, Error **errp)
+{
+    const char *name = s->bus_name ? s->bus_name : "sd-bus";
+
+    s->sdbus = sdbus_create_bus(DEVICE(s), name);
+}
+
+static void sdhci_unrealizefn(SDHCIState *s, Error **errp)
+{
+    g_free(s->sdbus);
 }
 
 static void sdhci_uninitfn(SDHCIState *s)
@@ -1279,6 +1288,7 @@ static void sdhci_pci_realize(PCIDevice *dev, Error **errp)
     dev->config[PCI_CLASS_PROG] = 0x01; /* Standard Host supported DMA */
     dev->config[PCI_INTERRUPT_PIN] = 0x01; /* interrupt pin A */
     sdhci_initfn(s);
+    sdhci_realizefn(s, errp);
     s->buf_maxsz = sdhci_get_fifolen(s);
     s->fifo_buffer = g_malloc0(s->buf_maxsz);
     s->irq = pci_allocate_irq(dev);
@@ -1290,6 +1300,7 @@ static void sdhci_pci_realize(PCIDevice *dev, Error **errp)
 static void sdhci_pci_exit(PCIDevice *dev)
 {
     SDHCIState *s = PCI_SDHCI(dev);
+    sdhci_unrealizefn(s, NULL);
     sdhci_uninitfn(s);
 }
 
@@ -1339,6 +1350,7 @@ static void sdhci_sysbus_init(Object *obj)
 static void sdhci_sysbus_finalize(Object *obj)
 {
     SDHCIState *s = SYSBUS_SDHCI(obj);
+    sdhci_unrealizefn(s, NULL);
     sdhci_uninitfn(s);
 }
 
@@ -1347,6 +1359,7 @@ static void sdhci_sysbus_realize(DeviceState *dev, Error ** errp)
     SDHCIState *s = SYSBUS_SDHCI(dev);
     SysBusDevice *sbd = SYS_BUS_DEVICE(dev);
 
+    sdhci_realizefn(s, errp);
     s->buf_maxsz = sdhci_get_fifolen(s);
     s->fifo_buffer = g_malloc0(s->buf_maxsz);
     sysbus_init_irq(sbd, &s->irq);
