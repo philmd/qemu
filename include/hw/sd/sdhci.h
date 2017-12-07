@@ -39,7 +39,8 @@ typedef struct SDHCIState {
     };
 
     /*< public >*/
-    SDBus sdbus;
+    char *bus_name;
+    SDBus *sdbus;
     MemoryRegion iomem;
     MemoryRegion *dma_mr;
     AddressSpace dma_as;

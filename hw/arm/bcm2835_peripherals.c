@@ -310,7 +310,7 @@ static void bcm2835_peripherals_realize(DeviceState *dev, Error **errp)
 
     /* GPIO */
     object_property_add_const_link(OBJECT(&s->gpio), "sdbus-sdhci",
-                                   OBJECT(&s->sdhci.sdbus), &error_abort);
+                                   OBJECT(s->sdhci.sdbus), &error_abort);
     object_property_add_const_link(OBJECT(&s->gpio), "sdbus-sdhost",
                                    OBJECT(&s->sdhost.sdbus), &error_abort);
     object_property_set_bool(OBJECT(&s->gpio), true, "realized", &err);

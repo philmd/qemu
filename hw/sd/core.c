@@ -187,3 +187,8 @@ static void sd_bus_register_types(void)
 }
 
 type_init(sd_bus_register_types)
+
+SDBus *sdbus_create_bus(DeviceState *parent, const char *name)
+{
+    return SD_BUS(qbus_create(TYPE_SD_BUS, parent, name));
+}
