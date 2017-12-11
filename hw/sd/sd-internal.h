@@ -88,6 +88,9 @@ typedef struct {
 
 #define SD_BUS_CLASS(klass) OBJECT_CLASS_CHECK(SDBusClass, (klass), TYPE_SD_BUS)
 #define SD_BUS_GET_CLASS(obj) OBJECT_GET_CLASS(SDBusClass, (obj), TYPE_SD_BUS)
+#define TYPE_SD_BUS_MASTER_INTERFACE    "sd-bus-master"
+#define SDBUS_MASTER_CLASS(klass) \
+    OBJECT_CLASS_CHECK(SDBusClass, (klass), TYPE_SD_BUS_MASTER_INTERFACE)
 
 typedef struct {
     /*< private >*/

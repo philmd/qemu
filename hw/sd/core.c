@@ -181,6 +181,12 @@ static const TypeInfo sd_bus_info = {
     .class_size = sizeof(SDBusClass),
 };
 
+static const TypeInfo sd_master_info = {
+    .name = TYPE_SD_BUS_MASTER_INTERFACE,
+    .parent = TYPE_INTERFACE,
+    .class_size = sizeof(SDBusClass),
+};
+
 static const TypeInfo sd_slave_info = {
     .name = TYPE_SD_BUS_SLAVE_INTERFACE,
     .parent = TYPE_INTERFACE,
@@ -190,6 +196,7 @@ static const TypeInfo sd_slave_info = {
 static void sd_bus_register_types(void)
 {
     type_register_static(&sd_bus_info);
+    type_register_static(&sd_master_info);
     type_register_static(&sd_slave_info);
 }
 
