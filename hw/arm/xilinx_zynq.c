@@ -250,6 +250,7 @@ static void zynq_init(MachineState *machine)
 
     dev = qdev_create(NULL, TYPE_SYSBUS_SDHCI);
     qdev_prop_set_string(dev, "sd-bus-name", "sd.0");
+    qdev_prop_set_uint8(dev, "sd-spec-version", SD_HOST_SPECv3_VERS);
     qdev_init_nofail(dev);
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0xE0100000);
     sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, pic[56-IRQ_OFFSET]);
@@ -262,6 +263,7 @@ static void zynq_init(MachineState *machine)
     object_property_set_bool(OBJECT(carddev), true, "realized", &error_fatal);
 
     dev = qdev_create(NULL, TYPE_SYSBUS_SDHCI);
+    qdev_prop_set_uint8(dev, "sd-spec-version", SD_HOST_SPECv3_VERS);
     qdev_prop_set_string(dev, "sd-bus-name", "sd.1");
     qdev_init_nofail(dev);
     sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0xE0101000);
