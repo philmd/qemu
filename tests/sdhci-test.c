@@ -62,12 +62,37 @@ static uint64_t sdhci_readq(uintptr_t base, uint32_t reg_addr)
     }
 }
 
+static void sdhci_writeq(uintptr_t base, uint32_t reg_addr, uint64_t value)
+{
+    if (g.dev) {
+        qpci_memwrite(g.dev, g.mem_bar, reg_addr, &value, sizeof(value));
+    } else {
+        QTestState *qtest = global_qtest;
+
+        qtest_writeq(qtest, base + reg_addr, value);
+    }
+}
+
 static void check_capab_capareg(uintptr_t addr, uint64_t expected_capab)
 {
     uint64_t capab;
 
     capab = sdhci_readq(addr, SDHC_CAPAB);
     g_assert_cmphex(capab, ==, expected_capab);
+}
+
+static void check_capab_readonly(uintptr_t addr)
+{
+    const uint64_t vrand = 0x123456789abcdef;
+    uint64_t capab0, capab1;
+
+    capab0 = sdhci_readq(addr, SDHC_CAPAB);
+    g_assert_cmpuint(capab0, !=, vrand);
+
+    sdhci_writeq(addr, SDHC_CAPAB, vrand);
+    capab1 = sdhci_readq(addr, SDHC_CAPAB);
+    g_assert_cmpuint(capab1, !=, vrand);
+    g_assert_cmpuint(capab1, ==, capab0);
 }
 
 static void machine_start(const struct sdhci_t *test)
@@ -110,6 +135,7 @@ static void test_machine(const void *data)
     machine_start(test);
 
     check_capab_capareg(test->sdhci.addr, test->sdhci.capab.reg);
+    check_capab_readonly(test->sdhci.addr);
 
     machine_stop();
 }
