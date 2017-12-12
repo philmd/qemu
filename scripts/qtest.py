@@ -228,3 +228,42 @@ def verify_machine(supported_machines):
 
     if True not in [x.encode() in machines for x in supported_machines]:
         notrun('no machine suitable for this test')
+
+def main(supported_oses=['linux'], supported_machines=['any']):
+    '''Run tests'''
+
+    global debug
+
+    verify_platform(supported_oses)
+    verify_machine(supported_machines)
+
+    verbosity = 0
+    level = logging.WARN
+    if '-d' in sys.argv:
+        verbosity = 2
+        level = logging.DEBUG
+    if '-v' in sys.argv:
+        verbosity = 1
+        level = logging.INFO
+    if '-q' in sys.argv:
+        level = logging.NOTSET
+
+    if verbosity:
+        output = sys.stdout
+    else:
+        try:
+            from StringIO import StringIO
+        except ImportError:
+            from io import StringIO
+        output = StringIO()
+
+    logging.basicConfig(level=level)
+
+    class MyTestRunner(unittest.TextTestRunner):
+        def __init__(self, stream=output, descriptions=True,
+                     verbosity=verbosity):
+            unittest.TextTestRunner.__init__(self, stream, descriptions,
+                                             verbosity)
+
+    # unittest.main() will use sys.exit() so expect a SystemExit exception
+    unittest.main(testRunner=MyTestRunner)
