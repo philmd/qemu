@@ -66,10 +66,11 @@ typedef enum {
 
 typedef struct SDState SDState;
 
+#define TYPE_SD_BUS_SLAVE_INTERFACE     "sd-bus-slave"
 #define SDBUS_SLAVE_CLASS(klass) \
-    OBJECT_CLASS_CHECK(SDSlaveClass, (klass), TYPE_SD_CARD)
+    OBJECT_CLASS_CHECK(SDSlaveClass, (klass), TYPE_SD_BUS_SLAVE_INTERFACE)
 #define SDBUS_SLAVE_GET_CLASS(obj) \
-    OBJECT_GET_CLASS(SDSlaveClass, (obj), TYPE_SD_CARD)
+    OBJECT_GET_CLASS(SDSlaveClass, (obj), TYPE_SD_BUS_SLAVE_INTERFACE)
 
 typedef struct {
     /*< private >*/
