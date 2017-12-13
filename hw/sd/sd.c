@@ -1917,7 +1917,7 @@ static Property sd_properties[] = {
 static void sd_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
-    SDCardClass *sc = SD_CARD_CLASS(klass);
+    SDSlaveClass *sc = SDBUS_SLAVE_CLASS(klass);
 
     dc->realize = sd_realize;
     dc->props = sd_properties;
@@ -1938,7 +1938,7 @@ static const TypeInfo sd_info = {
     .name = TYPE_SD_CARD,
     .parent = TYPE_DEVICE,
     .instance_size = sizeof(SDState),
-    .class_size = sizeof(SDCardClass),
+    .class_size = sizeof(SDSlaveClass),
     .class_init = sd_class_init,
     .instance_init = sd_instance_init,
     .instance_finalize = sd_instance_finalize,

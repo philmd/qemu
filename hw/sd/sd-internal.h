@@ -66,10 +66,10 @@ typedef enum {
 
 typedef struct SDState SDState;
 
-#define SD_CARD_CLASS(klass) \
-    OBJECT_CLASS_CHECK(SDCardClass, (klass), TYPE_SD_CARD)
-#define SD_CARD_GET_CLASS(obj) \
-    OBJECT_GET_CLASS(SDCardClass, (obj), TYPE_SD_CARD)
+#define SDBUS_SLAVE_CLASS(klass) \
+    OBJECT_CLASS_CHECK(SDSlaveClass, (klass), TYPE_SD_CARD)
+#define SDBUS_SLAVE_GET_CLASS(obj) \
+    OBJECT_GET_CLASS(SDSlaveClass, (obj), TYPE_SD_CARD)
 
 typedef struct {
     /*< private >*/
@@ -83,7 +83,7 @@ typedef struct {
     void (*enable)(SDState *sd, bool enable);
     bool (*get_inserted)(SDState *sd);
     bool (*get_readonly)(SDState *sd);
-} SDCardClass;
+} SDSlaveClass;
 
 #define SD_BUS_CLASS(klass) OBJECT_CLASS_CHECK(SDBusClass, (klass), TYPE_SD_BUS)
 #define SD_BUS_GET_CLASS(obj) OBJECT_GET_CLASS(SDBusClass, (obj), TYPE_SD_BUS)
