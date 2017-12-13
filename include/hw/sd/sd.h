@@ -39,15 +39,15 @@ typedef struct {
     uint8_t crc;        /*  7 bits */
 } SDRequest;     /* total: 48 bits shifted */
 
-typedef struct SDState SDState;
+typedef struct SDSlaveState SDState;
 typedef struct SDBus SDBus;
 
 #define TYPE_SD_CARD "sd-card"
-#define SD_CARD(obj) OBJECT_CHECK(SDState, (obj), TYPE_SD_CARD)
-#define SD_CARD_CLASS(klass) \
-    OBJECT_CLASS_CHECK(SDCardClass, (klass), TYPE_SD_CARD)
-#define SD_CARD_GET_CLASS(obj) \
-    OBJECT_GET_CLASS(SDCardClass, (obj), TYPE_SD_CARD)
+#define SDBUS_SLAVE(obj) OBJECT_CHECK(SDState, (obj), TYPE_SD_CARD)
+#define SDBUS_SLAVE_CLASS(klass) \
+    OBJECT_CLASS_CHECK(SDSlaveClass, (klass), TYPE_SD_CARD)
+#define SDBUS_SLAVE_GET_CLASS(obj) \
+    OBJECT_GET_CLASS(SDSlaveClass, (obj), TYPE_SD_CARD)
 
 typedef struct {
     /*< private >*/
@@ -61,7 +61,7 @@ typedef struct {
     void (*enable)(SDState *sd, bool enable);
     bool (*get_inserted)(SDState *sd);
     bool (*get_readonly)(SDState *sd);
-} SDCardClass;
+} SDSlaveClass;
 
 #define TYPE_SD_BUS "sd-bus"
 #define SD_BUS(obj) OBJECT_CHECK(SDBus, (obj), TYPE_SD_BUS)

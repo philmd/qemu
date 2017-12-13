@@ -37,7 +37,7 @@ static SDState *get_card(SDBus *sdbus)
     if (!kid) {
         return NULL;
     }
-    return SD_CARD(kid->child);
+    return SDBUS_SLAVE(kid->child);
 }
 
 int sdbus_do_command(SDBus *sdbus, SDRequest *req, uint8_t *response)
@@ -48,7 +48,7 @@ int sdbus_do_command(SDBus *sdbus, SDRequest *req, uint8_t *response)
 
     trace_sdbus_command(sdbus_name(sdbus), req->cmd, req->arg, req->crc);
     if (card) {
-        SDCardClass *sc = SD_CARD_GET_CLASS(card);
+        SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
 
         sz = sc->do_command(card, req, response);
         hexbuf = qemu_hexbuf_strdup(response, sz, NULL, "resp: ");
@@ -66,7 +66,7 @@ void sdbus_write_data(SDBus *sdbus, uint8_t value)
 
     trace_sdbus_write(sdbus_name(sdbus), value);
     if (card) {
-        SDCardClass *sc = SD_CARD_GET_CLASS(card);
+        SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
 
         sc->write_data(card, value);
     }
@@ -78,7 +78,7 @@ uint8_t sdbus_read_data(SDBus *sdbus)
     uint8_t value = 0;
 
     if (card) {
-        SDCardClass *sc = SD_CARD_GET_CLASS(card);
+        SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
 
         value = sc->read_data(card);
     }
@@ -92,7 +92,7 @@ bool sdbus_data_ready(SDBus *sdbus)
     SDState *card = get_card(sdbus);
 
     if (card) {
-        SDCardClass *sc = SD_CARD_GET_CLASS(card);
+        SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
 
         return sc->data_ready(card);
     }
@@ -105,7 +105,7 @@ bool sdbus_get_inserted(SDBus *sdbus)
     SDState *card = get_card(sdbus);
 
     if (card) {
-        SDCardClass *sc = SD_CARD_GET_CLASS(card);
+        SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
 
         return sc->get_inserted(card);
     }
@@ -118,7 +118,7 @@ bool sdbus_get_readonly(SDBus *sdbus)
     SDState *card = get_card(sdbus);
 
     if (card) {
-        SDCardClass *sc = SD_CARD_GET_CLASS(card);
+        SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
 
         return sc->get_readonly(card);
     }
@@ -149,7 +149,7 @@ void sdbus_set_readonly(SDBus *sdbus, bool readonly)
 void sdbus_reparent_card(SDBus *from, SDBus *to)
 {
     SDState *card = get_card(from);
-    SDCardClass *sc;
+    SDSlaveClass *sc;
     bool readonly;
 
     /* We directly reparent the card object rather than implementing this
@@ -164,7 +164,7 @@ void sdbus_reparent_card(SDBus *from, SDBus *to)
         return;
     }
 
-    sc = SD_CARD_GET_CLASS(card);
+    sc = SDBUS_SLAVE_GET_CLASS(card);
     readonly = sc->get_readonly(card);
 
     sdbus_set_inserted(from, false);

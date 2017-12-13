@@ -85,7 +85,7 @@ enum SDCardStates {
     sd_disconnect_state,
 };
 
-struct SDState {
+struct SDSlaveState {
     DeviceState parent_obj;
 
     uint32_t mode;    /* current card mode, one of SDCardModes */
@@ -412,7 +412,7 @@ static inline uint64_t sd_addr_to_wpnum(uint64_t addr)
 
 static void sd_reset(DeviceState *dev)
 {
-    SDState *sd = SD_CARD(dev);
+    SDState *sd = SDBUS_SLAVE(dev);
     uint64_t size;
     uint64_t sect;
 
@@ -582,7 +582,7 @@ SDState *sd_init(BlockBackend *blk, bool is_spi)
         return NULL;
     }
 
-    return SD_CARD(dev);
+    return SDBUS_SLAVE(dev);
 }
 
 void sd_set_cb(SDState *sd, qemu_irq readonly, qemu_irq insert)
@@ -1870,7 +1870,7 @@ void sd_enable(SDState *sd, bool enable)
 
 static void sd_instance_init(Object *obj)
 {
-    SDState *sd = SD_CARD(obj);
+    SDState *sd = SDBUS_SLAVE(obj);
 
     sd->enable = true;
     sd->ocr_power_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, sd_ocr_powerup, sd);
@@ -1878,7 +1878,7 @@ static void sd_instance_init(Object *obj)
 
 static void sd_instance_finalize(Object *obj)
 {
-    SDState *sd = SD_CARD(obj);
+    SDState *sd = SDBUS_SLAVE(obj);
 
     timer_del(sd->ocr_power_timer);
     timer_free(sd->ocr_power_timer);
@@ -1886,7 +1886,7 @@ static void sd_instance_finalize(Object *obj)
 
 static void sd_realize(DeviceState *dev, Error **errp)
 {
-    SDState *sd = SD_CARD(dev);
+    SDState *sd = SDBUS_SLAVE(dev);
     int ret;
 
     if (sd->blk && blk_is_read_only(sd->blk)) {
@@ -1917,7 +1917,7 @@ static Property sd_properties[] = {
 static void sd_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
-    SDCardClass *sc = SD_CARD_CLASS(klass);
+    SDSlaveClass *sc = SDBUS_SLAVE_CLASS(klass);
 
     dc->realize = sd_realize;
     dc->props = sd_properties;
@@ -1938,7 +1938,7 @@ static const TypeInfo sd_info = {
     .name = TYPE_SD_CARD,
     .parent = TYPE_DEVICE,
     .instance_size = sizeof(SDState),
-    .class_size = sizeof(SDCardClass),
+    .class_size = sizeof(SDSlaveClass),
     .class_init = sd_class_init,
     .instance_init = sd_instance_init,
     .instance_finalize = sd_instance_finalize,
