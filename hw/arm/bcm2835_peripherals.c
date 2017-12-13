@@ -112,11 +112,6 @@ static void bcm2835_peripherals_init(Object *obj)
     object_initialize(&s->gpio, sizeof(s->gpio), TYPE_BCM2835_GPIO);
     object_property_add_child(obj, "gpio", OBJECT(&s->gpio), NULL);
     qdev_set_parent_bus(DEVICE(&s->gpio), sysbus_get_default());
-
-    object_property_add_const_link(OBJECT(&s->gpio), "sdbus-sdhci",
-                                   OBJECT(&s->sdhci.sdbus), &error_abort);
-    object_property_add_const_link(OBJECT(&s->gpio), "sdbus-sdhost",
-                                   OBJECT(&s->sdhost.sdbus), &error_abort);
 }
 
 static void bcm2835_peripherals_realize(DeviceState *dev, Error **errp)
@@ -314,6 +309,10 @@ static void bcm2835_peripherals_realize(DeviceState *dev, Error **errp)
     }
 
     /* GPIO */
+    object_property_add_const_link(OBJECT(&s->gpio), "sdbus-sdhci",
+                                   OBJECT(&s->sdhci.sdbus), &error_abort);
+    object_property_add_const_link(OBJECT(&s->gpio), "sdbus-sdhost",
+                                   OBJECT(&s->sdhost.sdbus), &error_abort);
     object_property_set_bool(OBJECT(&s->gpio), true, "realized", &err);
     if (err) {
         error_propagate(errp, err);
