@@ -901,10 +901,10 @@ static uint64_t sdhci_read(void *opaque, hwaddr offset, unsigned size)
     case SDHC_ACMD12ERRSTS:
         ret = s->acmd12errsts;
         break;
-    case SDHC_CAPAREG:
+    case SDHC_CAPAB:
         ret = (uint32_t)s->capareg;
         break;
-    case SDHC_CAPAREG + 4:
+    case SDHC_CAPAB + 4:
         ret = (uint32_t)(s->capareg >> 32);
         break;
     case SDHC_MAXCURR:
@@ -1132,8 +1132,8 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
         sdhci_update_irq(s);
         break;
 
-    case SDHC_CAPAREG:
-    case SDHC_CAPAREG + 4:
+    case SDHC_CAPAB:
+    case SDHC_CAPAB + 4:
     case SDHC_MAXCURR:
     case SDHC_MAXCURR + 4:
         qemu_log_mask(LOG_GUEST_ERROR, "SDHC wr_%ub @0x%02" HWADDR_PRIx
