@@ -106,6 +106,7 @@ typedef struct SDHCIState {
     /* Configurable properties */
     bool pending_insert_quirk; /* Quirk for Raspberry Pi card insert int */
     bool dma; /* shortcut for sdma + adma* */
+    uint8_t data_lines;
     uint8_t spec_version;
     struct {
         /* v1 */
