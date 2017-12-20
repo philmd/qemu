@@ -272,6 +272,7 @@ static void zynq_init(MachineState *machine)
          */
         dev = qdev_create(NULL, TYPE_SYSBUS_SDHCI);
         qdev_prop_set_uint8(dev, "sd-spec-version", 2);
+        qdev_prop_set_bit(dev, "spi", false);
         qdev_prop_set_bit(dev, "adma1", true);
         qdev_prop_set_bit(dev, "high-speed", true);
         qdev_prop_set_uint16(dev, "max-block-length", 1024);
