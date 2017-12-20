@@ -1424,6 +1424,7 @@ static Property sdhci_properties[] = {
 
     DEFINE_PROP_UINT64("maxcurr", SDHCIState, maxcurr, 0),
     DEFINE_PROP_UINT8("data-lines", SDHCIState, data_lines, 4),
+    DEFINE_PROP_BOOL("spi", SDHCIState, spi, true),
     DEFINE_PROP_BOOL("pending-insert-quirk", SDHCIState, pending_insert_quirk,
                      false),
     DEFINE_PROP_LINK("dma-memory", SDHCIState, dma_mr,
