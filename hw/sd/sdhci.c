@@ -32,6 +32,7 @@
 #include "sdhci-internal.h"
 #include "qapi/error.h"
 #include "qemu/log.h"
+#include "qemu/cutils.h"
 #include "trace.h"
 
 #define MASKED_WRITE(reg, mask, val)  (reg = (reg & (mask)) | (val))
@@ -629,11 +630,12 @@ static void get_adma_description(SDHCIState *s, ADMADescr *dscr)
 }
 
 /* Advanced DMA data transfer */
+#define BLOCK_SIZE_MASK (4 * K_BYTE - 1)
 
 static void sdhci_do_adma(SDHCIState *s)
 {
     unsigned int n, begin, length;
-    const uint16_t block_size = s->blksize & 0x0fff;
+    const uint16_t block_size = s->blksize & BLOCK_SIZE_MASK;
     ADMADescr dscr = {};
     int i;
 
