@@ -83,6 +83,7 @@ typedef struct SDHCIState {
     uint16_t norintsigen;  /* Normal Interrupt Signal Enable Register */
     uint16_t errintsigen;  /* Error Interrupt Signal Enable Register */
     uint16_t acmd12errsts; /* Auto CMD12 error status register */
+    uint16_t hostctl2;     /* Host Control 2 */
     /* 0x50 */
     /* Force Event Auto CMD12 Error Interrupt Reg - write only */
     /* Force Event Error Interrupt Register- write only */
@@ -120,6 +121,7 @@ typedef struct SDHCIState {
         bool bus64;
         /* v3 */
         uint8_t slot_type, sdr, strength;
+        uint8_t uhs_mode;
     } cap;
 } SDHCIState;
 

@@ -120,6 +120,8 @@ uint8_t sdbus_read_data(SDBus *sd);
 bool sdbus_data_ready(SDBus *sd);
 bool sdbus_get_inserted(SDBus *sd);
 bool sdbus_get_readonly(SDBus *sd);
+void sdbus_set_voltage(SDBus *sdbus, uint16_t millivolts);
+
 /**
  * sdbus_reparent_card: Reparent an SD card from one controller to another
  * @from: controller bus to remove card from
@@ -135,5 +137,12 @@ void sdbus_reparent_card(SDBus *from, SDBus *to);
 /* Functions to be used by SD devices to report back to qdevified controllers */
 void sdbus_set_inserted(SDBus *sd, bool inserted);
 void sdbus_set_readonly(SDBus *sd, bool readonly);
+
+enum {
+    SD_VOLTAGE_0_4V     = 400,
+    SD_VOLTAGE_1_8V     = 1800,
+    SD_VOLTAGE_3_0V     = 3000,
+    SD_VOLTAGE_3_3V     = 3300
+};
 
 #endif /* HW_SD_H */

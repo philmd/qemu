@@ -35,6 +35,13 @@
 #include "qemu/cutils.h"
 #include "trace.h"
 
+enum sdhci_uhs_mode {
+    UHS_NOT_SUPPORTED   = 0,
+    UHS_I               = 1,
+    UHS_II              = 2,
+    UHS_III             = 3
+};
+
 #define MASKED_WRITE(reg, mask, val)  (reg = (reg & (mask)) | (val))
 
 static void sdhci_check_capab_freq_range(SDHCIState *s, const char *desc,
@@ -914,7 +921,7 @@ static uint64_t sdhci_read(void *opaque, hwaddr offset, unsigned size)
         ret = s->norintsigen | (s->errintsigen << 16);
         break;
     case SDHC_ACMD12ERRSTS:
-        ret = s->acmd12errsts;
+        ret = s->acmd12errsts | (s->hostctl2 << 16);
         break;
     case SDHC_CAPAB:
         ret = (uint32_t)s->capareg;
@@ -1112,6 +1119,23 @@ sdhci_write(void *opaque, hwaddr offset, uint64_t val, unsigned size)
         qemu_set_irq(s->access_led, s->hostctl1 & 1);
         break;
     }
+    case SDHC_ACMD12ERRSTS:
+        s->acmd12errsts = value;
+        if (s->cap.uhs_mode >= UHS_I) {
+            MASKED_WRITE(s->hostctl2, mask >> 16, value >> 16);
+            /* This implements a very simplified view.  */
+            if (s->hostctl2 & R_SDHC_HOSTCTL2_EXECUTE_TUNING_MASK) {
+                /* Signal immediate completition of tuning.  */
+                s->hostctl2 &= ~R_SDHC_HOSTCTL2_EXECUTE_TUNING_MASK;
+                s->hostctl2 |= R_SDHC_HOSTCTL2_SAMPLING_CLKSEL_MASK;
+            }
+            if (s->hostctl2 & R_SDHC_HOSTCTL2_V18_ENA_MASK) {
+                sdbus_set_voltage(s->sdbus, SD_VOLTAGE_1_8V);
+            } else {
+                sdbus_set_voltage(s->sdbus, SD_VOLTAGE_3_3V);
+            }
+        }
+        break;
     case SDHC_CLKCON:
         if (!(mask & 0xFF000000)) {
             sdhci_reset_write(s, value >> 24);
@@ -1370,6 +1394,7 @@ static Property sdhci_properties[] = {
     DEFINE_PROP_BOOL("3v3", SDHCIState, cap.v33, true),
     DEFINE_PROP_BOOL("3v0", SDHCIState, cap.v30, false),
     DEFINE_PROP_BOOL("1v8", SDHCIState, cap.v18, false),
+    DEFINE_PROP_UINT8("uhs", SDHCIState, cap.uhs_mode, UHS_NOT_SUPPORTED),
 
     DEFINE_PROP_BOOL("64bit", SDHCIState, cap.bus64, false),
     DEFINE_PROP_UINT8("slot-type", SDHCIState, cap.slot_type, 0),
