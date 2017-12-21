@@ -62,6 +62,17 @@ static void sdhci_init_capareg(SDHCIState *s, Error **errp)
     uint32_t val;
 
     switch (s->spec_version) {
+    case 3:
+        val = FIELD_EX64(capareg, SDHC_CAPAB, SLOT_TYPE);
+        if (val) {
+            error_setg(errp, "slot-type not supported");
+            return;
+        }
+        capareg = FIELD_DP64(capareg, SDHC_CAPAB, SLOT_TYPE, val);
+        capareg = FIELD_DP64(capareg, SDHC_CAPAB, BUS_SPEED, s->cap.sdr);
+        capareg = FIELD_DP64(capareg, SDHC_CAPAB, DRIVER_STRENGTH,
+                             s->cap.strength);
+
     /* fallback */
     case 2:
         capareg = FIELD_DP64(capareg, SDHC_CAPAB, ADMA1, s->cap.adma1);
@@ -1332,6 +1343,9 @@ static Property sdhci_properties[] = {
     DEFINE_PROP_BOOL("1v8", SDHCIState, cap.v18, false),
 
     DEFINE_PROP_BOOL("64bit", SDHCIState, cap.bus64, false),
+    DEFINE_PROP_UINT8("slot-type", SDHCIState, cap.slot_type, 0),
+    DEFINE_PROP_UINT8("bus-speed", SDHCIState, cap.sdr, 0),
+    DEFINE_PROP_UINT8("driver-strength", SDHCIState, cap.strength, 0),
 
     /* capareg: deprecated */
     DEFINE_PROP_UINT64("capareg", SDHCIState, capareg, UINT64_MAX),
