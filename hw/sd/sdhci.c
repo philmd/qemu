@@ -57,9 +57,6 @@
         } \
     } while (0)
 
-#define TYPE_SDHCI_BUS "sdhci-bus"
-#define SDHCI_BUS(obj) OBJECT_CHECK(SDBus, (obj), TYPE_SDHCI_BUS)
-
 /* Default SD/MMC host controller features information, which will be
  * presented in CAPABILITIES register of generic SD host controller at reset.
  * If not stated otherwise:
@@ -1294,11 +1291,16 @@ static Property sdhci_properties[] = {
 static void sdhci_class_init(ObjectClass *klass, void *data)
 {
     DeviceClass *dc = DEVICE_CLASS(klass);
+    SDMasterClass *mc = SDBUS_MASTER_CLASS(klass);
+
 
     set_bit(DEVICE_CATEGORY_STORAGE, dc->categories);
     dc->vmsd = &sdhci_vmstate;
     dc->props = sdhci_properties;
     dc->reset = sdhci_poweron_reset;
+
+    mc->set_inserted = sdhci_set_inserted;
+    mc->set_readonly = sdhci_set_readonly;
 }
 
 /* --- qdev PCI --- */
@@ -1343,6 +1345,7 @@ static const TypeInfo sdhci_pci_info = {
     .instance_size = sizeof(SDHCIState),
     .class_init = sdhci_pci_class_init,
     .interfaces = (InterfaceInfo[]) {
+        { TYPE_SDBUS_MASTER_INTERFACE },
         { INTERFACE_CONVENTIONAL_PCI_DEVICE },
         { },
     },
@@ -1399,30 +1402,16 @@ static const TypeInfo sdhci_sysbus_info = {
     .instance_init = sdhci_sysbus_init,
     .instance_finalize = sdhci_sysbus_finalize,
     .class_init = sdhci_sysbus_class_init,
-};
-
-/* --- qdev bus master --- */
-
-static void sdhci_bus_class_init(ObjectClass *klass, void *data)
-{
-    SDMasterClass *sbc = SDBUS_MASTER_CLASS(klass);
-
-    sbc->set_inserted = sdhci_set_inserted;
-    sbc->set_readonly = sdhci_set_readonly;
-}
-
-static const TypeInfo sdhci_bus_info = {
-    .name = TYPE_SDHCI_BUS,
-    .parent = TYPE_SD_BUS,
-    .instance_size = sizeof(SDBus),
-    .class_init = sdhci_bus_class_init,
+    .interfaces = (InterfaceInfo[]) {
+        { TYPE_SDBUS_MASTER_INTERFACE },
+        { },
+    },
 };
 
 static void sdhci_register_types(void)
 {
     type_register_static(&sdhci_pci_info);
     type_register_static(&sdhci_sysbus_info);
-    type_register_static(&sdhci_bus_info);
 }
 
 type_init(sdhci_register_types)
