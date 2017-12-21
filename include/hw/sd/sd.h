@@ -64,13 +64,18 @@ typedef struct {
     void (*enable)(SDState *sd, bool enable);
     bool (*get_inserted)(SDState *sd);
     bool (*get_readonly)(SDState *sd);
+    void (*change_voltage)(SDState *sd, uint16_t millivolts);
 } SDSlaveClass;
 
 #define TYPE_SD_BUS "sd-bus"
 #define SD_BUS(obj) OBJECT_CHECK(SDBus, (obj), TYPE_SD_BUS)
 
 struct SDBus {
-    BusState qbus;
+    /*< private >*/
+     BusState qbus;
+    /*< public >*/
+
+    uint16_t millivolts;
 };
 
 #define TYPE_SDBUS_MASTER_INTERFACE "sd-bus-master"

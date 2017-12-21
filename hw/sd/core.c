@@ -146,6 +146,20 @@ void sdbus_set_readonly(SDBus *sdbus, bool readonly)
     }
 }
 
+void sdbus_set_voltage(SDBus *sdbus, uint16_t millivolts)
+{
+    SDState *slave = get_slave(sdbus);
+
+    sdbus->millivolts = millivolts;
+    if (slave) {
+        SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(slave);
+
+        if (sc->change_voltage) {
+            sc->change_voltage(slave, millivolts);
+        }
+    }
+}
+
 void sdbus_reparent_card(SDBus *from, SDBus *to)
 {
     SDState *card = get_slave(from);
@@ -173,9 +187,19 @@ void sdbus_reparent_card(SDBus *from, SDBus *to)
     sdbus_set_readonly(to, readonly);
 }
 
+static void sd_bus_instance_init(Object *obj)
+{
+    SDBus *s = SD_BUS(obj);
+
+    /* Default 3v3 */
+    s->millivolts = 3300;
+    object_property_add_uint16_ptr(obj, "millivolts", &s->millivolts, NULL);
+}
+
 static const TypeInfo sd_bus_info = {
     .name = TYPE_SD_BUS,
     .parent = TYPE_BUS,
+    .instance_init = sd_bus_instance_init,
     .instance_size = sizeof(SDBus),
 };
 
