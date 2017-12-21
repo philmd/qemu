@@ -73,17 +73,18 @@ struct SDBus {
     BusState qbus;
 };
 
+#define TYPE_SDBUS_MASTER_INTERFACE "sd-bus-master"
 #define SDBUS_MASTER_CLASS(klass) \
-    OBJECT_CLASS_CHECK(SDMasterClass, (klass), TYPE_SD_BUS)
+    OBJECT_CLASS_CHECK(SDMasterClass, (klass), TYPE_SDBUS_MASTER_INTERFACE)
 #define SDBUS_MASTER_GET_CLASS(obj) \
-    OBJECT_GET_CLASS(SDMasterClass, (obj), TYPE_SD_BUS)
+    OBJECT_GET_CLASS(SDMasterClass, (obj), TYPE_SDBUS_MASTER_INTERFACE)
 
 typedef struct {
     /*< private >*/
     BusClass parent_class;
     /*< public >*/
 
-    /* These methods are called by the SD device to notify the controller
+    /* These methods are called by the SD slave device to notify the controller
      * when the card insertion or readonly status changes
      */
     void (*set_inserted)(DeviceState *dev, bool inserted);
