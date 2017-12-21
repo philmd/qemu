@@ -1294,7 +1294,7 @@ const VMStateDescription sdhci_vmstate = {
 /* Capabilities registers provide information on supported features of this
  * specific host controller implementation */
 static Property sdhci_properties[] = {
-    DEFINE_PROP_UINT8("sd-spec-version", SDHCIState, spec_version, 1),
+    DEFINE_PROP_UINT8("sd-spec-version", SDHCIState, spec_version, 2),
 
     /* Timeout clock frequency 1-63, 0 - not defined */
     DEFINE_PROP_UINT8("timeout-freq", SDHCIState, cap.timeout_clk_freq, 0),
