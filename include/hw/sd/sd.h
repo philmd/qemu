@@ -43,11 +43,14 @@ typedef struct SDSlaveState SDState;
 typedef struct SDBus SDBus;
 
 #define TYPE_SD_CARD "sd-card"
-#define SDBUS_SLAVE(obj) OBJECT_CHECK(SDState, (obj), TYPE_SD_CARD)
+
+#define TYPE_SDBUS_SLAVE_INTERFACE "sd-bus-slave"
+#define SDBUS_SLAVE(obj) \
+    OBJECT_CHECK(SDState, (obj), TYPE_SDBUS_SLAVE_INTERFACE)
 #define SDBUS_SLAVE_CLASS(klass) \
-    OBJECT_CLASS_CHECK(SDSlaveClass, (klass), TYPE_SD_CARD)
+    OBJECT_CLASS_CHECK(SDSlaveClass, (klass), TYPE_SDBUS_SLAVE_INTERFACE)
 #define SDBUS_SLAVE_GET_CLASS(obj) \
-    OBJECT_GET_CLASS(SDSlaveClass, (obj), TYPE_SD_CARD)
+    OBJECT_GET_CLASS(SDSlaveClass, (obj), TYPE_SDBUS_SLAVE_INTERFACE)
 
 typedef struct {
     /*< private >*/

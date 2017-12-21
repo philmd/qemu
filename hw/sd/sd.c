@@ -1942,6 +1942,10 @@ static const TypeInfo sd_info = {
     .class_init = sd_class_init,
     .instance_init = sd_instance_init,
     .instance_finalize = sd_instance_finalize,
+    .interfaces = (InterfaceInfo[]) {
+        { TYPE_SDBUS_SLAVE_INTERFACE },
+        { },
+    },
 };
 
 static void sd_register_types(void)
