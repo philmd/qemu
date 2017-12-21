@@ -49,6 +49,21 @@ static struct {
     QPCIBar mem_bar;
 } g = { };
 
+static uint32_t sdhci_readl(uintptr_t base, uint32_t reg_addr)
+{
+    if (g.dev) {
+        uint32_t value;
+
+        qpci_memread(g.dev, g.mem_bar, reg_addr, &value, sizeof(value));
+
+        return value;
+    } else {
+        QTestState *qtest = global_qtest;
+
+        return qtest_readl(qtest, base + reg_addr);
+    }
+}
+
 static uint64_t sdhci_readq(uintptr_t base, uint32_t reg_addr)
 {
     if (g.dev) {
@@ -73,6 +88,16 @@ static void sdhci_writeq(uintptr_t base, uint32_t reg_addr, uint64_t value)
 
         qtest_writeq(qtest, base + reg_addr, value);
     }
+}
+
+static void check_specs_version(uintptr_t addr, uint8_t version)
+{
+    uint32_t v;
+
+    v = sdhci_readl(addr, SDHC_HCVER);
+    v &= 0xff;
+    v += 1;
+    g_assert_cmpuint(v, ==, version);
 }
 
 static void check_capab_capareg(uintptr_t addr, uint64_t expected_capab)
@@ -157,6 +182,7 @@ static void test_machine(const void *data)
 
     machine_start(test);
 
+    check_specs_version(test->sdhci.addr, test->sdhci.version);
     check_capab_capareg(test->sdhci.addr, test->sdhci.capab.reg);
     check_capab_readonly(test->sdhci.addr);
     check_capab_sdma(test->sdhci.addr, test->sdhci.capab.sdma);
