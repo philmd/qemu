@@ -569,7 +569,7 @@ static void pxa2xx_mmci_class_init(ObjectClass *klass, void *data)
 
 static void pxa2xx_mmci_bus_class_init(ObjectClass *klass, void *data)
 {
-    SDBusClass *sbc = SD_BUS_CLASS(klass);
+    SDMasterClass *sbc = SDBUS_MASTER_CLASS(klass);
 
     sbc->set_inserted = pxa2xx_mmci_set_inserted;
     sbc->set_readonly = pxa2xx_mmci_set_readonly;

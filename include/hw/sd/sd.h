@@ -68,12 +68,15 @@ typedef struct {
 
 #define TYPE_SD_BUS "sd-bus"
 #define SD_BUS(obj) OBJECT_CHECK(SDBus, (obj), TYPE_SD_BUS)
-#define SD_BUS_CLASS(klass) OBJECT_CLASS_CHECK(SDBusClass, (klass), TYPE_SD_BUS)
-#define SD_BUS_GET_CLASS(obj) OBJECT_GET_CLASS(SDBusClass, (obj), TYPE_SD_BUS)
 
 struct SDBus {
     BusState qbus;
 };
+
+#define SDBUS_MASTER_CLASS(klass) \
+    OBJECT_CLASS_CHECK(SDMasterClass, (klass), TYPE_SD_BUS)
+#define SDBUS_MASTER_GET_CLASS(obj) \
+    OBJECT_GET_CLASS(SDMasterClass, (obj), TYPE_SD_BUS)
 
 typedef struct {
     /*< private >*/
@@ -85,7 +88,7 @@ typedef struct {
      */
     void (*set_inserted)(DeviceState *dev, bool inserted);
     void (*set_readonly)(DeviceState *dev, bool readonly);
-} SDBusClass;
+} SDMasterClass;
 
 /* Legacy functions to be used only by non-qdevified callers */
 SDState *sd_init(BlockBackend *bs, bool is_spi);

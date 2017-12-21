@@ -128,7 +128,7 @@ bool sdbus_get_readonly(SDBus *sdbus)
 
 void sdbus_set_inserted(SDBus *sdbus, bool inserted)
 {
-    SDBusClass *sbc = SD_BUS_GET_CLASS(sdbus);
+    SDMasterClass *sbc = SDBUS_MASTER_GET_CLASS(sdbus);
     BusState *qbus = BUS(sdbus);
 
     if (sbc->set_inserted) {
@@ -138,7 +138,7 @@ void sdbus_set_inserted(SDBus *sdbus, bool inserted)
 
 void sdbus_set_readonly(SDBus *sdbus, bool readonly)
 {
-    SDBusClass *sbc = SD_BUS_GET_CLASS(sdbus);
+    SDMasterClass *sbc = SDBUS_MASTER_GET_CLASS(sdbus);
     BusState *qbus = BUS(sdbus);
 
     if (sbc->set_readonly) {
@@ -177,7 +177,7 @@ static const TypeInfo sd_bus_info = {
     .name = TYPE_SD_BUS,
     .parent = TYPE_BUS,
     .instance_size = sizeof(SDBus),
-    .class_size = sizeof(SDBusClass),
+    .class_size = sizeof(SDMasterClass),
 };
 
 static const TypeInfo sd_slave_info = {
