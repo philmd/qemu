@@ -29,7 +29,7 @@ static inline const char *sdbus_name(SDBus *sdbus)
     return sdbus->qbus.name;
 }
 
-static SDState *get_card(SDBus *sdbus)
+static SDState *get_slave(SDBus *sdbus)
 {
     /* We only ever have one child on the bus so just return it */
     BusChild *kid = QTAILQ_FIRST(&sdbus->qbus.children);
@@ -42,7 +42,7 @@ static SDState *get_card(SDBus *sdbus)
 
 int sdbus_do_command(SDBus *sdbus, SDRequest *req, uint8_t *response)
 {
-    SDState *card = get_card(sdbus);
+    SDState *card = get_slave(sdbus);
     int sz = 0;
     char *hexbuf;
 
@@ -62,7 +62,7 @@ int sdbus_do_command(SDBus *sdbus, SDRequest *req, uint8_t *response)
 
 void sdbus_write_data(SDBus *sdbus, uint8_t value)
 {
-    SDState *card = get_card(sdbus);
+    SDState *card = get_slave(sdbus);
 
     trace_sdbus_write(sdbus_name(sdbus), value);
     if (card) {
@@ -74,7 +74,7 @@ void sdbus_write_data(SDBus *sdbus, uint8_t value)
 
 uint8_t sdbus_read_data(SDBus *sdbus)
 {
-    SDState *card = get_card(sdbus);
+    SDState *card = get_slave(sdbus);
     uint8_t value = 0;
 
     if (card) {
@@ -89,7 +89,7 @@ uint8_t sdbus_read_data(SDBus *sdbus)
 
 bool sdbus_data_ready(SDBus *sdbus)
 {
-    SDState *card = get_card(sdbus);
+    SDState *card = get_slave(sdbus);
 
     if (card) {
         SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
@@ -102,7 +102,7 @@ bool sdbus_data_ready(SDBus *sdbus)
 
 bool sdbus_get_inserted(SDBus *sdbus)
 {
-    SDState *card = get_card(sdbus);
+    SDState *card = get_slave(sdbus);
 
     if (card) {
         SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
@@ -115,7 +115,7 @@ bool sdbus_get_inserted(SDBus *sdbus)
 
 bool sdbus_get_readonly(SDBus *sdbus)
 {
-    SDState *card = get_card(sdbus);
+    SDState *card = get_slave(sdbus);
 
     if (card) {
         SDSlaveClass *sc = SDBUS_SLAVE_GET_CLASS(card);
@@ -148,7 +148,7 @@ void sdbus_set_readonly(SDBus *sdbus, bool readonly)
 
 void sdbus_reparent_card(SDBus *from, SDBus *to)
 {
-    SDState *card = get_card(from);
+    SDState *card = get_slave(from);
     SDSlaveClass *sc;
     bool readonly;
 
