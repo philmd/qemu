@@ -1175,6 +1175,10 @@ static void sdhci_init_readonly_registers(SDHCIState *s, Error **errp)
     }
     s->version = (SDHC_HCVER_VENDOR << 8) | (s->spec_version - 1);
 
+    if (!s->dma) {
+        s->cap.sdma = s->cap.adma1 = s->cap.adma2 = false;
+    }
+
     if (s->capareg == UINT64_MAX) {
         sdhci_init_capareg(s, errp);
     }
@@ -1308,6 +1312,7 @@ static Property sdhci_properties[] = {
      * Possible values: 512, 1024, 2048 bytes */
     DEFINE_PROP_UINT16("max-block-length", SDHCIState, cap.max_blk_len, 512),
     /* DMA */
+    DEFINE_PROP_BOOL("dma", SDHCIState, dma, true), /* shortcut */
     DEFINE_PROP_BOOL("sdma", SDHCIState, cap.sdma, true),
     DEFINE_PROP_BOOL("adma1", SDHCIState, cap.adma1, false),
     DEFINE_PROP_BOOL("adma2", SDHCIState, cap.adma2, true),
