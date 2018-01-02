@@ -48,6 +48,11 @@
 //#define DEBUG_SD 1
 
 typedef enum {
+    SD_PHY_SPEC_VER_1_10 = 110,
+    SD_PHY_SPEC_VER_2_00 = 200, /* not yet supported */
+} sd_phy_spec_ver_t;
+
+typedef enum {
     sd_r0 = 0,    /* no response */
     sd_r1,        /* normal response command */
     sd_r2_i,      /* CID register */
@@ -122,6 +127,7 @@ struct SDState {
     qemu_irq inserted_cb;
     QEMUTimer *ocr_power_timer;
     const char *proto_name;
+    int spec_version;
     bool enable;
     uint8_t dat_lines;
     bool cmd_line;
@@ -2201,6 +2207,7 @@ static void sd_realize(DeviceState *dev, Error **errp)
     int ret;
 
     sd->proto_name = sd->spi ? "SPI" : "SD";
+    sd->spec_version = SD_PHY_SPEC_VER_1_10;
 
     if (sd->blk && blk_is_read_only(sd->blk)) {
         error_setg(errp, "Cannot use read-only drive as SD card");
