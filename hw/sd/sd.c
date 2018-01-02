@@ -65,6 +65,13 @@ typedef enum {
 } sd_phy_spec_ver_t;
 
 typedef enum {
+    sd_capacity_unknown,
+    sd_capacity_sdsc,           /* not well supported */
+    sd_capacity_sdhc,
+    sd_capacity_sdxc,           /* not yet supported */
+} sd_card_capacity_t;
+
+typedef enum {
     sd_r0 = 0,    /* no response */
     sd_r1,        /* normal response command */
     sd_r2_i,      /* CID register */
@@ -142,6 +149,7 @@ struct SDState {
     uint8_t dat_lines;
     bool cmd_line;
     int spec_version;
+    sd_card_capacity_t capacity;
 };
 
 #define SDCARD_CMD_MAX 64
@@ -183,6 +191,17 @@ static const char *sd_response_name(sd_rsp_type_t rsp)
         rsp = sd_r1;
     }
     return response_name[rsp];
+}
+
+static const char *sd_capacity(sd_card_capacity_t capacity)
+{
+    static const char *capacity_name[] = {
+        [sd_capacity_unknown]   = "UNKN",
+        [sd_capacity_sdsc]      = "SDSC",
+        [sd_capacity_sdhc]      = "SDHC",
+        [sd_capacity_sdxc]      = "SDXC",
+    };
+    return capacity_name[capacity];
 }
 
 static const char *sd_cmd_abbreviation(uint8_t cmd)
@@ -2057,11 +2076,36 @@ static void sd_realize(DeviceState *dev, Error **errp)
     }
 
     if (sd->blk) {
+        int64_t size;
+
         ret = blk_set_perm(sd->blk, BLK_PERM_CONSISTENT_READ | BLK_PERM_WRITE,
                            BLK_PERM_ALL, errp);
         if (ret < 0) {
             return;
         }
+
+        size = blk_getlength(sd->blk);
+        if (size < 0) {
+            size = 0;
+        }
+        if (size <= 2 * G_BYTE) {
+            sd->capacity = sd_capacity_sdsc;
+        } else if (size <= 32 * G_BYTE) {
+            sd->capacity = sd_capacity_sdhc;
+        } else if (size <= 2 * T_BYTE) {
+            sd->capacity = sd_capacity_sdxc;
+        } else {
+            error_setg(errp, "block size unsupported: %lld TB", size / T_BYTE);
+            return;
+        }
+        trace_sdcard_capacity(sd_capacity(sd->capacity), size);
+
+        if (sd->capacity == sd_capacity_sdxc
+                && sd->spec_version < SD_PHY_SPEC_VER_3_01) {
+            error_setg(errp, "capacity SDHC requires at least Spec v3.01");
+            return;
+        }
+
         blk_set_dev_ops(sd->blk, &sd_block_ops, sd);
     }
 }
