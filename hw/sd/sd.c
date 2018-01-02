@@ -37,6 +37,7 @@
 #include "hw/sd/sd.h"
 #include "qapi/error.h"
 #include "qemu/bitmap.h"
+#include "qemu/cutils.h"
 #include "hw/qdev-properties.h"
 #include "qemu/error-report.h"
 #include "qemu/timer.h"
@@ -53,6 +54,10 @@ do { fprintf(stderr, "SD: " fmt , ## __VA_ARGS__); } while (0)
 #endif
 
 #define ACMD41_ENQUIRY_MASK     0x00ffffff
+
+#define SDSC_MAX_CAPACITY_BYTES (2028 * M_BYTE)
+#define SDHC_MAX_CAPACITY_BYTES (32 * G_BYTE - 80 * M_BYTE)
+#define SDXC_MAX_CAPACITY_BYTES (2 * T_BYTE)
 
 typedef enum {
     sd_r0 = 0,    /* no response */
@@ -415,7 +420,7 @@ static void sd_reset_csd(SDState *sd, uint64_t size)
     uint32_t sectsize = (1 << (SECTOR_SHIFT + 1)) - 1;
     uint32_t wpsize = (1 << (WPGROUP_SHIFT + 1)) - 1;
 
-    if (size <= 0x40000000) {	/* Standard Capacity SD */
+    if (size <= SDSC_MAX_CAPACITY_BYTES) { /* Standard Capacity SD */
         sd->csd[0] = 0x00;	/* CSD structure */
         sd->csd[1] = 0x26;	/* Data read access-time-1 */
         sd->csd[2] = 0x00;	/* Data read access-time-2 */
