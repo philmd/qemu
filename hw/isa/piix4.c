@@ -31,6 +31,7 @@
 #include "hw/southbridge/i82371_piix.h"
 #include "hw/dma/i8257.h"
 #include "hw/sysbus.h"
+#include "hw/audio/pcspk.h"
 #include "hw/timer/i8254.h"
 
 PCIDevice *piix4_dev;
@@ -142,6 +143,7 @@ static void piix4_realize(PCIDevice *pci_dev, Error **errp)
     DeviceState *dev = DEVICE(pci_dev);
     PIIX4State *s = DO_UPCAST(PIIX4State, dev, pci_dev);
     ISABus *isa_bus;
+    ISADevice *pit;
     qemu_irq *i8259_out_irq;
 
     isa_bus = isa_bus_new(dev, pci_address_space(pci_dev),
@@ -166,7 +168,10 @@ static void piix4_realize(PCIDevice *pci_dev, Error **errp)
     isa_bus_irqs(isa_bus, s->isa);
 
     /* initialize pit */
-    i8254_pit_init(isa_bus, 0x40, 0, NULL);
+    pit = i8254_pit_init(isa_bus, 0x40, 0, NULL);
+
+    /* speaker */
+    pcspk_init(isa_bus, pit);
 
     /* DMA */
     i8257_dma_init(isa_bus, 0);
