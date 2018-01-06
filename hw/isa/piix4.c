@@ -29,6 +29,7 @@
 #include "hw/pci/pci.h"
 #include "hw/isa/isa.h"
 #include "hw/southbridge/i82371_piix.h"
+#include "hw/dma/i8257.h"
 #include "hw/sysbus.h"
 
 PCIDevice *piix4_dev;
@@ -162,6 +163,9 @@ static void piix4_realize(PCIDevice *pci_dev, Error **errp)
 
     /* initialize ISA irqs */
     isa_bus_irqs(isa_bus, s->isa);
+
+    /* DMA */
+    i8257_dma_init(isa_bus, 0);
 
     piix4_dev = pci_dev;
 }
