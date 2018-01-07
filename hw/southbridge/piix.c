@@ -32,6 +32,7 @@
 #include "hw/dma/i8257.h"
 #include "hw/audio/pcspk.h"
 #include "hw/timer/i8254.h"
+#include "hw/isa/superio.h"
 #include "hw/xen/xen.h"
 
 #define PIIX_NUM_PIC_IRQS       16      /* i8259 * 2 */
@@ -537,6 +538,8 @@ static void piix4_realize(PCIDevice *pci_dev, Error **errp)
 
     /* DMA */
     i8257_dma_init(s->isa_bus, 0);
+
+    isa_superio_init(s->isa_bus, 2, 1, 1);
 
     piix4_dev = pci_dev;
 }
