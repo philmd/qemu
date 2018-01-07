@@ -203,10 +203,10 @@ static void piix3_write_config_xen(PCIDevice *dev,
     piix3_write_config(dev, address, val, len);
 }
 
-static void piix3_reset(void *opaque)
+static void piix3_reset(DeviceState *dev)
 {
-    PIIX3State *d = opaque;
-    uint8_t *pci_conf = d->dev.config;
+    PIIX3State *s = PIIX3_PCI_DEVICE(dev);
+    uint8_t *pci_conf = s->dev.config;
 
     pci_conf[0x04] = 0x07; /* master, memory and I/O */
     pci_conf[0x05] = 0x00;
@@ -240,8 +240,8 @@ static void piix3_reset(void *opaque)
     pci_conf[0xac] = 0x00;
     pci_conf[0xae] = 0x00;
 
-    d->pic_levels = 0;
-    d->rcr = 0;
+    s->pic_levels = 0;
+    s->rcr = 0;
 }
 
 static int piix3_post_load(void *opaque, int version_id)
@@ -352,8 +352,6 @@ static void piix3_realize(PCIDevice *dev, Error **errp)
                           "piix3-reset-control", 1);
     memory_region_add_subregion_overlap(pci_address_space_io(dev), RCR_IOPORT,
                                         &d->rcr_mem, 1);
-
-    qemu_register_reset(piix3_reset, d);
 }
 
 static void pci_piix3_class_init(ObjectClass *klass, void *data)
@@ -364,6 +362,7 @@ static void pci_piix3_class_init(ObjectClass *klass, void *data)
     dc->desc        = "ISA bridge";
     dc->vmsd        = &vmstate_piix3;
     dc->hotpluggable   = false;
+    dc->reset       = piix3_reset;
     k->realize      = piix3_realize;
     k->vendor_id    = PCI_VENDOR_ID_INTEL;
     /* 82371SB PIIX3 PCI-to-ISA bridge (Step A1) */
