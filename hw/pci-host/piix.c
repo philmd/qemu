@@ -27,6 +27,7 @@
 #include "hw/i386/pc.h"
 #include "hw/pci/pci.h"
 #include "hw/pci/pci_host.h"
+#include "hw/southbridge/i82371_piix.h"
 #include "hw/isa/isa.h"
 #include "hw/sysbus.h"
 #include "qapi/error.h"
@@ -119,11 +120,6 @@ struct PCII440FXState {
  * exist in real hardware, to get the RAM size from QEMU.
  */
 #define I440FX_COREBOOT_RAM_SIZE 0x57
-
-static void piix3_set_irq(void *opaque, int pirq, int level);
-static PCIINTxRoute piix3_route_intx_pin_to_irq(void *opaque, int pci_intx);
-static void piix3_write_config_xen(PCIDevice *dev,
-                               uint32_t address, uint32_t val, int len);
 
 /* return the global irq number corresponding to a given device irq
    pin. We could also use the bus number to have a more precise
@@ -353,7 +349,6 @@ PCIBus *i440fx_init(const char *host_type, const char *pci_type,
     PCIBus *b;
     PCIDevice *d;
     PCIHostState *s;
-    PIIX3State *piix3;
     PCII440FXState *f;
     unsigned i;
     I440FXState *i440fx;
@@ -406,28 +401,7 @@ PCIBus *i440fx_init(const char *host_type, const char *pci_type,
                  PAM_EXPAN_SIZE);
     }
 
-    /* Xen supports additional interrupt routes from the PCI devices to
-     * the IOAPIC: the four pins of each PCI device on the bus are also
-     * connected to the IOAPIC directly.
-     * These additional routes can be discovered through ACPI. */
-    if (xen_enabled()) {
-        PCIDevice *pci_dev = pci_create_simple_multifunction(b,
-                             -1, true, "PIIX3-xen");
-        piix3 = PIIX3_PCI_DEVICE(pci_dev);
-        pci_bus_irqs(b, xen_piix3_set_irq, xen_pci_slot_get_pirq,
-                piix3, XEN_PIIX_NUM_PIRQS);
-    } else {
-        PCIDevice *pci_dev = pci_create_simple_multifunction(b,
-                             -1, true, "PIIX3");
-        piix3 = PIIX3_PCI_DEVICE(pci_dev);
-        pci_bus_irqs(b, piix3_set_irq, pci_slot_get_pirq, piix3,
-                PIIX_NUM_PIRQS);
-        pci_bus_set_route_irq_fn(b, piix3_route_intx_pin_to_irq);
-    }
-    piix3->pic = pic;
-    *isa_bus = ISA_BUS(qdev_get_child_bus(DEVICE(piix3), "isa.0"));
-
-    *piix3_devfn = piix3->dev.devfn;
+    piix3_init(b, isa_bus, pic, piix3_devfn);
 
     ram_size = ram_size / 8 / 1024 / 1024;
     if (ram_size > 255) {
@@ -506,6 +480,38 @@ static PCIINTxRoute piix3_route_intx_pin_to_irq(void *opaque, int pin)
         route.irq = -1;
     }
     return route;
+}
+
+PCIDevice *piix3_init(PCIBus *bus, ISABus **isa_bus,
+                      qemu_irq *pic, int *piix3_devfn)
+{
+    PCIDevice *pci_dev;
+    PIIX3State *piix3;
+
+    /* Xen supports additional interrupt routes from the PCI devices to
+     * the IOAPIC: the four pins of each PCI device on the bus are also
+     * connected to the IOAPIC directly.
+     * These additional routes can be discovered through ACPI. */
+    if (xen_enabled()) {
+        pci_dev = pci_create_simple_multifunction(bus,
+                             -1, true, "PIIX3-xen");
+        piix3 = PIIX3_PCI_DEVICE(pci_dev);
+        pci_bus_irqs(bus, xen_piix3_set_irq, xen_pci_slot_get_pirq,
+                piix3, XEN_PIIX_NUM_PIRQS);
+    } else {
+        pci_dev = pci_create_simple_multifunction(bus,
+                             -1, true, "PIIX3");
+        piix3 = PIIX3_PCI_DEVICE(pci_dev);
+        pci_bus_irqs(bus, piix3_set_irq, pci_slot_get_pirq, piix3,
+                PIIX_NUM_PIRQS);
+        pci_bus_set_route_irq_fn(bus, piix3_route_intx_pin_to_irq);
+    }
+    piix3->pic = pic;
+    *isa_bus = ISA_BUS(qdev_get_child_bus(DEVICE(piix3), "isa.0"));
+
+    *piix3_devfn = piix3->dev.devfn;
+
+    return pci_dev;
 }
 
 /* irq routing is changed. so rebuild bitmap */

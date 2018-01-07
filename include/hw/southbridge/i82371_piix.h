@@ -22,6 +22,10 @@
  */
 #define RCR_IOPORT 0xcf9
 
+/* piix.c */
+PCIDevice *piix3_init(PCIBus *bus, ISABus **isa_bus,
+                      qemu_irq *pic, int *piix3_devfn);
+
 /* piix4.c */
 extern PCIDevice *piix4_dev;
 
