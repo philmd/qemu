@@ -53,8 +53,6 @@ do { fprintf(stderr, "SD: " fmt , ## __VA_ARGS__); } while (0)
 #define DPRINTF(fmt, ...) do {} while(0)
 #endif
 
-#define ACMD41_ENQUIRY_MASK     0x00ffffff
-
 #define SDSC_MAX_CAPACITY_BYTES (2028 * M_BYTE)
 #define SDHC_MAX_CAPACITY_BYTES (32 * G_BYTE - 80 * M_BYTE)
 #define SDXC_MAX_CAPACITY_BYTES (2 * T_BYTE)
@@ -368,13 +366,26 @@ static uint16_t sd_crc16(void *message, size_t width)
 
 #define OCR_POWER_DELAY_NS      500000 /* 0.5ms */
 
+FIELD(OCR, VDD_VOLTAGE_WINDOW,          0, 24)
+FIELD(OCR, VDD_VOLTAGE_WIN_LO,          0,  8)
+FIELD(OCR, DUAL_VOLTAGE_CARD,           7,  1)
+FIELD(OCR, VDD_VOLTAGE_WIN_HI,          8, 16)
+FIELD(OCR, ACCEPT_SWITCH_1V8,          24,  1) /* Only UHS-I */
+FIELD(OCR, UHS_II_CARD,                29,  1) /* Only UHS-II */
 FIELD(OCR, CARD_CAPACITY,              30,  1) /* 0:SDSC, 1:SDHC/SDXC */
 FIELD(OCR, CARD_POWER_UP,              31,  1)
 
+#define ACMD41_ENQUIRY_MASK     0x00ffffff
+#define ACMD41_R3_MASK          (R_OCR_VDD_VOLTAGE_WIN_HI_MASK \
+                               | R_OCR_ACCEPT_SWITCH_1V8_MASK \
+                               | R_OCR_UHS_II_CARD_MASK \
+                               | R_OCR_CARD_CAPACITY_MASK \
+                               | R_OCR_CARD_POWER_UP_MASK)
+
 static void sd_reset_ocr(SDState *sd)
 {
-    /* All voltages OK, Standard Capacity SD Memory Card, not yet powered up */
-    sd->ocr = 0x00ffff00;
+    /* All voltages OK */
+    sd->ocr = R_OCR_VDD_VOLTAGE_WIN_HI_MASK;
 }
 
 static void sd_ocr_powerup(void *opaque)
@@ -555,10 +566,12 @@ static void sd_response_r1_make(SDState *sd, uint8_t *response)
 
 static void sd_response_r3_make(SDState *sd, uint8_t *response)
 {
-    response[0] = (sd->ocr >> 24) & 0xff;
-    response[1] = (sd->ocr >> 16) & 0xff;
-    response[2] = (sd->ocr >> 8) & 0xff;
-    response[3] = (sd->ocr >> 0) & 0xff;
+    uint32_t ocr = sd->ocr & ACMD41_R3_MASK;
+
+    response[0] = (ocr >> 24) & 0xff;
+    response[1] = (ocr >> 16) & 0xff;
+    response[2] = (ocr >>  8) & 0xff;
+    response[3] = (ocr >>  0) & 0xff;
 }
 
 static void sd_response_r6_make(SDState *sd, uint8_t *response)
