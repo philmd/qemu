@@ -1394,6 +1394,11 @@ static sd_rsp_type_t sd_normal_command(SDState *sd, SDRequest req)
         case sd_identification_state:
         case sd_inactive_state:
             return sd_illegal;
+        case sd_idle_state:
+            if (rca) {
+                qemu_log_mask(LOG_GUEST_ERROR,
+                              "SD: illegal RCA 0x%04x for APP_CMD\n", req.cmd);
+            }
         default:
             break;
         }
