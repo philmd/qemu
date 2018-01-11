@@ -94,6 +94,7 @@ typedef struct SDHCIState {
     /* Configurable properties */
     bool pending_insert_quirk; /* Quirk for Raspberry Pi card insert int */
     uint8_t sd_spec_version;
+    uint8_t uhs_mode;
 } SDHCIState;
 
 #define TYPE_PCI_SDHCI "sdhci-pci"
