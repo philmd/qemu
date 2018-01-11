@@ -276,11 +276,25 @@ static bool sd_get_cmd_line(SDState *sd)
 
 static void sd_set_voltage(SDState *sd, uint16_t millivolts)
 {
-    trace_sdcard_set_voltage(millivolts);
+    trace_sdcard_set_voltage(millivolts, sd->uhs_enabled);
 
     switch (millivolts) {
     case 3001 ... 3600: /* SD_VOLTAGE_3_3V */
     case 2001 ... 3000: /* SD_VOLTAGE_3_0V */
+        if (sd->uhs_enabled) {
+            qemu_log_mask(LOG_GUEST_ERROR, "SD card in UHS mode, "
+                          "incorrect voltage!\n");
+            /* continue... */
+        }
+        break;
+    case 1601 ... 2000: /* SD_VOLTAGE_1_8V */
+        if (!sd->uhs_enabled) {
+            qemu_log_mask(LOG_GUEST_ERROR, "SD card not in correct state for"
+                          "1.8V switch\n");
+            break;
+        }
+        sd->cmd_line = true;
+        sd->dat_lines = 0xf;
         break;
     default:
         qemu_log_mask(LOG_GUEST_ERROR, "SD card voltage not supported: %.3fV",
@@ -1287,6 +1301,19 @@ static sd_rsp_type_t sd_normal_command(SDState *sd, SDRequest req)
 
         default:
             break;
+        }
+        break;
+
+    case 11:    /* CMD11: VOLTAGE_SWITCH */
+        if (sd->spi) {
+            goto bad_cmd;
+        }
+        if (sd->state == sd_ready_state) {
+            trace_sdcard_switch_voltage(sd->uhs_enabled);
+            sd->uhs_enabled = true;
+            sd->dat_lines = 0;
+            sd->cmd_line = false;
+            return sd_r1;
         }
         break;
 
@@ -2352,7 +2379,7 @@ static Property sd_properties[] = {
      * board to ensure that ssi transfers only occur when the chip select
      * is asserted.  */
     DEFINE_PROP_BOOL("spi", SDState, spi, false),
-    DEFINE_PROP_UINT8("uhs", SDState, uhs_supported, UHS_NOT_SUPPORTED),
+    DEFINE_PROP_UINT8("uhs", SDState, uhs_supported, UHS_I),
     DEFINE_PROP_END_OF_LIST()
 };
 
