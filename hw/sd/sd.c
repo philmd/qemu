@@ -427,11 +427,16 @@ static void sd_reset_scr(SDState *sd)
                  | 2;           /* Spec Version 2.00 or Version 3.0X */
     if (sd->capacity == sd_capacity_sdsc) {
         sd->scr[1] = (2 << 4);  /* SDSC Card (Security Version 1.01) */
-    } else {
+    } else if (sd->capacity == sd_capacity_sdhc) {
         sd->scr[1] = (3 << 4);  /* SDHC Card (Security Version 2.00) */
+    } else {
+        sd->scr[1] = (4 << 4);  /* SDXC Card (Security Version 3.xx) */
     }
     sd->scr[1] |= 0b0101;       /* 1-bit or 4-bit width bus modes */
     sd->scr[2] = 0x00;          /* Extended Security is not supported. */
+    if (sd->spec_version > SD_PHY_SPEC_VER_2_00) {
+        sd->scr[2] |= 1 << 7;   /* Version 3.0X */
+    }
     sd->scr[3] = 0x00;
     /* reserved for manufacturer usage */
     sd->scr[4] = 0x00;
