@@ -1385,9 +1385,11 @@ static sd_rsp_type_t sd_normal_command(SDState *sd, SDRequest req)
 
     /* Application specific commands (Class 8) */
     case 55:	/* CMD55:  APP_CMD */
-        if (sd->rca != rca)
-            return sd_r0;
-
+        if (!sd->spi) {
+            if (sd->rca != rca) {
+                return sd_r0;
+            }
+        }
         sd->expecting_acmd = true;
         sd->card_status |= APP_CMD;
         return sd_r1;
@@ -1406,6 +1408,18 @@ static sd_rsp_type_t sd_normal_command(SDState *sd, SDRequest req)
             break;
         }
         break;
+
+    case 58:    /* CMD58:   READ_OCR (SPI) */
+        if (!sd->spi) {
+            goto bad_cmd;
+        }
+        return sd_r3;
+
+    case 59:    /* CMD59:   CRC_ON_OFF (SPI) */
+        if (!sd->spi) {
+            goto bad_cmd;
+        }
+        goto unimplemented_cmd;
 
     default:
     bad_cmd:
@@ -1431,6 +1445,9 @@ static sd_rsp_type_t sd_app_command(SDState *sd,
     sd->card_status |= APP_CMD;
     switch (req.cmd) {
     case 6:	/* ACMD6:  SET_BUS_WIDTH */
+        if (sd->spi) {
+            goto unimplemented_cmd;
+        }
         switch (sd->state) {
         case sd_transfer_state:
             sd->sd_status[0] &= 0x3f;
@@ -1452,6 +1469,12 @@ static sd_rsp_type_t sd_app_command(SDState *sd,
 
         default:
             break;
+        }
+        break;
+
+    case 18:
+        if (sd->spi) {
+            goto unimplemented_cmd;
         }
         break;
 
@@ -1477,6 +1500,19 @@ static sd_rsp_type_t sd_app_command(SDState *sd,
 
         default:
             break;
+        }
+        break;
+
+    case 25:
+    case 26:
+        if (sd->spi) {
+            goto unimplemented_cmd;
+        }
+        break;
+
+    case 38:
+        if (sd->spi) {
+            goto unimplemented_cmd;
         }
         break;
 
@@ -1537,6 +1573,12 @@ static sd_rsp_type_t sd_app_command(SDState *sd,
         }
         break;
 
+    case 43 ... 49:
+        if (sd->spi) {
+            goto unimplemented_cmd;
+        }
+        break;
+
     case 51:	/* ACMD51: SEND_SCR */
         switch (sd->state) {
         case sd_transfer_state:
@@ -1550,9 +1592,18 @@ static sd_rsp_type_t sd_app_command(SDState *sd,
         }
         break;
 
+    case 55:    /* Not exist */
+        break;
+
     default:
         /* Fall back to standard commands.  */
         return sd_normal_command(sd, req);
+
+    unimplemented_cmd:
+        /* Commands that are recognised but not yet implemented in SPI mode.  */
+        qemu_log_mask(LOG_UNIMP, "SD: CMD%i not implemented in SPI mode\n",
+                      req.cmd);
+        return sd_illegal;
     }
 
     qemu_log_mask(LOG_GUEST_ERROR, "SD: ACMD%i in a wrong state\n", req.cmd);
