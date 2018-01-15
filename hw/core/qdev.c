@@ -232,19 +232,6 @@ static void device_realize(DeviceState *dev, Error **errp)
     }
 }
 
-static void device_unrealize(DeviceState *dev, Error **errp)
-{
-    DeviceClass *dc = DEVICE_GET_CLASS(dev);
-
-    if (dc->exit) {
-        int rc = dc->exit(dev);
-        if (rc < 0) {
-            error_setg(errp, "Device exit failed.");
-            return;
-        }
-    }
-}
-
 void qdev_set_legacy_instance_id(DeviceState *dev, int alias_id,
                                  int required_for_version)
 {
@@ -1128,7 +1115,6 @@ static void device_class_init(ObjectClass *class, void *data)
 
     class->unparent = device_unparent;
     dc->realize = device_realize;
-    dc->unrealize = device_unrealize;
 
     /* by default all devices were considered as hotpluggable,
      * so with intent to check it in generic qdev_unplug() /
