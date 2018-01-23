@@ -51,17 +51,22 @@
 #define ERASE_RESET		(1 << 13)
 #define CURRENT_STATE		(7 << 9)
 #define READY_FOR_DATA		(1 << 8)
-#define SWTICH_ERROR        (1 << 7)
 #define APP_CMD			(1 << 5)
 #define AKE_SEQ_ERROR		(1 << 3)
-#define OCR_CCS_BITN        30
 
-#define EXCSD_BUS_WIDTH_OFFSET 183
-#define BUS_WIDTH_8_MASK    0x4
-#define BUS_WIDTH_4_MASK    0x2
+typedef enum {
+    SD_VOLTAGE_0_4V     = 400,  /* currently not supported */
+    SD_VOLTAGE_1_8V     = 1800,
+    SD_VOLTAGE_3_0V     = 3000,
+    SD_VOLTAGE_3_3V     = 3300,
+} sd_voltage_mv_t;
 
-#define SD_TUNING_BLOCK_SIZE    64
-#define MMC_TUNING_BLOCK_SIZE   128
+typedef enum  {
+    UHS_NOT_SUPPORTED   = 0,
+    UHS_I               = 1,
+    UHS_II              = 2,    /* currently not supported */
+    UHS_III             = 3,    /* currently not supported */
+} sd_uhs_mode_t;
 
 typedef enum {
     sd_none = -1,
@@ -76,9 +81,6 @@ typedef struct {
     uint32_t arg;
     uint8_t crc;
 } SDRequest;
-
-#define SD_VOLTAGE_33 33
-#define SD_VOLTAGE_18 18
 
 typedef struct SDState SDState;
 typedef struct SDBus SDBus;
@@ -95,13 +97,13 @@ typedef struct {
     DeviceClass parent_class;
     /*< public >*/
 
-    uint8_t (*get_dat_lines)(SDState *sd);
-    bool (*get_cmd_line)(SDState *sd);
-    void (*set_voltage)(SDState *sd, int v);
     int (*do_command)(SDState *sd, SDRequest *req, uint8_t *response);
     void (*write_data)(SDState *sd, uint8_t value);
     uint8_t (*read_data)(SDState *sd);
     bool (*data_ready)(SDState *sd);
+    void (*set_voltage)(SDState *sd, uint16_t millivolts);
+    uint8_t (*get_dat_lines)(SDState *sd);
+    bool (*get_cmd_line)(SDState *sd);
     void (*enable)(SDState *sd, bool enable);
     bool (*get_inserted)(SDState *sd);
     bool (*get_readonly)(SDState *sd);
@@ -128,34 +130,12 @@ typedef struct {
     void (*set_readonly)(DeviceState *dev, bool readonly);
 } SDBusClass;
 
-/* Legacy functions to be used only by non-qdevified callers */
-SDState *sd_init(BlockBackend *bs, bool is_spi);
-SDState *mmc_init(BlockBackend *bs);
-
-int sd_do_command(SDState *sd, SDRequest *req,
-                  uint8_t *response);
-void sd_write_data(SDState *sd, uint8_t value);
-uint8_t sd_read_data(SDState *sd);
-void sd_set_cb(SDState *sd, qemu_irq readonly, qemu_irq insert);
-bool sd_data_ready(SDState *sd);
-/* sd_enable should not be used -- it is only used on the nseries boards,
- * where it is part of a broken implementation of the MMC card slot switch
- * (there should be two card slots which are multiplexed to a single MMC
- * controller, but instead we model it with one card and controller and
- * disable the card when the second slot is selected, so it looks like the
- * second slot is always empty).
- */
-void sd_enable(SDState *sd, bool enable);
-uint8_t sd_get_dat_lines(SDState *sd);
-bool sd_get_cmd_line(SDState *sd);
-void sd_set_voltage(SDState *sd, int v);
-
 /* Functions to be used by qdevified callers (working via
  * an SDBus rather than directly with SDState)
  */
+void sdbus_set_voltage(SDBus *sdbus, uint16_t millivolts);
 uint8_t sdbus_get_dat_lines(SDBus *sdbus);
 bool sdbus_get_cmd_line(SDBus *sdbus);
-void sdbus_set_voltage(SDBus *sdbus, int v);
 int sdbus_do_command(SDBus *sd, SDRequest *req, uint8_t *response);
 void sdbus_write_data(SDBus *sd, uint8_t value);
 uint8_t sdbus_read_data(SDBus *sd);
