@@ -143,7 +143,7 @@ static const MemoryRegionOps aspeed_sdmc_ops = {
 
 static int ast2400_rambits(AspeedSDMCState *s)
 {
-    switch (s->ram_size >> 20) {
+    switch (s->ram_size / M_BYTE) {
     case 64:
         return ASPEED_SDMC_DRAM_64MB;
     case 128:
@@ -159,13 +159,13 @@ static int ast2400_rambits(AspeedSDMCState *s)
     /* use a common default */
     warn_report("Invalid RAM size 0x%" PRIx64 ". Using default 256M",
                 s->ram_size);
-    s->ram_size = 256 << 20;
+    s->ram_size = 256 * M_BYTE;
     return ASPEED_SDMC_DRAM_256MB;
 }
 
 static int ast2500_rambits(AspeedSDMCState *s)
 {
-    switch (s->ram_size >> 20) {
+    switch (s->ram_size / M_BYTE) {
     case 128:
         return ASPEED_SDMC_AST2500_128MB;
     case 256:
@@ -181,7 +181,7 @@ static int ast2500_rambits(AspeedSDMCState *s)
     /* use a common default */
     warn_report("Invalid RAM size 0x%" PRIx64 ". Using default 512M",
                 s->ram_size);
-    s->ram_size = 512 << 20;
+    s->ram_size = 512 * M_BYTE;
     return ASPEED_SDMC_AST2500_512MB;
 }
 
