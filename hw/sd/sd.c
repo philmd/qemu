@@ -498,6 +498,7 @@ static int sd_req_crc_validate(SDRequest *req)
 void sd_prepare_request_with_crc(SDRequest *req, uint8_t cmd, uint32_t arg,
                                  uint8_t crc)
 {
+    trace_sdmmc_build_request(cmd, arg, crc);
     req->cmd = cmd;
     req->arg = arg;
     req->crc = crc;
