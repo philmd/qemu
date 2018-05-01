@@ -495,6 +495,19 @@ static int sd_req_crc_validate(SDRequest *req)
     return sd_req_crc_calculate(req->cmd, req->arg) != req->crc; /* TODO */
 }
 
+void sd_prepare_request_with_crc(SDRequest *req, uint8_t cmd, uint32_t arg,
+                                 uint8_t crc)
+{
+    req->cmd = cmd;
+    req->arg = arg;
+    req->crc = crc;
+}
+
+void sd_prepare_request(SDRequest *req, uint8_t cmd, uint32_t arg)
+{
+    sd_prepare_request_with_crc(req, cmd, arg, sd_req_crc_calculate(cmd, arg));
+}
+
 static void sd_response_r1_make(SDState *sd, uint8_t *response)
 {
     stl_be_p(response, sd->card_status);
