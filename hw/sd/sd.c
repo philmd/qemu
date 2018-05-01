@@ -93,6 +93,7 @@ struct SDState {
     /* Configurable properties */
     BlockBackend *blk;
     bool spi;
+    bool validate_crc;
 
     uint32_t mode;    /* current card mode, one of SDCardModes */
     int32_t state;    /* current card state, one of SDCardStates */
@@ -489,10 +490,12 @@ static uint8_t sd_req_crc_calculate(uint8_t cmd, uint32_t arg)
     return sd_crc7(buffer, 5);
 }
 
-static int sd_req_crc_validate(SDRequest *req)
+static bool sd_req_crc_valid(SDState *sd, SDRequest *req)
 {
-    return 0;
-    return sd_req_crc_calculate(req->cmd, req->arg) != req->crc; /* TODO */
+    if (sd->validate_crc) {
+        return sd_req_crc_calculate(req->cmd, req->arg) == req->crc;
+    }
+    return true;
 }
 
 void sd_prepare_request_with_crc(SDRequest *req, uint8_t cmd, uint32_t arg,
@@ -1664,7 +1667,7 @@ int sd_do_command(SDState *sd, SDRequest *req,
         return 0;
     }
 
-    if (sd_req_crc_validate(req)) {
+    if (!sd_req_crc_valid(sd, req)) {
         sd->card_status |= COM_CRC_ERROR;
         rtype = sd_illegal;
         goto send_response;
@@ -2113,6 +2116,7 @@ static Property sd_properties[] = {
      * board to ensure that ssi transfers only occur when the chip select
      * is asserted.  */
     DEFINE_PROP_BOOL("spi", SDState, spi, false),
+    DEFINE_PROP_BOOL("validate-crc", SDState, validate_crc, false),
     DEFINE_PROP_END_OF_LIST()
 };
 
