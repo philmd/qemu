@@ -393,8 +393,7 @@ static void sdhci_end_transfer(SDHCIState *s)
         SDRequest request;
         uint8_t response[16];
 
-        request.cmd = 0x0C;
-        request.arg = 0;
+        sd_prepare_request(&request, 0x0c, 0);
         trace_sdhci_end_transfer(request.cmd, request.arg);
         sdbus_do_command(&s->sdbus, &request, response);
         /* Auto CMD12 response goes to the upper Response register */
