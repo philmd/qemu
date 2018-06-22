@@ -8,18 +8,11 @@ XTENSA_SRC_PATH = $(SRC_PATH)/tests/tcg/xtensa
 # Set search path for all sources
 VPATH 		+= $(XTENSA_SRC_PATH)
 
-CORE=dc232b
-CROSS=xtensa-$(CORE)-elf-
-
-ifndef XT
-SIM = ../../../xtensa-softmmu/qemu-system-xtensa
-SIMFLAGS = -M sim -cpu $(CORE) -nographic -semihosting -icount 6 $(EXTFLAGS) -kernel
-SIMDEBUG = -s -S
-else
-SIM = xt-run
-SIMFLAGS = --xtensa-core=DC_B_232L --exit_with_target_code $(EXTFLAGS)
-SIMDEBUG = --gdbserve=0
-endif
+# LE
+#CORE=dc232b
+# BE
+CORE=fsf
+CPPFLAGS += -DXTENSA_HAVE_BE
 
 INCLUDE_DIRS = $(SRC_PATH)/target/xtensa/core-$(CORE)
 XTENSA_INC = $(addprefix -I,$(INCLUDE_DIRS))
@@ -65,12 +58,13 @@ TESTS := $(TESTCASES)
 $(info TESTS=$(TESTS))
 
 linker.ld: linker.ld.S
-	$(CC) $(XTENSA_INC) -E -P $< -o $@
+	$(CC) $(XTENSA_INC) $(CPPFLAGS) -E -P $< -o $@
 
 %.o: %.S
 	$(CC) $(XTENSA_INC) $(ASFLAGS) -c $< -o $@
 
-%.tst: %.o linker.ld macros.inc $(CRT) Makefile
+$(filter %.tst,$(TESTCASES)): linker.ld macros.inc $(CRT)
+$(filter %.tst,$(TESTCASES)): %.tst: %.o
 	$(LD) $(LDFLAGS) $(NOSTDFLAGS) $(CRT) $< -o $@
 
 run-%.tst: %.tst
