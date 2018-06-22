@@ -91,7 +91,10 @@ else
 # We handle system builds seperatly as we expect the target specific
 # makefile to be more likely to tweaks the compile setup.
 
+-include $(SRC_PATH)/tests/tcg/$(TARGET_BASE_ARCH)/Makefile.system
+ifneq ($(TARGET_BASE_ARCH),$(TARGET_NAME))
 -include $(SRC_PATH)/tests/tcg/$(TARGET_NAME)/Makefile.system
+endif
 
 endif
 

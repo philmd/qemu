@@ -7043,7 +7043,7 @@ case "$target_name" in
     target_compiler=$cross_cc_unicore32
   ;;
   xtensa|xtensaeb)
-    TARGET_ARCH=xtensa
+    TARGET_BASE_ARCH=xtensa
     mttcg="yes"
     target_compiler=$cross_cc_xtensa
   ;;
