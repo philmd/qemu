@@ -12,7 +12,7 @@ CORE=dc232b
 CROSS=xtensa-$(CORE)-elf-
 
 ifndef XT
-SIM = ../../../xtensa-softmmu/qemu-system-xtensa
+SIM = ../../xtensa-softmmu/qemu-system-xtensa
 SIMFLAGS = -M sim -cpu $(CORE) -nographic -semihosting -icount 6 $(EXTFLAGS) -kernel
 SIMDEBUG = -s -S
 else
