@@ -62,15 +62,14 @@ TESTCASES += test_windowed.tst
 
 TESTS := $(TESTCASES)
 
-$(info TESTS=$(TESTS))
-
 linker.ld: linker.ld.S
 	$(CC) $(XTENSA_INC) -E -P $< -o $@
 
 %.o: %.S
 	$(CC) $(XTENSA_INC) $(ASFLAGS) -c $< -o $@
 
-%.tst: %.o linker.ld macros.inc $(CRT) Makefile
+$(filter %.tst,$(TESTCASES)): linker.ld macros.inc $(CRT)
+$(filter %.tst,$(TESTCASES)): %.tst: %.o
 	$(LD) $(LDFLAGS) $(NOSTDFLAGS) $(CRT) $< -o $@
 
 run-%.tst: %.tst
