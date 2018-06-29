@@ -615,7 +615,7 @@ inline unsigned size_to_prdtl(unsigned bytes, unsigned bytes_per_prd)
     /* Each PRD can describe up to 4MiB */
     g_assert_cmphex(bytes_per_prd, <=, 4096 * 1024);
     g_assert_cmphex(bytes_per_prd & 0x01, ==, 0x00);
-    return (bytes + bytes_per_prd - 1) / bytes_per_prd;
+    return DIV_ROUND_UP(bytes, bytes_per_prd);
 }
 
 const AHCIOpts default_opts = { .size = 0 };
