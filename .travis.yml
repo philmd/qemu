@@ -79,6 +79,8 @@ matrix:
       compiler: clang
     - env: CONFIG="--disable-user"
       compiler: clang
+    - env: CONFIG="--disable-user --extra-cflags=-m32"
+      compiler: clang
     # gprof/gcov are GCC features
     - env: CONFIG="--enable-gprof --enable-gcov --disable-pie --target-list=aarch64-softmmu,arm-softmmu,i386-softmmu,mips-softmmu,mips64-softmmu,ppc64-softmmu,riscv64-softmmu,s390x-softmmu,x86_64-softmmu"
       compiler: gcc
