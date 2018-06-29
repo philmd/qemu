@@ -312,8 +312,8 @@ xtensa_isa xtensa_isa_init(void *xtensa_modules, xtensa_isa_status *errno_p,
     qsort(isa->funcUnit_lookup_table, isa->num_funcUnits,
           sizeof(xtensa_lookup_entry), xtensa_isa_name_compare);
 
-    isa->insnbuf_size = ((isa->insn_size + sizeof(xtensa_insnbuf_word) - 1) /
-                         sizeof(xtensa_insnbuf_word));
+    isa->insnbuf_size = DIV_ROUND_UP(isa->insn_size,
+                                     sizeof(xtensa_insnbuf_word));
     isa->num_stages = XTENSA_UNDEFINED;
 
     return (xtensa_isa)isa;
