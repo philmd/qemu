@@ -699,8 +699,7 @@ static int vmdk_open_vmdk4(BlockDriverState *bs,
         error_setg(errp, "L1 entry size is invalid");
         return -EINVAL;
     }
-    l1_size = (le64_to_cpu(header.capacity) + l1_entry_sectors - 1)
-                / l1_entry_sectors;
+    l1_size = DIV_ROUND_UP(le64_to_cpu(header.capacity), l1_entry_sectors);
     if (le32_to_cpu(header.flags) & VMDK4_FLAG_RGD) {
         l1_backup_offset = le64_to_cpu(header.rgd_offset) << 9;
     }
