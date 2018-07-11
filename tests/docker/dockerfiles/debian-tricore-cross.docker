@@ -22,7 +22,8 @@ RUN apt-get update && \
         ca-certificates \
         flex \
         git \
-        libtool
+        libtool && \
+    ln -s /bin/true /usr/bin/clang
 
 RUN git clone --single-branch \
         https://github.com/bkoppelmann/tricore-binutils.git \
