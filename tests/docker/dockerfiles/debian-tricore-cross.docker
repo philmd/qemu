@@ -23,7 +23,8 @@ RUN apt-get update && \
         flex \
         git \
         libtool && \
-    ln -s /bin/true /usr/bin/clang
+    ln -s /bin/true /usr/bin/clang && \
+    ln -s /usr/bin/gcc /usr/bin/tricore-gcc
 
 RUN git clone --single-branch \
         https://github.com/bkoppelmann/tricore-binutils.git \
