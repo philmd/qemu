@@ -31,7 +31,7 @@ RUN git clone --single-branch \
         /usr/src/binutils && \
     cd /usr/src/binutils && \
     cp /usr/share/libtool/build-aux/missing . && \
-    chmod +x ylwrap && \
+    chmod +x ylwrap binutils/ylwrap && \
     CFLAGS=-w ./configure --prefix=/usr --disable-nls --target=tricore && \
     make all install && \
     rm -rf /usr/src/binutils
