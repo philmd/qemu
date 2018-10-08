@@ -56,6 +56,7 @@
 #include "hw/intc/arm_gicv3_common.h"
 #include "kvm_arm.h"
 #include "hw/firmware/smbios.h"
+#include "hw/firmware/edk2.h"
 #include "qapi/visitor.h"
 #include "standard-headers/linux/input.h"
 #include "hw/arm/smmuv3.h"
@@ -1293,6 +1294,11 @@ static void virt_build_smbios(VirtMachineState *vms)
     }
 }
 
+static void virt_build_uefi(VirtMachineState *vms)
+{
+    edk2_add_host_crypto_policy(vms->fw_cfg);
+}
+
 static
 void virt_machine_done(Notifier *notifier, void *data)
 {
@@ -1321,6 +1327,7 @@ void virt_machine_done(Notifier *notifier, void *data)
 
     virt_acpi_setup(vms);
     virt_build_smbios(vms);
+    virt_build_uefi(vms);
 }
 
 static uint64_t virt_cpu_mp_affinity(VirtMachineState *vms, int idx)
