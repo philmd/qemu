@@ -214,7 +214,7 @@ static void nrf51_uart_reset(DeviceState *dev)
     s->enabled = false;
 }
 
-static void uart_receive(void *opaque, const uint8_t *buf, int size)
+static void uart_receive(void *opaque, const uint8_t *buf, size_t size)
 {
 
     NRF51UARTState *s = NRF51_UART(opaque);

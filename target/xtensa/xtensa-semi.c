@@ -170,7 +170,7 @@ static int sim_console_can_read(void *opaque)
 }
 
 static IOReadHandler sim_console_read;
-static void sim_console_read(void *opaque, const uint8_t *buf, int size)
+static void sim_console_read(void *opaque, const uint8_t *buf, size_t size)
 {
     XtensaSimConsole *p = opaque;
     size_t copy = sizeof(p->input.buffer) - p->input.offset;
