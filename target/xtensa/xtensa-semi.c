@@ -162,7 +162,7 @@ typedef struct XtensaSimConsole {
 static XtensaSimConsole *sim_console;
 
 static IOCanReadHandler sim_console_can_read;
-static int sim_console_can_read(void *opaque)
+static size_t sim_console_can_read(void *opaque)
 {
     XtensaSimConsole *p = opaque;
 

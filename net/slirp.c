@@ -866,7 +866,7 @@ static int slirp_smb(SlirpState* s, const char *exported_dir,
 
 #endif /* !defined(_WIN32) */
 
-static int guestfwd_can_read(void *opaque)
+static size_t guestfwd_can_read(void *opaque)
 {
     struct GuestFwd *fwd = opaque;
     return slirp_socket_can_recv(fwd->slirp, fwd->server, fwd->port);

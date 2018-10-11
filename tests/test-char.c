@@ -28,7 +28,7 @@ static void main_loop(void)
     } while (!quit);
 }
 
-static int fe_can_read(void *opaque)
+static size_t fe_can_read(void *opaque)
 {
     FeHandler *h = opaque;
 
@@ -290,7 +290,7 @@ static void socket_read(void *opaque, const uint8_t *buf, size_t size)
     g_assert_cmpint(ssize, ==, 5);
 }
 
-static int socket_can_read(void *opaque)
+static size_t socket_can_read(void *opaque)
 {
     return 10;
 }
@@ -303,7 +303,7 @@ static void socket_read_hello(void *opaque, const uint8_t *buf, size_t size)
     quit = true;
 }
 
-static int socket_can_read_hello(void *opaque)
+static size_t socket_can_read_hello(void *opaque)
 {
     return 10;
 }
@@ -429,7 +429,7 @@ static void websock_server_read(void *opaque, const uint8_t *buf, size_t size)
 }
 
 
-static int websock_server_can_read(void *opaque)
+static size_t websock_server_can_read(void *opaque)
 {
     return 10;
 }
@@ -479,7 +479,7 @@ static void websock_client_read(void *opaque, const uint8_t *buf, size_t size)
 }
 
 
-static int websock_client_can_read(void *opaque)
+static size_t websock_client_can_read(void *opaque)
 {
     return 4096;
 }

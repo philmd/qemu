@@ -233,7 +233,7 @@ static void uart_receive(void *opaque, const uint8_t *buf, size_t size)
     nrf51_uart_update_irq(s);
 }
 
-static int uart_can_receive(void *opaque)
+static size_t uart_can_receive(void *opaque)
 {
     NRF51UARTState *s = NRF51_UART(opaque);
 
