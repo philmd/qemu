@@ -34,7 +34,7 @@
 typedef struct {
     Chardev parent;
     QIOChannel *ioc;
-    int read_bytes;
+    size_t read_bytes;
 
     /* Protected by the Chardev chr_write_lock.  */
     int connected;
