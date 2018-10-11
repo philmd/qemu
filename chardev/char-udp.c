@@ -39,7 +39,7 @@ typedef struct {
     uint8_t buf[CHR_READ_BUF_LEN];
     int bufcnt;
     int bufptr;
-    int max_size;
+    size_t max_size;
 } UdpChardev;
 
 #define UDP_CHARDEV(obj) OBJECT_CHECK(UdpChardev, (obj), TYPE_CHARDEV_UDP)
