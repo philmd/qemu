@@ -298,7 +298,7 @@ static void *thread_function(void *data)
     return NULL;
 }
 
-static int chr_can_read(void *opaque)
+static size_t chr_can_read(void *opaque)
 {
     return VHOST_USER_HDR_SIZE;
 }

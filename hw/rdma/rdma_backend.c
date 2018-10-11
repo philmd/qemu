@@ -1013,7 +1013,7 @@ static void process_incoming_mad_req(RdmaBackendDev *backend_dev,
     rdma_rm_dealloc_cqe_ctx(backend_dev->rdma_dev_res, cqe_ctx_id);
 }
 
-static inline int rdmacm_mux_can_receive(void *opaque)
+static size_t rdmacm_mux_can_receive(void *opaque)
 {
     RdmaBackendDev *backend_dev = (RdmaBackendDev *)opaque;
 
