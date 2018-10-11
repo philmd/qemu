@@ -35,7 +35,7 @@ static int fe_can_read(void *opaque)
     return sizeof(h->read_buf) - h->read_count;
 }
 
-static void fe_read(void *opaque, const uint8_t *buf, int size)
+static void fe_read(void *opaque, const uint8_t *buf, size_t size)
 {
     FeHandler *h = opaque;
 
@@ -278,7 +278,7 @@ static gboolean char_socket_test_idle(gpointer user_data)
     return TRUE;
 }
 
-static void socket_read(void *opaque, const uint8_t *buf, int size)
+static void socket_read(void *opaque, const uint8_t *buf, size_t size)
 {
     SocketIdleData *data = opaque;
 
@@ -294,7 +294,7 @@ static int socket_can_read(void *opaque)
     return 10;
 }
 
-static void socket_read_hello(void *opaque, const uint8_t *buf, int size)
+static void socket_read_hello(void *opaque, const uint8_t *buf, size_t size)
 {
     g_assert_cmpint(size, ==, 5);
     g_assert(strncmp((char *)buf, "hello", 5) == 0);
@@ -420,7 +420,7 @@ static void char_socket_fdpass_test(void)
 }
 
 
-static void websock_server_read(void *opaque, const uint8_t *buf, int size)
+static void websock_server_read(void *opaque, const uint8_t *buf, size_t size)
 {
     g_assert_cmpint(size, ==, 5);
     g_assert(memcmp(buf, "world", size) == 0);
@@ -454,7 +454,7 @@ static bool websock_check_http_headers(char *buf, int size)
 }
 
 
-static void websock_client_read(void *opaque, const uint8_t *buf, int size)
+static void websock_client_read(void *opaque, const uint8_t *buf, size_t size)
 {
     const uint8_t ping[] = { 0x89, 0x85,                  /* Ping header */
                              0x07, 0x77, 0x9e, 0xf9,      /* Masking key */
