@@ -125,7 +125,7 @@ static void pty_chr_update_read_handler(Chardev *chr)
 }
 
 /* Called with chr_write_lock held.  */
-static int char_pty_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static ssize_t char_pty_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     PtyChardev *s = PTY_CHARDEV(chr);
 
@@ -133,7 +133,7 @@ static int char_pty_chr_write(Chardev *chr, const uint8_t *buf, int len)
         /* guest sends data, check for (re-)connect */
         pty_chr_update_read_handler_locked(chr);
         if (!s->connected) {
-            return len;
+            return (ssize_t)len;
         }
     }
     return io_channel_send(s->ioc, buf, len);

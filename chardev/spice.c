@@ -193,10 +193,10 @@ static GSource *spice_chr_add_watch(Chardev *chr, GIOCondition cond)
     return (GSource *)src;
 }
 
-static int spice_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static ssize_t spice_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     SpiceChardev *s = SPICE_CHARDEV(chr);
-    int read_bytes;
+    ssize_t read_bytes;
 
     assert(s->datalen == 0);
     s->datapos = buf;

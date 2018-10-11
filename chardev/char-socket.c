@@ -127,12 +127,12 @@ static gboolean tcp_chr_read_poll(void *opaque);
 static void tcp_chr_disconnect(Chardev *chr);
 
 /* Called with chr_write_lock held.  */
-static int tcp_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static ssize_t tcp_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     SocketChardev *s = SOCKET_CHARDEV(chr);
 
     if (s->connected) {
-        int ret =  io_channel_send_full(s->ioc, buf, len,
+        ssize_t ret =  io_channel_send_full(s->ioc, buf, len,
                                         s->write_msgfds,
                                         s->write_msgfds_num);
 

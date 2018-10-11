@@ -1708,13 +1708,13 @@ static void gd_vc_adjustment_changed(GtkAdjustment *adjustment, void *opaque)
     }
 }
 
-static int gd_vc_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static ssize_t gd_vc_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     VCChardev *vcd = VC_CHARDEV(chr);
     VirtualConsole *vc = vcd->console;
 
     vte_terminal_feed(VTE_TERMINAL(vc->vte.terminal), (const char *)buf, len);
-    return len;
+    return (ssize_t)len;
 }
 
 static void gd_vc_chr_set_echo(Chardev *chr, bool echo)

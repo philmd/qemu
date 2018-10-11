@@ -133,10 +133,10 @@ static void msmouse_input_sync(DeviceState *dev)
     msmouse_chr_accept_input(chr);
 }
 
-static int msmouse_chr_write(struct Chardev *s, const uint8_t *buf, int len)
+static ssize_t msmouse_chr_write(struct Chardev *s, const uint8_t *buf, size_t len)
 {
     /* Ignore writes to mouse port */
-    return len;
+    return (ssize_t)len;
 }
 
 static void char_msmouse_finalize(Object *obj)
