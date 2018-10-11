@@ -182,9 +182,10 @@ guint qemu_chr_fe_add_watch(CharBackend *be, GIOCondition cond,
  * will send data from the front end to the back end.  This function
  * is thread-safe.
  *
- * Returns: the number of bytes consumed (0 if no associated Chardev)
+ * Returns: the number of bytes consumed (0 if no associated Chardev),
+ *          or -1 on error.
  */
-int qemu_chr_fe_write(CharBackend *be, const uint8_t *buf, int len);
+ssize_t qemu_chr_fe_write(CharBackend *be, const uint8_t *buf, size_t len);
 
 /**
  * qemu_chr_fe_write_all:
@@ -196,9 +197,10 @@ int qemu_chr_fe_write(CharBackend *be, const uint8_t *buf, int len);
  * this function will block if the back end cannot consume all of the data
  * attempted to be written.  This function is thread-safe.
  *
- * Returns: the number of bytes consumed (0 if no associated Chardev)
+ * Returns: the number of bytes consumed (0 if no associated Chardev),
+ *          or -1 on error.
  */
-int qemu_chr_fe_write_all(CharBackend *be, const uint8_t *buf, int len);
+ssize_t qemu_chr_fe_write_all(CharBackend *be, const uint8_t *buf, size_t len);
 
 /**
  * qemu_chr_fe_read_all:
@@ -207,9 +209,10 @@ int qemu_chr_fe_write_all(CharBackend *be, const uint8_t *buf, int len);
  *
  * Read data to a buffer from the back end.
  *
- * Returns: the number of bytes read (0 if no associated Chardev)
+ * Returns: the number of bytes read (0 if no associated Chardev),
+ *          or -1 on error.
  */
-int qemu_chr_fe_read_all(CharBackend *be, uint8_t *buf, int len);
+ssize_t qemu_chr_fe_read_all(CharBackend *be, uint8_t *buf, size_t len);
 
 /**
  * qemu_chr_fe_ioctl:

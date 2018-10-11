@@ -655,7 +655,8 @@ static void ivshmem_read(void *opaque, const uint8_t *buf, int size)
 static int64_t ivshmem_recv_msg(IVShmemState *s, int *pfd, Error **errp)
 {
     int64_t msg;
-    int n, ret;
+    size_t n;
+    ssize_t ret;
 
     n = 0;
     do {
