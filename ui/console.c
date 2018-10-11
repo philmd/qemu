@@ -1080,7 +1080,7 @@ typedef struct VCChardev {
 #define TYPE_CHARDEV_VC "chardev-vc"
 #define VC_CHARDEV(obj) OBJECT_CHECK(VCChardev, (obj), TYPE_CHARDEV_VC)
 
-static int vc_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static ssize_t vc_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     VCChardev *drv = VC_CHARDEV(chr);
     QemuConsole *s = drv->console;
@@ -1104,7 +1104,7 @@ static int vc_chr_write(Chardev *chr, const uint8_t *buf, int len)
                        s->update_x1 - s->update_x0,
                        s->update_y1 - s->update_y0);
     }
-    return len;
+    return (ssize_t)len;
 }
 
 static void kbd_send_chars(void *opaque)

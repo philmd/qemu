@@ -479,10 +479,10 @@ static int baum_eat_packet(BaumChardev *baum, const uint8_t *buf, int len)
 }
 
 /* The other end is writing some data.  Store it and try to interpret */
-static int baum_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static ssize_t baum_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     BaumChardev *baum = BAUM_CHARDEV(chr);
-    int tocopy, cur, eaten, orig_len = len;
+    size_t tocopy, cur, eaten, orig_len = len;
 
     if (!len)
         return 0;
@@ -516,7 +516,7 @@ static int baum_chr_write(Chardev *chr, const uint8_t *buf, int len)
 
         /* And continue if any data left */
     }
-    return orig_len;
+    return (ssize_t)orig_len;
 }
 
 /* Send the key code to the other end */

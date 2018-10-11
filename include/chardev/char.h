@@ -253,7 +253,15 @@ typedef struct ChardevClass {
     void (*open)(Chardev *chr, ChardevBackend *backend,
                  bool *be_opened, Error **errp);
 
-    int (*chr_write)(Chardev *s, const uint8_t *buf, int len);
+    /**
+     * chr_write:
+     * @s: a Chardev object
+     * @buf: the data buffer to send
+     * @len: the length of @buf
+     *
+     * Returns: the number of bytes sent, or -1 on error
+     */
+    ssize_t (*chr_write)(Chardev *s, const uint8_t *buf, size_t len);
     /**
      * chr_sync_read:
      * @s: a Chardev object

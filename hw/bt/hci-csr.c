@@ -314,17 +314,17 @@ static void csrhci_ready_for_next_inpkt(struct csrhci_s *s)
     s->in_hdr = INT_MAX;
 }
 
-static int csrhci_write(struct Chardev *chr,
-                const uint8_t *buf, int len)
+static ssize_t csrhci_write(struct Chardev *chr,
+                            const uint8_t *buf, size_t len)
 {
     struct csrhci_s *s = (struct csrhci_s *)chr;
-    int total = 0;
+    ssize_t total = 0;
 
     if (!s->enable)
         return 0;
 
     for (;;) {
-        int cnt = MIN(len, s->in_needed - s->in_len);
+        ssize_t cnt = MIN((ssize_t)len, s->in_needed - s->in_len);
         if (cnt) {
             memcpy(s->inpkt + s->in_len, buf, cnt);
             s->in_len += cnt;
