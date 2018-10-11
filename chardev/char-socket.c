@@ -488,7 +488,7 @@ static gboolean tcp_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
             tcp_chr_process_IAC_bytes(chr, s, buf, &size);
         }
         if (size > 0) {
-            qemu_chr_be_write(chr, buf, size);
+            qemu_chr_be_write(chr, buf, (size_t)size);
         }
     }
 
