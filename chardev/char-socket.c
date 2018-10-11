@@ -173,7 +173,7 @@ static gboolean tcp_chr_read_poll(void *opaque)
 
 static void tcp_chr_process_IAC_bytes(Chardev *chr,
                                       SocketChardev *s,
-                                      uint8_t *buf, int *size)
+                                      uint8_t *buf, ssize_t *size)
 {
     /* Handle any telnet or tn3270 client's basic IAC options.
      * For telnet options, it satisfies char by char mode with no echo.
@@ -246,7 +246,7 @@ static int tcp_get_msgfds(Chardev *chr, int *fds, size_t num)
 {
     SocketChardev *s = SOCKET_CHARDEV(chr);
 
-    int to_copy = (s->read_msgfds_num < num) ? s->read_msgfds_num : num;
+    size_t to_copy = (s->read_msgfds_num < num) ? s->read_msgfds_num : num;
 
     assert(num <= TCP_MAX_FDS);
 
@@ -297,7 +297,7 @@ static ssize_t tcp_chr_recv(Chardev *chr, char *buf, size_t len)
 {
     SocketChardev *s = SOCKET_CHARDEV(chr);
     struct iovec iov = { .iov_base = buf, .iov_len = len };
-    int ret;
+    ssize_t ret;
     size_t i;
     int *msgfds = NULL;
     size_t msgfds_num = 0;
@@ -469,7 +469,8 @@ static gboolean tcp_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
     Chardev *chr = CHARDEV(opaque);
     SocketChardev *s = SOCKET_CHARDEV(opaque);
     uint8_t buf[CHR_READ_BUF_LEN];
-    int len, size;
+    size_t len;
+    ssize_t size;
 
     if (!s->connected || s->max_size == 0) {
         return TRUE;
@@ -503,10 +504,10 @@ static gboolean tcp_chr_hup(QIOChannel *channel,
     return G_SOURCE_REMOVE;
 }
 
-static int tcp_chr_sync_read(Chardev *chr, const uint8_t *buf, int len)
+static ssize_t tcp_chr_sync_read(Chardev *chr, uint8_t *buf, size_t len)
 {
     SocketChardev *s = SOCKET_CHARDEV(chr);
-    int size;
+    ssize_t size;
 
     if (!s->connected) {
         return 0;
