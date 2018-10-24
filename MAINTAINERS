@@ -1436,6 +1436,13 @@ F: hw/display/edid*
 F: include/hw/display/edid.h
 F: qemu-edid.c
 
+Firmware configuration
+M: László Ersek <lersek@redhat.com>
+M: Philippe Mathieu-Daudé <philmd@redhat.com>
+S: Maintained
+F: hw/nvram/fw_cfg.c
+F: include/hw/nvram/fw_cfg.h
+
 Subsystems
 ----------
 Audio
