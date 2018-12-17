@@ -7,7 +7,7 @@ env:
   matrix:
     - IMAGE=fedora
       TARGET_LIST=arm-softmmu,i386-softmmu,lm32-softmmu,aarch64-softmmu,sparc64-softmmu,x86_64-softmmu
-      EXTRA_CONFIGURE_FLAGS="--cross-prefix=i686-w64-mingw32-
+      EXTRA_CONFIGURE_FLAGS="--cross-prefix=i686-w64-mingw32-"
       EXTRA_CFLAGS="--disable-werror --disable-stack-protector"
 build:
   pre_ci:
