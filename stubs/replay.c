@@ -49,7 +49,7 @@ void replay_char_write_event_load(int *res, size_t *offset)
     abort();
 }
 
-int replay_char_read_all_load(uint8_t *buf)
+size_t replay_char_read_all_load(uint8_t *buf)
 {
     abort();
 }
