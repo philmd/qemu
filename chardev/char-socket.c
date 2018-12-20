@@ -72,7 +72,7 @@ typedef struct {
     bool is_websock;
 
     GSource *reconnect_timer;
-    int64_t reconnect_time;
+    guint reconnect_time;
     bool connect_err_reported;
 } SocketChardev;
 
@@ -1125,7 +1125,7 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
     bool is_tn3270      = qemu_opt_get_bool(opts, "tn3270", false);
     bool is_websock     = qemu_opt_get_bool(opts, "websocket", false);
     bool do_nodelay     = !qemu_opt_get_bool(opts, "delay", true);
-    int64_t reconnect   = qemu_opt_get_number(opts, "reconnect", 0);
+    uint64_t reconnect   = qemu_opt_get_number(opts, "reconnect", 0);
     const char *path = qemu_opt_get(opts, "path");
     const char *host = qemu_opt_get(opts, "host");
     const char *port = qemu_opt_get(opts, "port");
