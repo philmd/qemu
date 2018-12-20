@@ -944,13 +944,15 @@ static void slave_read(void *opaque)
     struct vhost_user *u = dev->opaque;
     VhostUserHeader hdr = { 0, };
     VhostUserPayload payload = { 0, };
-    int size, ret = 0;
+    ssize_t size;
+    int ret = 0;
     struct iovec iov;
     struct msghdr msgh;
     int fd[VHOST_USER_SLAVE_MAX_FDS];
     char control[CMSG_SPACE(sizeof(fd))];
     struct cmsghdr *cmsg;
-    int i, fdsize = 0;
+    int i;
+    size_t fdsize = 0;
 
     memset(&msgh, 0, sizeof(msgh));
     msgh.msg_iov = &iov;
