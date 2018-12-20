@@ -119,20 +119,17 @@ void replay_char_write_event_load(int *res, size_t *offset)
     }
 }
 
-int replay_char_read_all_load(uint8_t *buf)
+size_t replay_char_read_all_load(uint8_t *buf)
 {
     g_assert(replay_mutex_locked());
 
     if (replay_next_event_is(EVENT_CHAR_READ_ALL)) {
         size_t size;
-        int res;
         replay_get_array(buf, &size);
         replay_finish_event();
-        res = (int)size;
-        assert(res >= 0);
-        return res;
+        return size;
     } else if (replay_next_event_is(EVENT_CHAR_READ_ALL_ERROR)) {
-        int res = replay_get_dword();
+        uint32_t res = replay_get_dword();
         replay_finish_event();
         return res;
     } else {
