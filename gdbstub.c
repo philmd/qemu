@@ -507,7 +507,7 @@ static inline int tohex(int v)
 }
 
 /* writes 2*len+1 bytes in buf */
-static void memtohex(char *buf, const uint8_t *mem, int len)
+static void memtohex(char *buf, const uint8_t *mem, size_t len)
 {
     int i, c;
     char *q;
@@ -520,7 +520,7 @@ static void memtohex(char *buf, const uint8_t *mem, int len)
     *q = '\0';
 }
 
-static void hextomem(uint8_t *mem, const char *buf, int len)
+static void hextomem(uint8_t *mem, const char *buf, size_t len)
 {
     int i;
 
@@ -530,7 +530,7 @@ static void hextomem(uint8_t *mem, const char *buf, int len)
     }
 }
 
-static void hexdump(const char *buf, int len,
+static void hexdump(const char *buf, size_t len,
                     void (*trace_fn)(size_t ofs, char const *text))
 {
     char line_buffer[3 * 16 + 4 + 16 + 1];
