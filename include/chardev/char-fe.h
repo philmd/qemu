@@ -239,6 +239,9 @@ int qemu_chr_fe_get_msgfd(CharBackend *be);
 
 /**
  * qemu_chr_fe_get_msgfds:
+ * @be: a CharBackend
+ * @fds: an array of file handles to receive
+ * @num: number of file handles in @fds
  *
  * For backends capable of fd passing, return the number of file received
  * descriptors and fills the fds array up to num elements
@@ -248,10 +251,13 @@ int qemu_chr_fe_get_msgfd(CharBackend *be);
  *          this function will return -1 until a client sends a new set of file
  *          descriptors.
  */
-int qemu_chr_fe_get_msgfds(CharBackend *be, int *fds, int num);
+int qemu_chr_fe_get_msgfds(CharBackend *be, int *fds, size_t num);
 
 /**
  * qemu_chr_fe_set_msgfds:
+ * @be: a CharBackend
+ * @fds: an array of file handles to send
+ * @num: number of file handles in @fds
  *
  * For backends capable of fd passing, set an array of fds to be passed with
  * the next send operation.
@@ -261,6 +267,6 @@ int qemu_chr_fe_get_msgfds(CharBackend *be, int *fds, int num);
  *
  * Returns: -1 if fd passing isn't supported or no associated Chardev.
  */
-int qemu_chr_fe_set_msgfds(CharBackend *be, int *fds, int num);
+int qemu_chr_fe_set_msgfds(CharBackend *be, int *fds, size_t num);
 
 #endif /* QEMU_CHAR_FE_H */

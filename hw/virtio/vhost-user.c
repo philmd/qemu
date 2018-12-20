@@ -296,7 +296,7 @@ static bool vhost_user_one_time_request(VhostUserRequest request)
 
 /* most non-init callers ignore the error */
 static int vhost_user_write(struct vhost_dev *dev, VhostUserMsg *msg,
-                            int *fds, int fd_num)
+                            int *fds, size_t fd_num)
 {
     struct vhost_user *u = dev->opaque;
     CharBackend *chr = u->user->chr;

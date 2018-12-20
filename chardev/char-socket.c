@@ -242,7 +242,7 @@ static void tcp_chr_process_IAC_bytes(Chardev *chr,
     *size = j;
 }
 
-static int tcp_get_msgfds(Chardev *chr, int *fds, int num)
+static int tcp_get_msgfds(Chardev *chr, int *fds, size_t num)
 {
     SocketChardev *s = SOCKET_CHARDEV(chr);
 
@@ -268,7 +268,7 @@ static int tcp_get_msgfds(Chardev *chr, int *fds, int num)
     return to_copy;
 }
 
-static int tcp_set_msgfds(Chardev *chr, int *fds, int num)
+static int tcp_set_msgfds(Chardev *chr, int *fds, size_t num)
 {
     SocketChardev *s = SOCKET_CHARDEV(chr);
 

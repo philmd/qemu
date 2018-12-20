@@ -123,7 +123,7 @@ int qemu_chr_fe_get_msgfd(CharBackend *be)
     return res;
 }
 
-int qemu_chr_fe_get_msgfds(CharBackend *be, int *fds, int len)
+int qemu_chr_fe_get_msgfds(CharBackend *be, int *fds, size_t len)
 {
     Chardev *s = be->chr;
 
@@ -135,7 +135,7 @@ int qemu_chr_fe_get_msgfds(CharBackend *be, int *fds, int len)
         CHARDEV_GET_CLASS(s)->get_msgfds(s, fds, len) : -1;
 }
 
-int qemu_chr_fe_set_msgfds(CharBackend *be, int *fds, int num)
+int qemu_chr_fe_set_msgfds(CharBackend *be, int *fds, size_t num)
 {
     Chardev *s = be->chr;
 

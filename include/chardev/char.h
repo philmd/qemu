@@ -258,8 +258,20 @@ typedef struct ChardevClass {
     GSource *(*chr_add_watch)(Chardev *s, GIOCondition cond);
     void (*chr_update_read_handler)(Chardev *s);
     int (*chr_ioctl)(Chardev *s, int cmd, void *arg);
-    int (*get_msgfds)(Chardev *s, int* fds, int num);
-    int (*set_msgfds)(Chardev *s, int *fds, int num);
+    /**
+     * get_msgfds:
+     * @s: a Chardev object
+     * @fds: an array of file handles to receive
+     * @num: number of file handles in @fds
+     */
+    int (*get_msgfds)(Chardev *s, int* fds, size_t num);
+    /**
+     * set_msgfds:
+     * @s: a Chardev object
+     * @fds: an array of file handles to send
+     * @num: number of file handles in @fds
+     */
+    int (*set_msgfds)(Chardev *s, int *fds, size_t num);
     int (*chr_add_client)(Chardev *chr, int fd);
     int (*chr_wait_connected)(Chardev *chr, Error **errp);
     void (*chr_disconnect)(Chardev *chr);
