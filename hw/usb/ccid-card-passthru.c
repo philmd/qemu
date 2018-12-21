@@ -70,7 +70,7 @@ struct PassthruState {
 
 static void ccid_card_vscard_send_msg(PassthruState *s,
         VSCMsgType type, uint32_t reader_id,
-        const uint8_t *payload, uint32_t length)
+        const uint8_t *payload, size_t length)
 {
     VSCMsgHeader scr_msg_header;
 
