@@ -207,7 +207,7 @@ static void ccid_card_vscard_handle_message(PassthruState *card,
 
     switch (scr_msg_header->type) {
     case VSC_ATR:
-        DPRINTF(card, D_INFO, "VSC_ATR %d\n", scr_msg_header->length);
+        DPRINTF(card, D_INFO, "VSC_ATR %u\n", scr_msg_header->length);
         if (scr_msg_header->length > MAX_ATR_SIZE) {
             error_report("ATR size exceeds spec, ignoring");
             ccid_card_vscard_send_error(card, scr_msg_header->reader_id,
@@ -258,7 +258,7 @@ static void ccid_card_vscard_handle_message(PassthruState *card,
             scr_msg_header->reader_id, VSC_SUCCESS);
         break;
     default:
-        printf("usb-ccid: chardev: unexpected message of type %X\n",
+        printf("usb-ccid: chardev: unexpected message of type 0x%X\n",
                scr_msg_header->type);
         ccid_card_vscard_send_error(card, scr_msg_header->reader_id,
             VSC_GENERAL_ERROR);
@@ -277,7 +277,7 @@ static void ccid_card_vscard_read(void *opaque, const uint8_t *buf, size_t size)
     VSCMsgHeader *hdr;
 
     if (card->vscard_in_pos + size > VSCARD_IN_SIZE) {
-        error_report("no room for data: pos %u +  size %zu > %" PRId64 "."
+        error_report("no room for data: pos %u +  size %zu > %zu."
                      " dropping connection.",
                      card->vscard_in_pos, size, VSCARD_IN_SIZE);
         ccid_card_vscard_drop_connection(card);
@@ -326,7 +326,7 @@ static void passthru_apdu_from_guest(
     PassthruState *card = PASSTHRU_CCID_CARD(base);
 
     if (!qemu_chr_fe_backend_connected(&card->cs)) {
-        printf("ccid-passthru: no chardev, discarding apdu length %d\n", len);
+        printf("ccid-passthru: no chardev, discarding apdu length %u\n", len);
         return;
     }
     ccid_card_vscard_send_apdu(card, apdu, len);
