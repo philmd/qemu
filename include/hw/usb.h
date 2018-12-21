@@ -308,7 +308,7 @@ typedef struct USBDeviceClass {
      * then the number of bytes transferred is stored in p->actual_length
      */
     void (*handle_control)(USBDevice *dev, USBPacket *p, int request, int value,
-                           int index, int length, uint8_t *data);
+                           int index, size_t length, uint8_t *data);
 
     /*
      * Process data transfers (both BULK and ISOC).

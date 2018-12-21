@@ -302,7 +302,7 @@ static const char *feature_name(int feature)
 }
 
 static void usb_hub_handle_control(USBDevice *dev, USBPacket *p,
-               int request, int value, int index, int length, uint8_t *data)
+               int request, int value, int index, size_t length, uint8_t *data)
 {
     USBHubState *s = (USBHubState *)dev;
     int ret;

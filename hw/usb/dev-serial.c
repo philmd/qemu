@@ -229,7 +229,7 @@ static uint8_t usb_get_modem_lines(USBSerialState *s)
 }
 
 static void usb_serial_handle_control(USBDevice *dev, USBPacket *p,
-               int request, int value, int index, int length, uint8_t *data)
+               int request, int value, int index, size_t length, uint8_t *data)
 {
     USBSerialState *s = (USBSerialState *)dev;
     int ret;

@@ -1043,7 +1043,8 @@ static void usbredir_get_interface(USBRedirDevice *dev, USBPacket *p,
 }
 
 static void usbredir_handle_control(USBDevice *udev, USBPacket *p,
-        int request, int value, int index, int length, uint8_t *data)
+                                    int request, int value, int index,
+                                    size_t length, uint8_t *data)
 {
     USBRedirDevice *dev = USB_REDIRECT(udev);
     struct usb_redir_control_packet_header control_packet;
@@ -1075,7 +1076,7 @@ static void usbredir_handle_control(USBDevice *udev, USBPacket *p,
 
     /* Normal ctrl requests, note request is (bRequestType << 8) | bRequest */
     DPRINTF(
-        "ctrl-out type 0x%x req 0x%x val 0x%x index %d len %d id %"PRIu64"\n",
+        "ctrl-out type 0x%x req 0x%x val 0x%x index %d len %zu id %"PRIu64"\n",
         request >> 8, request & 0xff, value, index, length, p->id);
 
     control_packet.request     = request & 0xFF;

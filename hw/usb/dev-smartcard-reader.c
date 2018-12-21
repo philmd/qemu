@@ -665,7 +665,8 @@ static const char *ccid_control_to_str(USBCCIDState *s, int request)
 }
 
 static void ccid_handle_control(USBDevice *dev, USBPacket *p, int request,
-                               int value, int index, int length, uint8_t *data)
+                               int value, int index,
+                               size_t length, uint8_t *data)
 {
     USBCCIDState *s = USB_CCID_DEV(dev);
     int ret;

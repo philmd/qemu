@@ -1557,7 +1557,7 @@ static void usb_mtp_handle_reset(USBDevice *dev)
 
 static void usb_mtp_handle_control(USBDevice *dev, USBPacket *p,
                                    int request, int value, int index,
-                                   int length, uint8_t *data)
+                                   size_t length, uint8_t *data)
 {
     int ret;
     MTPState *s = USB_MTP(dev);

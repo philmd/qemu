@@ -1062,7 +1062,7 @@ static void usb_net_handle_reset(USBDevice *dev)
 }
 
 static void usb_net_handle_control(USBDevice *dev, USBPacket *p,
-               int request, int value, int index, int length, uint8_t *data)
+               int request, int value, int index, size_t length, uint8_t *data)
 {
     USBNetState *s = (USBNetState *) dev;
     int ret;
@@ -1121,7 +1121,7 @@ static void usb_net_handle_control(USBDevice *dev, USBPacket *p,
     default:
     fail:
         fprintf(stderr, "usbnet: failed control transaction: "
-                        "request 0x%x value 0x%x index 0x%x length 0x%x\n",
+                        "request 0x%x value 0x%x index 0x%x length 0x%zu\n",
                         request, value, index, length);
         p->status = USB_RET_STALL;
         break;

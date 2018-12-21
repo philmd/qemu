@@ -1277,7 +1277,7 @@ static void usb_host_set_interface(USBHostDevice *s, int iface, int alt,
 
 static void usb_host_handle_control(USBDevice *udev, USBPacket *p,
                                     int request, int value, int index,
-                                    int length, uint8_t *data)
+                                    size_t length, uint8_t *data)
 {
     USBHostDevice *s = USB_HOST_DEVICE(udev);
     USBHostRequest *r;

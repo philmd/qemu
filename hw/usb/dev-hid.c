@@ -575,7 +575,7 @@ static void usb_hid_handle_reset(USBDevice *dev)
 }
 
 static void usb_hid_handle_control(USBDevice *dev, USBPacket *p,
-               int request, int value, int index, int length, uint8_t *data)
+               int request, int value, int index, size_t length, uint8_t *data)
 {
     USBHIDState *us = USB_HID(dev);
     HIDState *hs = &us->hid;

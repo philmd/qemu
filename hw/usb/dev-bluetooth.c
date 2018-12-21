@@ -367,7 +367,7 @@ static void usb_bt_handle_reset(USBDevice *dev)
 }
 
 static void usb_bt_handle_control(USBDevice *dev, USBPacket *p,
-               int request, int value, int index, int length, uint8_t *data)
+               int request, int value, int index, size_t length, uint8_t *data)
 {
     struct USBBtState *s = (struct USBBtState *) dev->opaque;
     int ret;

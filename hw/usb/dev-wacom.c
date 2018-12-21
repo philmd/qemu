@@ -258,7 +258,7 @@ static void usb_wacom_handle_reset(USBDevice *dev)
 }
 
 static void usb_wacom_handle_control(USBDevice *dev, USBPacket *p,
-               int request, int value, int index, int length, uint8_t *data)
+               int request, int value, int index, size_t length, uint8_t *data)
 {
     USBWacomState *s = (USBWacomState *) dev;
     int ret;

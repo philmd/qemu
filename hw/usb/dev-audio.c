@@ -508,14 +508,14 @@ static int usb_audio_set_control(USBAudioState *s, uint8_t attrib,
 
 static void usb_audio_handle_control(USBDevice *dev, USBPacket *p,
                                     int request, int value, int index,
-                                    int length, uint8_t *data)
+                                    size_t length, uint8_t *data)
 {
     USBAudioState *s = USB_AUDIO(dev);
     int ret = 0;
 
     if (s->debug) {
         fprintf(stderr, "usb-audio: control transaction: "
-                "request 0x%04x value 0x%04x index 0x%04x length 0x%04x\n",
+                "request 0x%04x value 0x%04x index 0x%04x length 0x%04zu\n",
                 request, value, index, length);
     }
 
@@ -558,7 +558,7 @@ static void usb_audio_handle_control(USBDevice *dev, USBPacket *p,
 fail:
         if (s->debug) {
             fprintf(stderr, "usb-audio: failed control transaction: "
-                    "request 0x%04x value 0x%04x index 0x%04x length 0x%04x\n",
+                    "request 0x%04x value 0x%04x index 0x%04x length 0x%04zu\n",
                     request, value, index, length);
         }
         p->status = USB_RET_STALL;
