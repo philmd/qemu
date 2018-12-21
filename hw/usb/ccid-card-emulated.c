@@ -261,6 +261,7 @@ static void *handle_apdu_thread(void* arg)
                     event->p.data.data, event->p.data.len,
                     recv_data, &recv_len);
             DPRINTF(card, 2, "got back apdu of length %d\n", recv_len);
+            assert(recv_len >= 0);
             if (reader_status == VREADER_OK) {
                 emulated_push_response_apdu(card, recv_data, recv_len);
             } else {
