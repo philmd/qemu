@@ -60,7 +60,6 @@ static int usb_device_post_load(void *opaque, int version_id)
         dev->attached = true;
     }
     if (dev->setup_index < 0 ||
-        dev->setup_len < 0 ||
         dev->setup_index > dev->setup_len ||
         dev->setup_len > sizeof(dev->data_buf)) {
         return -EINVAL;
@@ -78,7 +77,7 @@ const VMStateDescription vmstate_usb_device = {
         VMSTATE_INT32(state, USBDevice),
         VMSTATE_INT32(remote_wakeup, USBDevice),
         VMSTATE_INT32(setup_state, USBDevice),
-        VMSTATE_INT32(setup_len, USBDevice),
+        VMSTATE_UINT32(setup_len, USBDevice),
         VMSTATE_INT32(setup_index, USBDevice),
         VMSTATE_UINT8_ARRAY(setup_buf, USBDevice, 8),
         VMSTATE_END_OF_LIST(),

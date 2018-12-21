@@ -244,7 +244,7 @@ struct USBDevice {
     uint8_t data_buf[4096];
     int32_t remote_wakeup;
     int32_t setup_state;
-    int32_t setup_len;
+    uint32_t setup_len;
     int32_t setup_index;
 
     USBEndpoint ep_ctl;
