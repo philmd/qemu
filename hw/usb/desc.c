@@ -705,7 +705,7 @@ int usb_desc_get_descriptor(USBDevice *dev, USBPacket *p,
 }
 
 int usb_desc_handle_control(USBDevice *dev, USBPacket *p,
-        int request, int value, int index, int length, uint8_t *data)
+        int request, int value, int index, size_t length, uint8_t *data)
 {
     bool msos = (dev->flags & (1 << USB_DEV_FLAG_MSOS_DESC_IN_USE));
     const USBDesc *desc = usb_device_get_usb_desc(dev);
