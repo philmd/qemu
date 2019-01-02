@@ -107,7 +107,7 @@ static void raise_mmu_exception(OpenRISCCPU *cpu, target_ulong address,
     cpu->env.lock_addr = -1;
 }
 
-int openrisc_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size,
+int openrisc_cpu_handle_mmu_fault(CPUState *cs, vaddr address, unsigned size,
                                   int rw, int mmu_idx)
 {
 #ifdef CONFIG_USER_ONLY

@@ -25,7 +25,7 @@
 
 #ifdef CONFIG_USER_ONLY
 int hppa_cpu_handle_mmu_fault(CPUState *cs, vaddr address,
-                              int size, int rw, int mmu_idx)
+                              unsigned size, int rw, int mmu_idx)
 {
     HPPACPU *cpu = HPPA_CPU(cs);
 

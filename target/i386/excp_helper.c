@@ -366,7 +366,7 @@ static hwaddr get_hphys(CPUState *cs, hwaddr gphys, MMUAccessType access_type,
  * 0  = nothing more to do
  * 1  = generate PF fault
  */
-int x86_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, int size,
+int x86_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, unsigned size,
                              int is_write1, int mmu_idx)
 {
     X86CPU *cpu = X86_CPU(cs);

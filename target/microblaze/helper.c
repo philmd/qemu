@@ -48,7 +48,7 @@ int mb_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size, int rw,
 
 #else /* !CONFIG_USER_ONLY */
 
-int mb_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size, int rw,
+int mb_cpu_handle_mmu_fault(CPUState *cs, vaddr address, unsigned size, int rw,
                             int mmu_idx)
 {
     MicroBlazeCPU *cpu = MICROBLAZE_CPU(cs);

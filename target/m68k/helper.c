@@ -804,8 +804,8 @@ hwaddr m68k_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
     return phys_addr;
 }
 
-int m68k_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size, int rw,
-                              int mmu_idx)
+int m68k_cpu_handle_mmu_fault(CPUState *cs, vaddr address, unsigned size,
+                              int rw, int mmu_idx)
 {
     M68kCPU *cpu = M68K_CPU(cs);
     CPUM68KState *env = &cpu->env;

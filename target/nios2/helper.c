@@ -232,7 +232,7 @@ static int cpu_nios2_handle_virtual_page(
     return 1;
 }
 
-int nios2_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size,
+int nios2_cpu_handle_mmu_fault(CPUState *cs, vaddr address, unsigned size,
                                int rw, int mmu_idx)
 {
     Nios2CPU *cpu = NIOS2_CPU(cs);

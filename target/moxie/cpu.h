@@ -140,7 +140,7 @@ static inline void cpu_get_tb_cpu_state(CPUMoxieState *env, target_ulong *pc,
     *flags = 0;
 }
 
-int moxie_cpu_handle_mmu_fault(CPUState *cpu, vaddr address, int size,
+int moxie_cpu_handle_mmu_fault(CPUState *cpu, vaddr address, unsigned size,
                                int rw, int mmu_idx);
 
 #endif /* MOXIE_CPU_H */

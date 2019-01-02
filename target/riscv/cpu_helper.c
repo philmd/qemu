@@ -384,7 +384,7 @@ void tlb_fill(CPUState *cs, target_ulong addr, int size,
 
 #endif
 
-int riscv_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size,
+int riscv_cpu_handle_mmu_fault(CPUState *cs, vaddr address, unsigned size,
         int rw, int mmu_idx)
 {
     RISCVCPU *cpu = RISCV_CPU(cs);

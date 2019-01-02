@@ -107,7 +107,7 @@ int moxie_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size,
 
 #else /* !CONFIG_USER_ONLY */
 
-int moxie_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size,
+int moxie_cpu_handle_mmu_fault(CPUState *cs, vaddr address, unsigned size,
                                int rw, int mmu_idx)
 {
     MoxieCPU *cpu = MOXIE_CPU(cs);

@@ -202,8 +202,8 @@ void cpu_mips_start_count(CPUMIPSState *env);
 void cpu_mips_stop_count(CPUMIPSState *env);
 
 /* helper.c */
-int mips_cpu_handle_mmu_fault(CPUState *cpu, vaddr address, int size, int rw,
-                              int mmu_idx);
+int mips_cpu_handle_mmu_fault(CPUState *cpu, vaddr address, unsigned size,
+                              int rw, int mmu_idx);
 
 /* op_helper.c */
 uint32_t float_class_s(uint32_t arg, float_status *fst);

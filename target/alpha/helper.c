@@ -247,7 +247,7 @@ hwaddr alpha_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
     return (fail >= 0 ? -1 : phys);
 }
 
-int alpha_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, int size, int rw,
+int alpha_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, unsigned size, int rw,
                                int mmu_idx)
 {
     AlphaCPU *cpu = ALPHA_CPU(cs);

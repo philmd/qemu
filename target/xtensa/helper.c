@@ -321,14 +321,14 @@ bool xtensa_cpu_exec_interrupt(CPUState *cs, int interrupt_request)
 
 #ifdef CONFIG_USER_ONLY
 
-int xtensa_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size, int rw,
-                                int mmu_idx)
+int xtensa_cpu_handle_mmu_fault(CPUState *cs, vaddr address, unsigned size,
+                                int rw, int mmu_idx)
 {
     XtensaCPU *cpu = XTENSA_CPU(cs);
     CPUXtensaState *env = &cpu->env;
 
     qemu_log_mask(CPU_LOG_INT,
-                  "%s: rw = %d, address = 0x%08" VADDR_PRIx ", size = %d\n",
+                  "%s: rw = %d, address = 0x%08" VADDR_PRIx ", size = %zu\n",
                   __func__, rw, address, size);
     env->sregs[EXCVADDR] = address;
     env->sregs[EXCCAUSE] = rw ? STORE_PROHIBITED_CAUSE : LOAD_PROHIBITED_CAUSE;

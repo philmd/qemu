@@ -873,8 +873,8 @@ refill:
 #endif
 #endif
 
-int mips_cpu_handle_mmu_fault(CPUState *cs, vaddr address, int size, int rw,
-                              int mmu_idx)
+int mips_cpu_handle_mmu_fault(CPUState *cs, vaddr address, unsigned size,
+                              int rw, int mmu_idx)
 {
     MIPSCPU *cpu = MIPS_CPU(cs);
     CPUMIPSState *env = &cpu->env;

@@ -282,8 +282,8 @@ static inline int cpu_mmu_index (CPUCRISState *env, bool ifetch)
 	return !!(env->pregs[PR_CCS] & U_FLAG);
 }
 
-int cris_cpu_handle_mmu_fault(CPUState *cpu, vaddr address, int size, int rw,
-                              int mmu_idx);
+int cris_cpu_handle_mmu_fault(CPUState *cpu, vaddr address, unsigned size,
+                              int rw, int mmu_idx);
 
 /* Support function regs.  */
 #define SFR_RW_GC_CFG      0][0

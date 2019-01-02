@@ -102,7 +102,7 @@ static inline uint64_t cpu_mmu_idx_to_asc(int mmu_idx)
     }
 }
 
-int s390_cpu_handle_mmu_fault(CPUState *cs, vaddr orig_vaddr, int size,
+int s390_cpu_handle_mmu_fault(CPUState *cs, vaddr orig_vaddr, unsigned size,
                               int rw, int mmu_idx)
 {
     S390CPU *cpu = S390_CPU(cs);
