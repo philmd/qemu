@@ -366,13 +366,13 @@ void dump_mmu(FILE *f, fprintf_function cpu_fprintf, CPUSPARCState *env)
  * that the sparc ABI is followed.
  */
 int sparc_cpu_memory_rw_debug(CPUState *cs, vaddr address,
-                              uint8_t *buf, int len, bool is_write)
+                              uint8_t *buf, unsigned len, bool is_write)
 {
     SPARCCPU *cpu = SPARC_CPU(cs);
     CPUSPARCState *env = &cpu->env;
     target_ulong addr = address;
     int i;
-    int len1;
+    unsigned len1;
     int cwp = env->cwp;
 
     if (!is_write) {

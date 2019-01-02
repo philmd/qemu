@@ -177,7 +177,7 @@ typedef struct CPUClass {
                                   MemTxResult response, uintptr_t retaddr);
     bool (*virtio_is_big_endian)(CPUState *cpu);
     int (*memory_rw_debug)(CPUState *cpu, vaddr addr,
-                           uint8_t *buf, int len, bool is_write);
+                           uint8_t *buf, unsigned len, bool is_write);
     void (*dump_state)(CPUState *cpu, FILE *f, fprintf_function cpu_fprintf,
                        int flags);
     GuestPanicInformation* (*get_crash_info)(CPUState *cpu);

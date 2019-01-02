@@ -46,7 +46,8 @@
 #endif
 
 static inline int target_memory_rw_debug(CPUState *cpu, target_ulong addr,
-                                         uint8_t *buf, int len, bool is_write)
+                                         uint8_t *buf, unsigned len,
+                                         bool is_write)
 {
     CPUClass *cc = CPU_GET_CLASS(cpu);
 
