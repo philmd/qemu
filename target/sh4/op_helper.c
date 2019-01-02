@@ -41,7 +41,7 @@ void superh_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
     cpu_loop_exit_restore(cs, retaddr);
 }
 
-void tlb_fill(CPUState *cs, target_ulong addr, int size,
+void tlb_fill(CPUState *cs, target_ulong addr, unsigned size,
               MMUAccessType access_type, int mmu_idx, uintptr_t retaddr)
 {
     int ret;

@@ -473,7 +473,7 @@ static inline void assert_no_pages_locked(void)
 struct MemoryRegionSection *iotlb_to_section(CPUState *cpu,
                                              hwaddr index, MemTxAttrs attrs);
 
-void tlb_fill(CPUState *cpu, target_ulong addr, int size,
+void tlb_fill(CPUState *cpu, target_ulong addr, unsigned size,
               MMUAccessType access_type, int mmu_idx, uintptr_t retaddr);
 
 #endif

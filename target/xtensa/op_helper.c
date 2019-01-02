@@ -53,7 +53,7 @@ void xtensa_cpu_do_unaligned_access(CPUState *cs,
     }
 }
 
-void tlb_fill(CPUState *cs, target_ulong vaddr, int size,
+void tlb_fill(CPUState *cs, target_ulong vaddr, unsigned size,
               MMUAccessType access_type, int mmu_idx, uintptr_t retaddr)
 {
     XtensaCPU *cpu = XTENSA_CPU(cs);

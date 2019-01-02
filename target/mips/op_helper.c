@@ -2639,7 +2639,7 @@ void mips_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
     do_raise_exception_err(env, excp, error_code, retaddr);
 }
 
-void tlb_fill(CPUState *cs, target_ulong addr, int size,
+void tlb_fill(CPUState *cs, target_ulong addr, unsigned size,
               MMUAccessType access_type, int mmu_idx, uintptr_t retaddr)
 {
     int ret;

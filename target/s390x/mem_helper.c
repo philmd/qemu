@@ -39,7 +39,7 @@
    NULL, it means that the function was called in C code (i.e. not
    from generated code or from helper.c) */
 /* XXX: fix it to restore all registers */
-void tlb_fill(CPUState *cs, target_ulong addr, int size,
+void tlb_fill(CPUState *cs, target_ulong addr, unsigned size,
               MMUAccessType access_type, int mmu_idx, uintptr_t retaddr)
 {
     int ret = s390_cpu_handle_mmu_fault(cs, addr, size, access_type, mmu_idx);

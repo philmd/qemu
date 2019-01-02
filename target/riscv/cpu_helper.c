@@ -370,7 +370,7 @@ void riscv_cpu_do_unaligned_access(CPUState *cs, vaddr addr,
 }
 
 /* called by qemu's softmmu to fill the qemu tlb */
-void tlb_fill(CPUState *cs, target_ulong addr, int size,
+void tlb_fill(CPUState *cs, target_ulong addr, unsigned size,
         MMUAccessType access_type, int mmu_idx, uintptr_t retaddr)
 {
     int ret;

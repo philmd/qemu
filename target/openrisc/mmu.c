@@ -153,7 +153,7 @@ hwaddr openrisc_cpu_get_phys_page_debug(CPUState *cs, vaddr addr)
     }
 }
 
-void tlb_fill(CPUState *cs, target_ulong addr, int size,
+void tlb_fill(CPUState *cs, target_ulong addr, unsigned size,
               MMUAccessType access_type, int mmu_idx, uintptr_t retaddr)
 {
     OpenRISCCPU *cpu = OPENRISC_CPU(cs);
