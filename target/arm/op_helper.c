@@ -1381,7 +1381,7 @@ bool arm_debug_check_watchpoint(CPUState *cs, CPUWatchpoint *wp)
     return check_watchpoints(cpu);
 }
 
-vaddr arm_adjust_watchpoint_address(CPUState *cs, vaddr addr, int len)
+vaddr arm_adjust_watchpoint_address(CPUState *cs, vaddr addr, unsigned len)
 {
     ARMCPU *cpu = ARM_CPU(cs);
     CPUARMState *env = &cpu->env;

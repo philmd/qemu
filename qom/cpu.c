@@ -387,7 +387,8 @@ static int64_t cpu_common_get_arch_id(CPUState *cpu)
     return cpu->cpu_index;
 }
 
-static vaddr cpu_adjust_watchpoint_address(CPUState *cpu, vaddr addr, int len)
+static vaddr cpu_adjust_watchpoint_address(CPUState *cpu,
+                                           vaddr addr, unsigned len)
 {
     return addr;
 }
