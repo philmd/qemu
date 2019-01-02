@@ -18,6 +18,7 @@
  */
 
 #include "qemu/osdep.h"
+#include "qemu/units.h"
 #include "cpu.h"
 #include "exec/exec-all.h"
 #include "qemu/log.h"
@@ -397,7 +398,7 @@ int x86_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, int size,
         }
 #endif
         prot = PAGE_READ | PAGE_WRITE | PAGE_EXEC;
-        page_size = 4096;
+        page_size = 4 * KiB;
         goto do_mapping;
     }
 
@@ -477,7 +478,7 @@ int x86_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, int size,
             }
             if (pdpe & PG_PSE_MASK) {
                 /* 1 GB page */
-                page_size = 1024 * 1024 * 1024;
+                page_size = 1 * GiB;
                 pte_addr = pdpe_addr;
                 pte = pdpe;
                 goto do_check_protect;
@@ -513,7 +514,7 @@ int x86_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, int size,
         ptep &= pde ^ PG_NX_MASK;
         if (pde & PG_PSE_MASK) {
             /* 2 MB page */
-            page_size = 2048 * 1024;
+            page_size = 2 * MiB;
             pte_addr = pde_addr;
             pte = pde;
             goto do_check_protect;
@@ -535,7 +536,7 @@ int x86_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, int size,
         }
         /* combine pde and pte nx, user and rw protections */
         ptep &= pte ^ PG_NX_MASK;
-        page_size = 4096;
+        page_size = 4 * KiB;
     } else {
         uint32_t pde;
 
@@ -551,7 +552,7 @@ int x86_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, int size,
 
         /* if PSE bit is set, then we use a 4MB page */
         if ((pde & PG_PSE_MASK) && (env->cr[4] & CR4_PSE_MASK)) {
-            page_size = 4096 * 1024;
+            page_size = 4 * MiB;
             pte_addr = pde_addr;
 
             /* Bits 20-13 provide bits 39-32 of the address, bit 21 is reserved.
@@ -577,7 +578,7 @@ int x86_cpu_handle_mmu_fault(CPUState *cs, vaddr addr, int size,
         }
         /* combine pde and pte user and rw protections */
         ptep &= pte | PG_NX_MASK;
-        page_size = 4096;
+        page_size = 4 * KiB;
         rsvd_mask = 0;
     }
 
