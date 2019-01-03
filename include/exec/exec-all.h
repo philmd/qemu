@@ -473,6 +473,48 @@ static inline void assert_no_pages_locked(void)
 struct MemoryRegionSection *iotlb_to_section(CPUState *cpu,
                                              hwaddr index, MemTxAttrs attrs);
 
+/**
+ * tlb_fill:
+ * @cpu: CPU to add this TLB entry for
+ * @addr: virtual address to fill
+ * @size: size of the page in bytes
+ * @access_type: access permissions (DATA_LOAD/DATA_STORE/INST_FETCH)
+ * @mmu_idx: MMU index to fill
+* @retaddr
+
+ * @addr: guest virtual address to look up
+ * @access_type: 0 for read, 1 for write, 2 for execute
+ * @mmu_idx: MMU index to use for lookup
+ *
+ * Add an entry to this CPU's TLB (a mapping from virtual address
+ * @vaddr to physical address @paddr) with the specified memory
+ * transaction attributes. This is generally called by the target CPU
+ * specific code after it has been called through the tlb_fill()
+ * entry point and performed a successful page table walk to find
+ * the physical address and attributes for the virtual address
+ * which provoked the TLB miss.
+ *
+ * At most one entry for a given virtual address is permitted. Only a
+ * single TARGET_PAGE_SIZE region is mapped; the supplied @size is only
+ * used by tlb_flush_page.
+ */
+
+/* try to fill the TLB and return an exception if error. If retaddr is
+   NULL, it means that the function was called in C code (i.e. not
+   from generated code or from helper.c) */
+// 55e9409366c 1787cc8ee55:doc b35399bb4e 03ae85f858fc4:switch_acc_typ 98670d47cd:size
+/* try to fill the TLB and return an exception if error */
+/* Walk the page table and (if the mapping exists) add the page
+ * to the TLB. Return 0 on success, or an ARM DFSR/IFSR fault
+ * register format value on failure.
+ */
+ /* Walk the page table and (if the mapping exists) add the page
+- * to the TLB. Return 0 on success, or an ARM DFSR/IFSR fault
+- * register format value on failure.
++ * to the TLB. Return false on success, or true on failure. Populate
++ * fsr with ARM DFSR/IFSR fault register format value on failure.
+  */
+
 void tlb_fill(CPUState *cpu, target_ulong addr, unsigned size,
               MMUAccessType access_type, int mmu_idx, uintptr_t retaddr);
 
