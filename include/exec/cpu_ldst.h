@@ -434,7 +434,7 @@ static inline CPUTLBEntry *tlb_entry(CPUArchState *env, uintptr_t mmu_idx,
  * TCG backends for guest load and store accesses.
  */
 static inline void *tlb_vaddr_to_host(CPUArchState *env, abi_ptr addr,
-                                      int access_type, int mmu_idx)
+                                      MMUAccessType access_type, int mmu_idx)
 {
 #if defined(CONFIG_USER_ONLY)
     return g2h(addr);
@@ -444,13 +444,13 @@ static inline void *tlb_vaddr_to_host(CPUArchState *env, abi_ptr addr,
     uintptr_t haddr;
 
     switch (access_type) {
-    case 0:
+    case MMU_DATA_LOAD:
         tlb_addr = tlbentry->addr_read;
         break;
-    case 1:
+    case MMU_DATA_STORE:
         tlb_addr = tlb_addr_write(tlbentry);
         break;
-    case 2:
+    case MMU_INST_FETCH:
         tlb_addr = tlbentry->addr_code;
         break;
     default:
