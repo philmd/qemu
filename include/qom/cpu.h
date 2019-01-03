@@ -71,6 +71,16 @@ typedef enum MMUAccessType {
 
 typedef struct CPUWatchpoint CPUWatchpoint;
 
+/**
+ * CPUUnassignedAccess: handler for unassigned access
+ *
+ * @cpu: the #CPUState that triggered the access
+ * @addr: physical address to access
+ * @is_write: whether the access is for write
+ * @is_exec: whether the access is for execution
+ * @opaque: target-specific
+ * @size: size of the access
+ */
 typedef void (*CPUUnassignedAccess)(CPUState *cpu, hwaddr addr,
                                     bool is_write, bool is_exec, int opaque,
                                     unsigned size);
