@@ -10886,7 +10886,7 @@ static ARMCacheAttrs combine_cacheattrs(ARMCacheAttrs s1, ARMCacheAttrs s2)
  *
  * @env: CPUARMState
  * @address: virtual address to get physical address for
- * @access_type: 0 for read, 1 for write, 2 for execute
+ * @access_type: 0 for read, 1 for write, 2 for execute //
  * @mmu_idx: MMU index indicating required translation regime
  * @phys_ptr: set to the physical address corresponding to the virtual address
  * @attrs: set to the memory transaction attributes to use
