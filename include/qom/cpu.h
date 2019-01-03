@@ -189,6 +189,15 @@ typedef struct CPUClass {
                                Error **errp);
     void (*set_pc)(CPUState *cpu, vaddr value);
     void (*synchronize_from_tb)(CPUState *cpu, struct TranslationBlock *tb);
+    /**
+     * handle_mmu_fault: handler for MMU fault
+     *
+     * @cpu: the #CPUState where the fault occured
+     * @address: virtual address that triggered the fault
+     * @size: the size of the access
+     * @rw: whether the access is for write
+     * @mmu_index: the MMU index
+     */
     int (*handle_mmu_fault)(CPUState *cpu, vaddr address, unsigned size,
                             int rw, int mmu_index);
     hwaddr (*get_phys_page_debug)(CPUState *cpu, vaddr addr);
