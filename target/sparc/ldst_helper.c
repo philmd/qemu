@@ -398,7 +398,7 @@ static void dump_mxcc(CPUSPARCState *env)
 
 #if (defined(TARGET_SPARC64) || !defined(CONFIG_USER_ONLY))     \
     && defined(DEBUG_ASI)
-static void dump_asi(const char *txt, target_ulong addr, int asi, int size,
+static void dump_asi(const char *txt, target_ulong addr, int asi, unsigned size,
                      uint64_t r1)
 {
     switch (size) {
@@ -429,9 +429,9 @@ static void dump_asi(const char *txt, target_ulong addr, int asi, int size,
 /* Leon3 cache control */
 
 static void leon3_cache_control_st(CPUSPARCState *env, target_ulong addr,
-                                   uint64_t val, int size)
+                                   uint64_t val, unsigned size)
 {
-    DPRINTF_CACHE_CONTROL("st addr:%08x, val:%" PRIx64 ", size:%d\n",
+    DPRINTF_CACHE_CONTROL("st addr:%08x, val:%" PRIx64 ", size:%u\n",
                           addr, val, size);
 
     if (size != 4) {
@@ -497,7 +497,7 @@ static uint64_t leon3_cache_control_ld(CPUSPARCState *env, target_ulong addr,
 uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
                        int asi, uint32_t memop)
 {
-    int size = 1 << (memop & MO_SIZE);
+    unsigned size = 1U << (memop & MO_SIZE);
     int sign = memop & MO_SIGN;
     CPUState *cs = CPU(sparc_env_get_cpu(env));
     uint64_t ret = 0;
@@ -522,7 +522,7 @@ uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
                 ret = env->mxccregs[3];
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -531,7 +531,7 @@ uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
                 ret = env->mxccregs[3];
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -541,7 +541,7 @@ uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
                 /* should we do something here? */
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -550,17 +550,17 @@ uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
                 ret = env->mxccregs[7];
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
         default:
             qemu_log_mask(LOG_UNIMP,
-                          "%08x: unimplemented address, size: %d\n", addr,
+                          "%08x: unimplemented address, size: %u\n", addr,
                           size);
             break;
         }
-        DPRINTF_MXCC("asi = %d, size = %d, sign = %d, "
+        DPRINTF_MXCC("asi = %d, size = %u, sign = %d, "
                      "addr = %08x -> ret = %" PRIx64 ","
                      "addr = %08x\n", asi, size, sign, last_addr, ret, addr);
 #ifdef DEBUG_MXCC
@@ -724,7 +724,7 @@ uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
 void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                    int asi, uint32_t memop)
 {
-    int size = 1 << (memop & MO_SIZE);
+    unsigned size = 1U << (memop & MO_SIZE);
     SPARCCPU *cpu = sparc_env_get_cpu(env);
     CPUState *cs = CPU(cpu);
 
@@ -746,7 +746,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccdata[0] = val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -755,7 +755,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccdata[1] = val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -764,7 +764,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccdata[2] = val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -773,7 +773,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccdata[3] = val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -782,7 +782,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccregs[0] = val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             env->mxccdata[0] = ldq_phys(cs->as,
@@ -803,7 +803,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccregs[1] = val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             stq_phys(cs->as, (env->mxccregs[1] & 0xffffffffULL) +  0,
@@ -820,7 +820,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccregs[3] = val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -830,7 +830,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                     | val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -840,7 +840,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccregs[6] &= ~val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
@@ -849,17 +849,17 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
                 env->mxccregs[7] = val;
             } else {
                 qemu_log_mask(LOG_UNIMP,
-                              "%08x: unimplemented access size: %d\n", addr,
+                              "%08x: unimplemented access size: %u\n", addr,
                               size);
             }
             break;
         default:
             qemu_log_mask(LOG_UNIMP,
-                          "%08x: unimplemented address, size: %d\n", addr,
+                          "%08x: unimplemented address, size: %u\n", addr,
                           size);
             break;
         }
-        DPRINTF_MXCC("asi = %d, size = %d, addr = %08x, val = %" PRIx64 "\n",
+        DPRINTF_MXCC("asi = %d, size = %u, addr = %08x, val = %" PRIx64 "\n",
                      asi, size, addr, val);
 #ifdef DEBUG_MXCC
         dump_mxcc(env);
@@ -1053,7 +1053,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, uint64_t val,
 uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
                        int asi, uint32_t memop)
 {
-    int size = 1 << (memop & MO_SIZE);
+    unsigned size = 1U << (memop & MO_SIZE);
     int sign = memop & MO_SIGN;
     uint64_t ret = 0;
 
@@ -1142,7 +1142,7 @@ uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
 void helper_st_asi(CPUSPARCState *env, target_ulong addr, target_ulong val,
                    int asi, uint32_t memop)
 {
-    int size = 1 << (memop & MO_SIZE);
+    unsigned size = 1U << (memop & MO_SIZE);
 #ifdef DEBUG_ASI
     dump_asi("write", addr, asi, size, val);
 #endif
@@ -1173,7 +1173,7 @@ void helper_st_asi(CPUSPARCState *env, target_ulong addr, target_ulong val,
 uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
                        int asi, uint32_t memop)
 {
-    int size = 1 << (memop & MO_SIZE);
+    unsigned size = 1U << (memop & MO_SIZE);
     int sign = memop & MO_SIGN;
     CPUState *cs = CPU(sparc_env_get_cpu(env));
     uint64_t ret = 0;
@@ -1480,7 +1480,7 @@ uint64_t helper_ld_asi(CPUSPARCState *env, target_ulong addr,
 void helper_st_asi(CPUSPARCState *env, target_ulong addr, target_ulong val,
                    int asi, uint32_t memop)
 {
-    int size = 1 << (memop & MO_SIZE);
+    unsigned size = 1U << (memop & MO_SIZE);
     SPARCCPU *cpu = sparc_env_get_cpu(env);
     CPUState *cs = CPU(cpu);
 
