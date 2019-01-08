@@ -19,9 +19,11 @@ environment:
     #  MY_VAR: value2
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1604
       QEMU_CONFIGURE_OPTS: --cross-prefix=x86_64-w64-mingw32-
+    # https://www.appveyor.com/docs/windows-images-software/#mingw-msys-cygwin
 
 build_script:
-- sh: PATH=/mingw64/bin:$PATH bash ./configure $QEMU_CONFIGURE_OPTS
+- sh: ls -l /msys64 /mingw-w64 /mingw-w64/x* || true
+- sh: PATH=/msys64/bin:$PATH bash ./configure $QEMU_CONFIGURE_OPTS
 - sh: make msi
 
 test: off
