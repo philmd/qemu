@@ -30,11 +30,22 @@ install:
     #  QEMU_CONFIGURE_OPTS: --cross-prefix=x86_64-w64-mingw32-
     # https://www.appveyor.com/docs/windows-images-software/#mingw-msys-cygwin
 
+#Prefix command with cmd: to run it on Windows image only
+#Prefix command with sh: to run it on Linux image only
+#Do not prefix command to run it on both Windows and Linux.
+#    CI_WINDOWS is true if the build is running on Windows-based image; otherwise false.
+#    CI_LINUX is true if the build is running on Linux-based image; otherwise false.
+
 build_script:
 #- sh: ls -l /msys64 /mingw-w64 /mingw-w64/x* || true
 #- sh: PATH=/msys64/bin:$PATH
-- sh: bash ./configure $QEMU_CONFIGURE_OPTS
-- sh: make
+- sh: sudo apt-get --yes install glib2-devel
+- sh: |
+    id
+    bash ./configure $QEMU_CONFIGURE_OPTS
+    make
 #- sh: make msi
+
+# ./build_configure.sh --cross-prefix=i686-w64-mingw32- --enable-guest-agent-msi --with-vss-sdk=/builddir/build/BUILD/qemu-3.1.0-rc0/VSSSDK72 --static
 
 test: off
