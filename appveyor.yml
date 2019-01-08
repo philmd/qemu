@@ -7,7 +7,17 @@ shallow_clone: true
 image: Ubuntu1604
 image: Ubuntu1804
 
+environment:
+  matrix:
+    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    #  MY_VAR: value1
+    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #  MY_VAR: value2
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1604
+        QEMU_CONFIGURE_OPTS: --cross-prefix=x86_64-w64-mingw32-
+
 build_script:
-- sh: cd $APPVEYOR_BUILD_FOLDER; PATH=/mingw64/bin:$PATH ./configure --cross-prefix=x86_64-w64-mingw32- && make msi
+- sh: PATH=/mingw64/bin:$PATH ./configure $QEMU_CONFIGURE_OPTS
+- sh: make msi
 
 test: off
