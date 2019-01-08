@@ -9,9 +9,7 @@ image:
 - Ubuntu1804
 
 install:
-- git submodule update --init --recursive capstone
-- git submodule update --init --recursive dtc
-- git submodule update --init --recursive ui/keycodemapdb
+- cd $APPVEYOR_BUILD_FOLDER && git submodule update --init --recursive
 
 environment:
   matrix:
