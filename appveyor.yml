@@ -15,7 +15,7 @@ environment:
     #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     #  MY_VAR: value2
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1604
-        QEMU_CONFIGURE_OPTS: --cross-prefix=x86_64-w64-mingw32-
+      QEMU_CONFIGURE_OPTS: --cross-prefix=x86_64-w64-mingw32-
 
 build_script:
 - sh: PATH=/mingw64/bin:$PATH ./configure $QEMU_CONFIGURE_OPTS
