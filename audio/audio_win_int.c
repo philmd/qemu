@@ -4,7 +4,6 @@
 #include "qemu-common.h"
 
 #define AUDIO_CAP "win-int"
-#include <windows.h>
 #include <mmsystem.h>
 
 #include "audio.h"

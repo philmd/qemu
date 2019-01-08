@@ -29,10 +29,6 @@
 #include "block/aio.h"
 #include "qemu/main-loop.h"
 
-#ifndef _WIN32
-#include <sys/wait.h>
-#endif
-
 /* This context runs on top of main loop. We can't reuse qemu_aio_context
  * because iohandlers mustn't be polled by aio_poll(qemu_aio_context). */
 static AioContext *iohandler_ctx;

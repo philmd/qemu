@@ -34,7 +34,6 @@
 #include "qemu/iov.h"
 #include "qapi/qmp/qdict.h"
 #include "qapi/qmp/qstring.h"
-#include <windows.h>
 #include <winioctl.h>
 
 #define FTYPE_FILE 0

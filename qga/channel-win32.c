@@ -1,5 +1,4 @@
 #include "qemu/osdep.h"
-#include <windows.h>
 #include <io.h>
 #include "guest-agent-core.h"
 #include "channel.h"

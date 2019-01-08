@@ -18,8 +18,6 @@
 #include "qemu/osdep.h"
 #include <wtypes.h>
 #include <powrprof.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
 #include <iptypes.h>
 #include <iphlpapi.h>
 #ifdef CONFIG_QGA_NTDDSCSI

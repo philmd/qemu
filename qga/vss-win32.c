@@ -11,7 +11,6 @@
  */
 
 #include "qemu/osdep.h"
-#include <windows.h>
 #include "qapi/error.h"
 #include "qemu/error-report.h"
 #include "guest-agent-core.h"

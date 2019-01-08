@@ -30,7 +30,6 @@
 #include "block/raw-aio.h"
 #include "qemu/event_notifier.h"
 #include "qemu/iov.h"
-#include <windows.h>
 #include <winioctl.h>
 
 #define FTYPE_FILE 0

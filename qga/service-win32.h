@@ -14,8 +14,6 @@
 #ifndef QGA_SERVICE_WIN32_H
 #define QGA_SERVICE_WIN32_H
 
-#include <windows.h>
-
 #define QGA_SERVICE_DISPLAY_NAME "QEMU Guest Agent"
 #define QGA_SERVICE_NAME         "qemu-ga"
 #define QGA_SERVICE_DESCRIPTION  "Enables integration with QEMU machine emulator and virtualizer."

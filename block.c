@@ -56,10 +56,6 @@
 #endif
 #endif
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #define NOT_DONE 0x7fffffff /* used while emulated sync operation in progress */
 
 static QTAILQ_HEAD(, BlockDriverState) graph_bdrv_states =

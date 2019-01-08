@@ -35,7 +35,6 @@
 #include "net/tap.h"            /* tap_has_ufo, ... */
 #include "sysemu/sysemu.h"
 #include "qemu/error-report.h"
-#include <windows.h>
 #include <winioctl.h>
 
 //=============

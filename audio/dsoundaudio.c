@@ -33,7 +33,6 @@
 #define AUDIO_CAP "dsound"
 #include "audio_int.h"
 
-#include <windows.h>
 #include <mmsystem.h>
 #include <objbase.h>
 #include <dsound.h>

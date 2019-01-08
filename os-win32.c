@@ -23,7 +23,6 @@
  * THE SOFTWARE.
  */
 #include "qemu/osdep.h"
-#include <windows.h>
 #include <mmsystem.h>
 #include "sysemu/sysemu.h"
 #include "qemu-options.h"

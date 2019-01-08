@@ -1,8 +1,6 @@
 #ifndef QEMU_THREAD_WIN32_H
 #define QEMU_THREAD_WIN32_H
 
-#include <windows.h>
-
 struct QemuMutex {
     SRWLOCK lock;
 #ifdef CONFIG_DEBUG_MUTEX
