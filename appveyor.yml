@@ -20,8 +20,8 @@ image:
 install:
 - git submodule update --init --recursive ui/keycodemapdb
 
-environment:
-  matrix:
+#environment:
+#  matrix:
     #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     #  MY_VAR: value1
     #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
