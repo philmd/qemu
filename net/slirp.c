@@ -28,7 +28,6 @@
 
 #ifndef _WIN32
 #include <pwd.h>
-#include <sys/wait.h>
 #endif
 #include "net/net.h"
 #include "clients.h"

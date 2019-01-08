@@ -25,8 +25,6 @@
 #include "trace.h"
 
 #include <sys/ioctl.h>
-#include <sys/socket.h>
-#include <sys/un.h>
 #include <linux/vhost.h>
 #include <linux/userfaultfd.h>
 

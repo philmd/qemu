@@ -16,7 +16,6 @@
 #include <glib/gstdio.h>
 #ifndef _WIN32
 #include <syslog.h>
-#include <sys/wait.h>
 #endif
 #include "qapi/qmp/json-parser.h"
 #include "qapi/qmp/qdict.h"

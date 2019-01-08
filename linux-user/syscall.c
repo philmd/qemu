@@ -25,7 +25,6 @@
 #include <grp.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include <sys/wait.h>
 #include <sys/mount.h>
 #include <sys/file.h>
 #include <sys/fsuid.h>
@@ -36,9 +35,6 @@
 #include <linux/capability.h>
 #include <sched.h>
 #include <sys/timex.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/uio.h>
 #include <poll.h>
 #include <sys/times.h>
 #include <sys/shm.h>
@@ -49,7 +45,6 @@
 #include <sys/signalfd.h>
 //#include <sys/user.h>
 #include <netinet/ip.h>
-#include <netinet/tcp.h>
 #include <linux/wireless.h>
 #include <linux/icmp.h>
 #include <linux/icmpv6.h>

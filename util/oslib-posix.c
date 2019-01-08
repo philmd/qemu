@@ -36,7 +36,6 @@
 #include "qapi/error.h"
 #include "qemu/sockets.h"
 #include <libgen.h>
-#include <sys/signal.h>
 #include "qemu/cutils.h"
 
 #ifdef CONFIG_LINUX

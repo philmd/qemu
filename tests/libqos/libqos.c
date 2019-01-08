@@ -1,5 +1,4 @@
 #include "qemu/osdep.h"
-#include <sys/wait.h>
 
 #include "libqtest.h"
 #include "libqos/libqos.h"

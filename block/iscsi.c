@@ -27,7 +27,6 @@
 
 #include <poll.h>
 #include <math.h>
-#include <arpa/inet.h>
 #include "qemu/config-file.h"
 #include "qemu/error-report.h"
 #include "qemu/bitops.h"

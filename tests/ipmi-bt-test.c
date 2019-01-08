@@ -24,10 +24,7 @@
 
 #include "qemu/osdep.h"
 
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <netinet/ip.h>
-#include <netinet/tcp.h>
 
 
 #include "libqtest.h"

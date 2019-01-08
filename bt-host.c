@@ -24,7 +24,6 @@
 
 #ifndef _WIN32
 # include <sys/ioctl.h>
-# include <sys/uio.h>
 # ifdef CONFIG_BLUEZ
 #  include <bluetooth/bluetooth.h>
 #  include <bluetooth/hci.h>

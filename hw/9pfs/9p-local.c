@@ -16,11 +16,8 @@
 #include "9p-xattr.h"
 #include "9p-util.h"
 #include "fsdev/qemu-fsdev.h"   /* local_ops */
-#include <arpa/inet.h>
 #include <pwd.h>
 #include <grp.h>
-#include <sys/socket.h>
-#include <sys/un.h>
 #include "qemu/xattr.h"
 #include "qapi/error.h"
 #include "qemu/cutils.h"

@@ -11,8 +11,6 @@
  */
 
 #include "qemu/osdep.h"
-#include <sys/socket.h>
-#include <sys/un.h>
 
 /* #define SOCKET_SCM_DEBUG */
 

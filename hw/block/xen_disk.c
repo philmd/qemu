@@ -22,7 +22,6 @@
 #include "qemu/osdep.h"
 #include "qemu/units.h"
 #include <sys/ioctl.h>
-#include <sys/uio.h>
 
 #include "hw/hw.h"
 #include "hw/xen/xen_backend.h"

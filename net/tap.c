@@ -28,8 +28,6 @@
 
 
 #include <sys/ioctl.h>
-#include <sys/wait.h>
-#include <sys/socket.h>
 #include <net/if.h>
 
 #include "net/net.h"

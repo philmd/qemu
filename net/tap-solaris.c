@@ -31,12 +31,10 @@
 #include <sys/ethernet.h>
 #include <sys/sockio.h>
 #include <netinet/arp.h>
-#include <netinet/in.h>
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h> // must come after ip.h
 #include <netinet/udp.h>
-#include <netinet/tcp.h>
 #include <net/if.h>
 #include <stropts.h>
 #include "qemu/error-report.h"

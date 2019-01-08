@@ -20,9 +20,7 @@
  */
 
 #include "qemu/osdep.h"
-#include <sys/socket.h>
 #include <sys/ioctl.h>
-#include <sys/wait.h>
 
 #include "hw/hw.h"
 #include "net/net.h"

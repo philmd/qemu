@@ -24,7 +24,6 @@
  */
 
 #include "qemu/osdep.h"
-#include <sys/wait.h>
 #include <pwd.h>
 #include <grp.h>
 #include <libgen.h>

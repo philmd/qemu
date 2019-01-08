@@ -25,12 +25,10 @@
 
 #ifdef CONFIG_VHOST_NET
 #include <linux/vhost.h>
-#include <sys/socket.h>
 #include <linux/kvm.h>
 #include <netpacket/packet.h>
 #include <net/ethernet.h>
 #include <net/if.h>
-#include <netinet/in.h>
 
 
 #include "standard-headers/linux/virtio_ring.h"

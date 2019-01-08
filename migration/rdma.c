@@ -27,9 +27,6 @@
 #include "qemu/sockets.h"
 #include "qemu/bitmap.h"
 #include "qemu/coroutine.h"
-#include <sys/socket.h>
-#include <netdb.h>
-#include <arpa/inet.h>
 #include <rdma/rdma_cma.h>
 #include "trace.h"
 

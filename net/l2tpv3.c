@@ -25,7 +25,6 @@
 
 #include "qemu/osdep.h"
 #include <linux/ip.h>
-#include <netdb.h>
 #include "net/net.h"
 #include "clients.h"
 #include "qapi/error.h"

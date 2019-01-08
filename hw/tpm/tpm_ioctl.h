@@ -8,7 +8,6 @@
 #ifndef _TPM_IOCTL_H_
 #define _TPM_IOCTL_H_
 
-#include <sys/uio.h>
 #include <sys/ioctl.h>
 
 /*

@@ -14,7 +14,6 @@
 #include "qemu/osdep.h"
 #include <sys/ioctl.h>
 #include <sys/utsname.h>
-#include <sys/wait.h>
 #include <dirent.h>
 #include "guest-agent-core.h"
 #include "qga-qapi-commands.h"
@@ -43,8 +42,6 @@ extern char **environ;
 #include <mntent.h>
 #include <linux/fs.h>
 #include <ifaddrs.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
 #include <net/if.h>
 #include <sys/statvfs.h>
 

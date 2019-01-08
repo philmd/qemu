@@ -11,8 +11,6 @@
  */
 
 #include "qemu/osdep.h"
-#include <sys/socket.h>
-#include <sys/un.h>
 #include "9p.h"
 #include "qapi/error.h"
 #include "qemu/cutils.h"

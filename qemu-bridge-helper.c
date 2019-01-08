@@ -15,10 +15,7 @@
 
 #include "qemu/osdep.h"
 
-
 #include <sys/ioctl.h>
-#include <sys/socket.h>
-#include <sys/un.h>
 #include <sys/prctl.h>
 
 #include <net/if.h>
