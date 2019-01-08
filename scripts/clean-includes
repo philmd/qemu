@@ -161,15 +161,47 @@ for f in "$@"; do
   # Remove includes that osdep.h already provides
   perl -n -i -e 'print if !/\s*#\s*include\s*(["<][^>"]*[">])/ ||
                           ! (grep { $_ eq $1 } qw (
-           "config-host.h" "config-target.h" "qemu/compiler.h"
-           <setjmp.h> <stdarg.h> <stddef.h> <stdbool.h> <stdint.h> <sys/types.h>
-           <stdlib.h> <stdio.h> <string.h> <strings.h> <inttypes.h>
-           <limits.h> <unistd.h> <time.h> <ctype.h> <errno.h> <fcntl.h>
-           <sys/stat.h> <sys/time.h> <assert.h> <signal.h> <glib.h>
-           <sys/stat.h> <sys/time.h> <assert.h> <signal.h> <glib.h> <sys/mman.h>
-           <netdb.h>
-           "sysemu/os-posix.h, sysemu/os-win32.h "glib-compat.h"
+           "config-host.h"
+           "config-target.h"
+           "qemu/compiler.h"
+           #<stdarg.h>
+           <stddef.h>
+           <stdbool.h>
+           <stdint.h>
+           <sys/types.h>
+           <stdlib.h>
+           <stdio.h>
+           <string.h>
+           <strings.h>
+           <inttypes.h>
+           <limits.h>
+           <unistd.h>
+           <time.h>
+           <ctype.h>
+           <errno.h>
+           <fcntl.h>
+           <sys/stat.h>
+           <sys/time.h>
+           <assert.h>
+           <sys/signal.h>
+           <sys/wait.h>
+           "glib-compat.h"
+                <glib.h>
+           "sysemu/os-posix.h"
+               <sys/mman.h>
+               <sys/socket.h>
+               <netinet/in.h>
+               <netinet/tcp.h>
+               <arpa/inet.h>
+               <netdb.h>
+               <sys/un.h>
+               <sys/sysmacros.h>
+           "sysemu/os-win32.h"
+               <winsock2.h>
+               <windows.h>
+               <ws2tcpip.h>
            "qemu/typedefs.h"
+            <sys/uio.h>
             ))' "$f"
 
 done
