@@ -18,7 +18,7 @@ environment:
       QEMU_CONFIGURE_OPTS: --cross-prefix=x86_64-w64-mingw32-
 
 build_script:
-- bash: PATH=/mingw64/bin:$PATH ./configure $QEMU_CONFIGURE_OPTS
+- sh: PATH=/mingw64/bin:$PATH bash ./configure $QEMU_CONFIGURE_OPTS
 - sh: make msi
 
 test: off
