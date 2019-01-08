@@ -2461,6 +2461,7 @@ S: Maintained
 F: .travis.yml
 F: scripts/travis/
 F: .shippable.yml
+F: appveyor.yml
 F: tests/docker/
 F: tests/vm/
 W: https://travis-ci.org/qemu/qemu

@@ -1,0 +1,6 @@
+version: 1.0.{build}
+
+build_script:
+- sh: cd $APPVEYOR_BUILD_FOLDER; PATH=/mingw64/bin:$PATH ./configure --cross-prefix=x86_64-w64-mingw32- && make msi
+
+test: off
