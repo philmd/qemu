@@ -3,6 +3,10 @@ version: 1.0.{build}
 clone_depth: 3
 shallow_clone: true
 
+#image: Visual Studio 2017
+image: Ubuntu1604
+image: Ubuntu1804
+
 build_script:
 - sh: cd $APPVEYOR_BUILD_FOLDER; PATH=/mingw64/bin:$PATH ./configure --cross-prefix=x86_64-w64-mingw32- && make msi
 
