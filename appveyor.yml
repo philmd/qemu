@@ -4,9 +4,18 @@ clone_depth: 3
 #shallow_clone: true
 
 #image: Visual Studio 2017
+# https://www.appveyor.com/docs/windows-images-software/
 image:
-- Ubuntu1604
+- Visual Studio 2017
+#- Ubuntu1604
 - Ubuntu1804
+# https://www.appveyor.com/docs/linux-images-software/
+
+# clone directory
+#clone_folder: c:\projects\myproject
+
+#init:
+#- git config --global core.autocrlf input
 
 install:
 - git submodule update --init --recursive ui/keycodemapdb
@@ -17,13 +26,15 @@ environment:
     #  MY_VAR: value1
     #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     #  MY_VAR: value2
-    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1604
-      QEMU_CONFIGURE_OPTS: --cross-prefix=x86_64-w64-mingw32-
+    #- APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu1604
+    #  QEMU_CONFIGURE_OPTS: --cross-prefix=x86_64-w64-mingw32-
     # https://www.appveyor.com/docs/windows-images-software/#mingw-msys-cygwin
 
 build_script:
-- sh: ls -l /msys64 /mingw-w64 /mingw-w64/x* || true
-- sh: PATH=/msys64/bin:$PATH bash ./configure $QEMU_CONFIGURE_OPTS
-- sh: make msi
+#- sh: ls -l /msys64 /mingw-w64 /mingw-w64/x* || true
+#- sh: PATH=/msys64/bin:$PATH
+- sh: bash ./configure $QEMU_CONFIGURE_OPTS
+- sh: make
+#- sh: make msi
 
 test: off
