@@ -8,6 +8,11 @@ image:
 - Ubuntu1604
 - Ubuntu1804
 
+install:
+- git submodule update --init --recursive capstone
+- git submodule update --init --recursive dtc
+- git submodule update --init --recursive ui/keycodemapdb
+
 environment:
   matrix:
     #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
