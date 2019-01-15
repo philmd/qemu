@@ -26,6 +26,7 @@ ENV PACKAGES \
     libcap-devel \
     libcap-ng-devel \
     libcurl-devel \
+    libepoxy-devel \
     libfdt-devel \
     libjpeg-devel \
     libpng-devel \
@@ -37,6 +38,7 @@ ENV PACKAGES \
     llvm \
     lzo-devel \
     make \
+    mesa-libgbm-devel \
     mingw32-bzip2 \
     mingw32-curl \
     mingw32-glib2 \
@@ -90,4 +92,4 @@ ENV QEMU_CONFIGURE_OPTS --python=/usr/bin/python3
 
 RUN dnf install -y $PACKAGES
 RUN rpm -q $PACKAGES | sort > /packages.txt
-ENV FEATURES mingw clang pyyaml asan
+ENV FEATURES mingw clang pyyaml asan opengl
