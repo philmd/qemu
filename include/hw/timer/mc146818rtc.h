@@ -3,7 +3,6 @@
 
 #include "qemu/queue.h"
 #include "hw/isa/isa.h"
-#include "hw/timer/mc146818rtc_regs.h"
 
 #define TYPE_MC146818_RTC "mc146818rtc"
 #define MC146818_RTC(obj) OBJECT_CHECK(RTCState, (obj), TYPE_MC146818_RTC)
