@@ -1174,8 +1174,8 @@ static void mips_create_cpu(MaltaState *s, const char *cpu_type,
     }
 }
 
-static DeviceState *piix4_init(PCIBus *pci_bus,
-                               ISABus **isa_bus, I2CBus **smbus)
+static DeviceState *piix4_create(PCIBus *pci_bus,
+                                 ISABus **isa_bus, I2CBus **smbus)
 {
     DriveInfo *hd[MAX_IDE_BUS * MAX_IDE_DEVS];
     PCIDevice *pci;
@@ -1397,7 +1397,7 @@ void mips_malta_init(MachineState *machine)
     pci_bus = gt64120_register(s->i8259);
 
     /* Southbridge */
-    dev = piix4_init(pci_bus, &isa_bus, &smbus);
+    dev = piix4_create(pci_bus, &isa_bus, &smbus);
 
     /* Interrupt controller */
     qdev_connect_gpio_out_named(dev, "intr", 0, i8259_irq);
