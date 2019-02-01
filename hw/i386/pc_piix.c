@@ -47,6 +47,7 @@
 #include "exec/memory.h"
 #include "exec/address-spaces.h"
 #include "hw/acpi/acpi.h"
+#include "hw/acpi/piix4.h"
 #include "cpu.h"
 #include "qapi/error.h"
 #include "qemu/error-report.h"
