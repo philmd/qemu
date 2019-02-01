@@ -1174,7 +1174,7 @@ static void mips_create_cpu(MaltaState *s, const char *cpu_type,
     }
 }
 
-static DeviceState *piix4_init(PCIBus *pci_bus, qemu_irq irq,
+static DeviceState *piix4_init(PCIBus *pci_bus,
                                ISABus **isa_bus, I2CBus **smbus)
 {
     DriveInfo *hd[MAX_IDE_BUS * MAX_IDE_DEVS];
@@ -1188,12 +1188,6 @@ static DeviceState *piix4_init(PCIBus *pci_bus, qemu_irq irq,
     dev = DEVICE(pci);
     if (isa_bus) {
         *isa_bus = ISA_BUS(qdev_get_child_bus(dev, "isa.0"));
-    }
-
-    /* Interrupt controller */
-    qdev_connect_gpio_out_named(dev, "intr", 0, irq);
-    for (int i = 0; i < ISA_NUM_IRQS; i++) {
-        s->i8259[i] = qdev_get_gpio_in_named(dev, "isa", i);
     }
 
     ide_drive_get(hd, ARRAY_SIZE(hd));
@@ -1405,7 +1399,13 @@ void mips_malta_init(MachineState *machine)
     pci_bus = gt64120_register(s->i8259);
 
     /* Southbridge */
-    piix4_init(pci_bus, i8259_irq, &isa_bus, &smbus);
+    dev = piix4_init(pci_bus, &isa_bus, &smbus);
+
+    /* Interrupt controller */
+    qdev_connect_gpio_out_named(dev, "intr", 0, i8259_irq);
+    for (int i = 0; i < ISA_NUM_IRQS; i++) {
+        s->i8259[i] = qdev_get_gpio_in_named(dev, "isa", i);
+    }
 
     /* generate SPD EEPROM data */
     generate_eeprom_spd(&smbus_eeprom_buf[0 * 256], ram_size);
