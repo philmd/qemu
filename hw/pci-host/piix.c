@@ -119,8 +119,9 @@ struct PCII440FXState {
 /* Keep it 2G to comply with older win32 guests */
 #define I440FX_PCI_HOST_HOLE64_SIZE_DEFAULT (1ULL << 31)
 
-/* Older coreboot versions (4.0 and older) read a config register that doesn't
- * exist in real hardware, to get the RAM size from QEMU.
+/*
+ * Older coreboot versions (4.0 and older) read a config register that
+ * doesn't exist in real hardware, to get the RAM size from QEMU.
  */
 #define I440FX_COREBOOT_RAM_SIZE 0x57
 
@@ -129,9 +130,10 @@ static PCIINTxRoute piix3_route_intx_pin_to_irq(void *opaque, int pci_intx);
 static void piix3_write_config_xen(PCIDevice *dev,
                                uint32_t address, uint32_t val, int len);
 
-/* return the global irq number corresponding to a given device irq
-   pin. We could also use the bus number to have a more precise
-   mapping. */
+/*
+ * Return the global irq number corresponding to a given device irq pin.
+ * We could also use the bus number to have a more precise mapping.
+ */
 static int pci_slot_get_pirq(PCIDevice *pci_dev, int pci_intx)
 {
     int slot_addend;
@@ -209,7 +211,8 @@ static const VMStateDescription vmstate_i440fx = {
     .post_load = i440fx_post_load,
     .fields = (VMStateField[]) {
         VMSTATE_PCI_DEVICE(parent_obj, PCII440FXState),
-        /* Used to be smm_enabled, which was basically always zero because
+        /*
+         * Used to be smm_enabled, which was basically always zero because
          * SeaBIOS hardly uses SMM.  SMRAM is now handled by CPU code.
          */
         VMSTATE_UNUSED(1),
@@ -421,10 +424,12 @@ PCIBus *i440fx_init(const char *host_type, const char *pci_type,
                  PAM_EXPAN_SIZE);
     }
 
-    /* Xen supports additional interrupt routes from the PCI devices to
+    /*
+     * Xen supports additional interrupt routes from the PCI devices to
      * the IOAPIC: the four pins of each PCI device on the bus are also
      * connected to the IOAPIC directly.
-     * These additional routes can be discovered through ACPI. */
+     * These additional routes can be discovered through ACPI.
+     */
     if (xen_enabled()) {
         PCIDevice *pci_dev = pci_create_simple_multifunction(b,
                              -1, true, TYPE_PIIX3_XEN_DEVICE);
