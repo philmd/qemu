@@ -1180,21 +1180,19 @@ static DeviceState *piix4_init(PCIBus *pci_bus,
     DriveInfo *hd[MAX_IDE_BUS * MAX_IDE_DEVS];
     PCIDevice *pci;
     DeviceState *dev;
-    int piix4_devfn;
 
     pci = pci_create_simple_multifunction(pci_bus, PCI_DEVFN(10, 0),
                                           true, TYPE_PIIX4_PCI_DEVICE);
-    piix4_devfn = pci->devfn;
     dev = DEVICE(pci);
     if (isa_bus) {
         *isa_bus = ISA_BUS(qdev_get_child_bus(dev, "isa.0"));
     }
 
     ide_drive_get(hd, ARRAY_SIZE(hd));
-    pci_piix4_ide_init(pci_bus, hd, piix4_devfn + 1);
-    pci_create_simple(pci_bus, piix4_devfn + 2, "piix4-usb-uhci");
+    pci_piix4_ide_init(pci_bus, hd, pci->devfn + 1);
+    pci_create_simple(pci_bus, pci->devfn + 2, "piix4-usb-uhci");
     if (smbus) {
-        *smbus = piix4_pm_init(pci_bus, piix4_devfn + 3, 0x1100,
+        *smbus = piix4_pm_init(pci_bus, pci->devfn + 3, 0x1100,
                                isa_get_irq(NULL, 9), NULL, 0, NULL);
    }
 
