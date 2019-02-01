@@ -172,7 +172,7 @@ static void i440fx_write_config(PCIDevice *dev,
     }
 }
 
-static int i440fx_load_old(QEMUFile* f, void *opaque, int version_id)
+static int i440fx_load_old(QEMUFile *f, void *opaque, int version_id)
 {
     PCII440FXState *d = opaque;
     PCIDevice *pd = PCI_DEVICE(d);
@@ -180,8 +180,9 @@ static int i440fx_load_old(QEMUFile* f, void *opaque, int version_id)
     uint8_t smm_enabled;
 
     ret = pci_device_load(pd, f);
-    if (ret < 0)
+    if (ret < 0) {
         return ret;
+    }
     i440fx_update_memory_mappings(d);
     qemu_get_8s(f, &smm_enabled);
 
@@ -420,7 +421,7 @@ PCIBus *i440fx_init(const char *host_type, const char *pci_type,
              &f->pam_regions[0], PAM_BIOS_BASE, PAM_BIOS_SIZE);
     for (i = 0; i < ARRAY_SIZE(f->pam_regions) - 1; ++i) {
         init_pam(dev, f->ram_memory, f->system_memory, f->pci_address_space,
-                 &f->pam_regions[i+1], PAM_EXPAN_BASE + i * PAM_EXPAN_SIZE,
+                 &f->pam_regions[i + 1], PAM_EXPAN_BASE + i * PAM_EXPAN_SIZE,
                  PAM_EXPAN_SIZE);
     }
 
