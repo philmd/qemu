@@ -26,12 +26,15 @@
 #include "qemu/osdep.h"
 #include "hw/hw.h"
 #include "hw/i386/pc.h"
+#include "hw/isa/piix.h"
 #include "hw/pci/pci.h"
 #include "hw/isa/isa.h"
 #include "hw/sysbus.h"
 #include "hw/dma/i8257.h"
 #include "hw/timer/i8254.h"
 #include "hw/timer/mc146818rtc.h"
+#include "hw/acpi/piix4.h"
+#include "hw/ide.h"
 #include "qapi/error.h"
 
 PCIDevice *piix4_dev;
@@ -230,3 +233,31 @@ static void piix4_register_types(void)
 }
 
 type_init(piix4_register_types)
+
+DeviceState *piix4_create(PCIBus *pci_bus, ISABus **isa_bus, I2CBus **smbus,
+                          size_t ide_buses)
+{
+    size_t ide_drives = ide_buses * MAX_IDE_DEVS;
+    DriveInfo **hd;
+    PCIDevice *pci;
+    DeviceState *dev;
+
+    pci = pci_create_simple_multifunction(pci_bus, PCI_DEVFN(10, 0),
+                                          true, TYPE_PIIX4_PCI_DEVICE);
+    dev = DEVICE(pci);
+    if (isa_bus) {
+        *isa_bus = ISA_BUS(qdev_get_child_bus(dev, "isa.0"));
+    }
+
+    hd = g_new(DriveInfo *, ide_drives);
+    ide_drive_get(hd, ide_drives);
+    pci_piix4_ide_init(pci_bus, hd, pci->devfn + 1);
+    g_free(hd);
+    pci_create_simple(pci_bus, pci->devfn + 2, "piix4-usb-uhci");
+    if (smbus) {
+        *smbus = piix4_pm_init(pci_bus, pci->devfn + 3, 0x1100,
+                               isa_get_irq(NULL, 9), NULL, 0, NULL);
+   }
+
+    return dev;
+}
