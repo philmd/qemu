@@ -50,6 +50,7 @@
 #include "sysemu/numa.h"
 
 /* Supported chipsets: */
+#include "hw/isa/piix.h"
 #include "hw/acpi/piix4.h"
 #include "hw/acpi/pcihp.h"
 #include "hw/i386/ich9.h"
