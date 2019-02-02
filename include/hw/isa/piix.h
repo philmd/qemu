@@ -58,6 +58,11 @@ typedef struct PIIX3State {
 #define TYPE_PIIX3_DEVICE "PIIX3"
 #define TYPE_PIIX3_XEN_DEVICE "PIIX3-xen"
 
+void piix3_set_irq(void *opaque, int pirq, int level);
+PCIINTxRoute piix3_route_intx_pin_to_irq(void *opaque, int pci_intx);
+void piix3_write_config_xen(PCIDevice *dev,
+                            uint32_t address, uint32_t val, int len);
+
 extern PCIDevice *piix4_dev;
 
 DeviceState *piix4_create(PCIBus *pci_bus, ISABus **isa_bus, I2CBus **smbus,

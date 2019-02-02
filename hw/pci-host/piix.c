@@ -85,11 +85,6 @@ struct PCII440FXState {
  */
 #define I440FX_COREBOOT_RAM_SIZE 0x57
 
-static void piix3_set_irq(void *opaque, int pirq, int level);
-static PCIINTxRoute piix3_route_intx_pin_to_irq(void *opaque, int pci_intx);
-static void piix3_write_config_xen(PCIDevice *dev,
-                               uint32_t address, uint32_t val, int len);
-
 /*
  * Return the global irq number corresponding to a given device irq pin.
  * We could also use the bus number to have a more precise mapping.
@@ -467,13 +462,13 @@ static void piix3_set_irq_level(PIIX3State *piix3, int pirq, int level)
     piix3_set_irq_pic(piix3, pic_irq);
 }
 
-static void piix3_set_irq(void *opaque, int pirq, int level)
+void piix3_set_irq(void *opaque, int pirq, int level)
 {
     PIIX3State *piix3 = opaque;
     piix3_set_irq_level(piix3, pirq, level);
 }
 
-static PCIINTxRoute piix3_route_intx_pin_to_irq(void *opaque, int pin)
+PCIINTxRoute piix3_route_intx_pin_to_irq(void *opaque, int pin)
 {
     PIIX3State *piix3 = opaque;
     int irq = piix3->dev.config[PIIX_PIRQC + pin];
@@ -517,8 +512,8 @@ static void piix3_write_config(PCIDevice *dev,
     }
 }
 
-static void piix3_write_config_xen(PCIDevice *dev,
-                               uint32_t address, uint32_t val, int len)
+void piix3_write_config_xen(PCIDevice *dev,
+                            uint32_t address, uint32_t val, int len)
 {
     xen_piix_pci_write_config_client(address, val, len);
     piix3_write_config(dev, address, val, len);
