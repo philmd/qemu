@@ -418,7 +418,8 @@ static inline uint32_t tb_cflags(const TranslationBlock *tb)
 static inline uint32_t curr_cflags(void)
 {
     return (parallel_cpus ? CF_PARALLEL : 0)
-         | (use_icount ? CF_USE_ICOUNT : 0);
+         | (use_icount ? CF_USE_ICOUNT : 0)
+         | CF_CLUSTER_MASK;
 }
 
 /* TranslationBlock invalidate API */
