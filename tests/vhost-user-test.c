@@ -317,7 +317,7 @@ static int chr_can_read(void *opaque)
     return VHOST_USER_HDR_SIZE;
 }
 
-static void chr_read(void *opaque, const uint8_t *buf, int size)
+static void chr_read(void *opaque, const uint8_t *buf, size_t size)
 {
     TestServer *s = opaque;
     CharBackend *chr = &s->chr;
@@ -332,7 +332,7 @@ static void chr_read(void *opaque, const uint8_t *buf, int size)
     }
 
     if (size != VHOST_USER_HDR_SIZE) {
-        g_test_message("Wrong message size received %d", size);
+        g_test_message("Wrong message size received %zu", size);
         return;
     }
 
@@ -340,11 +340,12 @@ static void chr_read(void *opaque, const uint8_t *buf, int size)
     memcpy(p, buf, VHOST_USER_HDR_SIZE);
 
     if (msg.size) {
+        ssize_t ssize;
         p += VHOST_USER_HDR_SIZE;
-        size = qemu_chr_fe_read_all(chr, p, msg.size);
-        if (size != msg.size) {
-            g_test_message("Wrong message size received %d != %d",
-                           size, msg.size);
+        ssize = qemu_chr_fe_read_all(chr, p, msg.size);
+        if (ssize != msg.size) {
+            g_test_message("Wrong message size received %zd != %d",
+                           ssize, msg.size);
             return;
         }
     }

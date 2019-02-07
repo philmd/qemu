@@ -1020,12 +1020,12 @@ static inline int rdmacm_mux_can_receive(void *opaque)
     return rdmacm_mux_can_process_async(backend_dev);
 }
 
-static void rdmacm_mux_read(void *opaque, const uint8_t *buf, int size)
+static void rdmacm_mux_read(void *opaque, const uint8_t *buf, size_t size)
 {
     RdmaBackendDev *backend_dev = (RdmaBackendDev *)opaque;
     RdmaCmMuxMsg *msg = (RdmaCmMuxMsg *)buf;
 
-    pr_dbg("Got %d bytes\n", size);
+    pr_dbg("Got %zu bytes\n", size);
     pr_dbg("msg_type=%d\n", msg->hdr.msg_type);
     pr_dbg("op_code=%d\n", msg->hdr.op_code);
 
