@@ -34,7 +34,7 @@
 typedef struct {
     Chardev parent;
     QIOChannel *ioc;
-    int read_bytes;
+    size_t read_bytes;
 
     /* Protected by the Chardev chr_write_lock.  */
     int connected;
@@ -161,7 +161,7 @@ static gboolean pty_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
 {
     Chardev *chr = CHARDEV(opaque);
     PtyChardev *s = PTY_CHARDEV(opaque);
-    gsize len;
+    size_t len;
     uint8_t buf[CHR_READ_BUF_LEN];
     ssize_t ret;
 

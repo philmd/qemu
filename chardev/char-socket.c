@@ -54,7 +54,7 @@ typedef struct {
     GSource *hup_source;
     QCryptoTLSCreds *tls_creds;
     int connected;
-    int max_size;
+    size_t max_size;
     int do_telnetopt;
     int do_nodelay;
     int *read_msgfds;
@@ -469,9 +469,10 @@ static gboolean tcp_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
     Chardev *chr = CHARDEV(opaque);
     SocketChardev *s = SOCKET_CHARDEV(opaque);
     uint8_t buf[CHR_READ_BUF_LEN];
-    int len, size;
+    size_t len;
+    int size;
 
-    if (!s->connected || s->max_size <= 0) {
+    if (!s->connected || s->max_size == 0) {
         return TRUE;
     }
     len = sizeof(buf);
