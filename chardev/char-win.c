@@ -52,7 +52,7 @@ static void win_chr_read(Chardev *chr, DWORD len)
     }
 
     if (size > 0) {
-        qemu_chr_be_write(chr, buf, size);
+        qemu_chr_be_write(chr, buf, (size_t)size);
     }
 }
 

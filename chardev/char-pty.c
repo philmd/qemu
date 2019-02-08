@@ -178,7 +178,7 @@ static gboolean pty_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
         return FALSE;
     } else {
         pty_chr_state(chr, 1);
-        qemu_chr_be_write(chr, buf, ret);
+        qemu_chr_be_write(chr, buf, (size_t)ret);
     }
     return TRUE;
 }

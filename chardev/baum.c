@@ -301,7 +301,7 @@ static void baum_write_packet(BaumChardev *baum, const uint8_t *buf, size_t len)
     len = cur - io_buf;
     if (len <= room) {
         /* Fits */
-        qemu_chr_be_write(chr, io_buf, len);
+        qemu_chr_be_write(chr, io_buf, (size_t)len);
     } else {
         int first;
         uint8_t out;

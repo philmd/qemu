@@ -63,7 +63,7 @@ static gboolean fd_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
         return FALSE;
     }
     if (ret > 0) {
-        qemu_chr_be_write(chr, buf, ret);
+        qemu_chr_be_write(chr, buf, (size_t)ret);
     }
 
     return TRUE;
