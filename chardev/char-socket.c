@@ -470,7 +470,7 @@ static gboolean tcp_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
     SocketChardev *s = SOCKET_CHARDEV(opaque);
     uint8_t buf[CHR_READ_BUF_LEN];
     size_t len;
-    int size;
+    int ret;
 
     if (!s->connected || s->max_size == 0) {
         return TRUE;
@@ -479,11 +479,12 @@ static gboolean tcp_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
     if (len > s->max_size) {
         len = s->max_size;
     }
-    size = tcp_chr_recv(chr, (void *)buf, len);
-    if (size == 0 || (size == -1 && errno != EAGAIN)) {
+    ret = tcp_chr_recv(chr, (void *)buf, len);
+    if (ret == 0 || (ret == -1 && errno != EAGAIN)) {
         /* connection closed */
         tcp_chr_disconnect(chr);
-    } else if (size > 0) {
+    } else if (ret > 0) {
+        size_t size = ret;
         if (s->do_telnetopt) {
             size = tcp_chr_process_IAC_bytes(chr, s, buf, size);
         }
