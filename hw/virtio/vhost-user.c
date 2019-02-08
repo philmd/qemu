@@ -215,7 +215,8 @@ static int vhost_user_read(struct vhost_dev *dev, VhostUserMsg *msg)
     struct vhost_user *u = dev->opaque;
     CharBackend *chr = u->user->chr;
     uint8_t *p = (uint8_t *) msg;
-    int r, size = VHOST_USER_HDR_SIZE;
+    int r;
+    size_t size = VHOST_USER_HDR_SIZE;
 
     r = qemu_chr_fe_read_all(chr, p, size);
     if (r != size) {
