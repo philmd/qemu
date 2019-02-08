@@ -171,9 +171,9 @@ static gboolean tcp_chr_read_poll(void *opaque)
     return s->max_size > 0;
 }
 
-static void tcp_chr_process_IAC_bytes(Chardev *chr,
-                                      SocketChardev *s,
-                                      uint8_t *buf, int *size)
+static int tcp_chr_process_IAC_bytes(Chardev *chr,
+                                     SocketChardev *s,
+                                     uint8_t *buf, int size)
 {
     /* Handle any telnet or tn3270 client's basic IAC options.
      * For telnet options, it satisfies char by char mode with no echo.
@@ -195,7 +195,7 @@ static void tcp_chr_process_IAC_bytes(Chardev *chr,
     int i;
     int j = 0;
 
-    for (i = 0; i < *size; i++) {
+    for (i = 0; i < size; i++) {
         if (s->do_telnetopt > 1) {
             if ((unsigned char)buf[i] == IAC && s->do_telnetopt == 2) {
                 /* Double IAC means send an IAC */
@@ -239,7 +239,7 @@ static void tcp_chr_process_IAC_bytes(Chardev *chr,
             }
         }
     }
-    *size = j;
+    return j;
 }
 
 static int tcp_get_msgfds(Chardev *chr, int *fds, int num)
@@ -485,7 +485,7 @@ static gboolean tcp_chr_read(QIOChannel *chan, GIOCondition cond, void *opaque)
         tcp_chr_disconnect(chr);
     } else if (size > 0) {
         if (s->do_telnetopt) {
-            tcp_chr_process_IAC_bytes(chr, s, buf, &size);
+            size = tcp_chr_process_IAC_bytes(chr, s, buf, size);
         }
         if (size > 0) {
             qemu_chr_be_write(chr, buf, size);
