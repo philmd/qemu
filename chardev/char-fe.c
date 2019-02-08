@@ -53,10 +53,10 @@ int qemu_chr_fe_write_all(CharBackend *be, const uint8_t *buf, size_t len)
     return qemu_chr_write(s, buf, len, true);
 }
 
-int qemu_chr_fe_read_all(CharBackend *be, uint8_t *buf, int len)
+int qemu_chr_fe_read_all(CharBackend *be, uint8_t *buf, size_t len)
 {
     Chardev *s = be->chr;
-    int offset = 0;
+    size_t offset = 0;
     int res;
 
     if (!s || !CHARDEV_GET_CLASS(s)->chr_sync_read) {

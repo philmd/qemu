@@ -209,7 +209,7 @@ int qemu_chr_fe_write_all(CharBackend *be, const uint8_t *buf, size_t len);
  *
  * Returns: the number of bytes read (0 if no associated Chardev)
  */
-int qemu_chr_fe_read_all(CharBackend *be, uint8_t *buf, int len);
+int qemu_chr_fe_read_all(CharBackend *be, uint8_t *buf, size_t len);
 
 /**
  * qemu_chr_fe_ioctl:
