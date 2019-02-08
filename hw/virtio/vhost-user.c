@@ -215,11 +215,12 @@ static int vhost_user_read(struct vhost_dev *dev, VhostUserMsg *msg)
     struct vhost_user *u = dev->opaque;
     CharBackend *chr = u->user->chr;
     uint8_t *p = (uint8_t *) msg;
-    int r, size = VHOST_USER_HDR_SIZE;
+    int r;
+    size_t size = VHOST_USER_HDR_SIZE;
 
     r = qemu_chr_fe_read_all(chr, p, size);
     if (r != size) {
-        error_report("Failed to read msg header. Read %d instead of %d."
+        error_report("Failed to read msg header. Read %d instead of %zu."
                      " Original request %d.", r, size, msg->hdr.request);
         goto fail;
     }
@@ -235,7 +236,7 @@ static int vhost_user_read(struct vhost_dev *dev, VhostUserMsg *msg)
     /* validate message size is sane */
     if (msg->hdr.size > VHOST_USER_PAYLOAD_SIZE) {
         error_report("Failed to read msg header."
-                " Size %d exceeds the maximum %zu.", msg->hdr.size,
+                " Size %u exceeds the maximum %zu.", msg->hdr.size,
                 VHOST_USER_PAYLOAD_SIZE);
         goto fail;
     }
@@ -246,7 +247,7 @@ static int vhost_user_read(struct vhost_dev *dev, VhostUserMsg *msg)
         r = qemu_chr_fe_read_all(chr, p, size);
         if (r != size) {
             error_report("Failed to read msg payload."
-                         " Read %d instead of %d.", r, msg->hdr.size);
+                         " Read %d instead of %u.", r, msg->hdr.size);
             goto fail;
         }
     }
@@ -300,7 +301,8 @@ static int vhost_user_write(struct vhost_dev *dev, VhostUserMsg *msg,
 {
     struct vhost_user *u = dev->opaque;
     CharBackend *chr = u->user->chr;
-    int ret, size = VHOST_USER_HDR_SIZE + msg->hdr.size;
+    int ret;
+    size_t size = VHOST_USER_HDR_SIZE + msg->hdr.size;
 
     /*
      * For non-vring specific requests, like VHOST_USER_SET_MEM_TABLE,
@@ -320,7 +322,7 @@ static int vhost_user_write(struct vhost_dev *dev, VhostUserMsg *msg,
     ret = qemu_chr_fe_write_all(chr, (const uint8_t *) msg, size);
     if (ret != size) {
         error_report("Failed to write msg."
-                     " Wrote %d instead of %d.", ret, size);
+                     " Wrote %d instead of %zu.", ret, size);
         return -1;
     }
 
