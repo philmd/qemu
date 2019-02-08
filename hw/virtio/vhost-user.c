@@ -215,12 +215,12 @@ static int vhost_user_read(struct vhost_dev *dev, VhostUserMsg *msg)
     struct vhost_user *u = dev->opaque;
     CharBackend *chr = u->user->chr;
     uint8_t *p = (uint8_t *) msg;
-    int r;
+    ssize_t r;
     size_t size = VHOST_USER_HDR_SIZE;
 
     r = qemu_chr_fe_read_all(chr, p, size);
     if (r != size) {
-        error_report("Failed to read msg header. Read %d instead of %d."
+        error_report("Failed to read msg header. Read %zd instead of %zu."
                      " Original request %d.", r, size, msg->hdr.request);
         goto fail;
     }
@@ -236,7 +236,7 @@ static int vhost_user_read(struct vhost_dev *dev, VhostUserMsg *msg)
     /* validate message size is sane */
     if (msg->hdr.size > VHOST_USER_PAYLOAD_SIZE) {
         error_report("Failed to read msg header."
-                " Size %d exceeds the maximum %zu.", msg->hdr.size,
+                " Size %u exceeds the maximum %zu.", msg->hdr.size,
                 VHOST_USER_PAYLOAD_SIZE);
         goto fail;
     }
@@ -247,7 +247,7 @@ static int vhost_user_read(struct vhost_dev *dev, VhostUserMsg *msg)
         r = qemu_chr_fe_read_all(chr, p, size);
         if (r != size) {
             error_report("Failed to read msg payload."
-                         " Read %d instead of %d.", r, msg->hdr.size);
+                         " Read %zd instead of %u.", r, msg->hdr.size);
             goto fail;
         }
     }

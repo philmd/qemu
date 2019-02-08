@@ -180,7 +180,7 @@ static inline int rdmacm_mux_can_process_async(RdmaBackendDev *backend_dev)
 static int check_mux_op_status(CharBackend *mad_chr_be)
 {
     RdmaCmMuxMsg msg = {};
-    int ret;
+    ssize_t ret;
 
     pr_dbg("Reading response\n");
     ret = qemu_chr_fe_read_all(mad_chr_be, (uint8_t *)&msg, sizeof(msg));

@@ -638,10 +638,10 @@ static int64_t ivshmem_recv_msg(IVShmemState *s, int *pfd, Error **errp)
 {
     int64_t msg;
     size_t n;
-    int ret;
 
     n = 0;
     do {
+        ssize_t ret;
         ret = qemu_chr_fe_read_all(&s->server_chr, (uint8_t *)&msg + n,
                                    sizeof(msg) - n);
         if (ret < 0) {
