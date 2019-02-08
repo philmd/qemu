@@ -170,7 +170,7 @@ size_t qemu_chr_be_can_write(Chardev *s)
     return receivable_bytes;
 }
 
-void qemu_chr_be_write_impl(Chardev *s, uint8_t *buf, int len)
+void qemu_chr_be_write_impl(Chardev *s, uint8_t *buf, size_t len)
 {
     CharBackend *be = s->be;
 

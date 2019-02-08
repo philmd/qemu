@@ -186,7 +186,7 @@ void qemu_chr_be_write(Chardev *s, uint8_t *buf, size_t len);
  *
  * Implementation of back end writing. Used by replay module.
  */
-void qemu_chr_be_write_impl(Chardev *s, uint8_t *buf, int len);
+void qemu_chr_be_write_impl(Chardev *s, uint8_t *buf, size_t len);
 
 /**
  * qemu_chr_be_update_read_handlers:

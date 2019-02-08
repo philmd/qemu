@@ -69,8 +69,7 @@ void replay_event_char_read_run(void *opaque)
 {
     CharEvent *event = (CharEvent *)opaque;
 
-    qemu_chr_be_write_impl(char_drivers[event->id], event->buf,
-                           (int)event->len);
+    qemu_chr_be_write_impl(char_drivers[event->id], event->buf, event->len);
 
     g_free(event->buf);
     g_free(event);
