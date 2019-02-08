@@ -49,7 +49,7 @@ void replay_register_char_driver(Chardev *chr)
     char_drivers[drivers_count++] = chr;
 }
 
-void replay_chr_be_write(Chardev *s, uint8_t *buf, int len)
+void replay_chr_be_write(Chardev *s, uint8_t *buf, size_t len)
 {
     CharEvent *event = g_malloc0(sizeof(CharEvent));
 
