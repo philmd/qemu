@@ -98,7 +98,7 @@ ipmb_checksum(const unsigned char *data, int size, unsigned char start)
 
 static void continue_send(IPMIBmcExtern *ibe)
 {
-    int ret;
+    ssize_t ret;
     if (ibe->outlen == 0) {
         goto check_reset;
     }

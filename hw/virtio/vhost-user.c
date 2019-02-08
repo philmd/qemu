@@ -301,7 +301,7 @@ static int vhost_user_write(struct vhost_dev *dev, VhostUserMsg *msg,
 {
     struct vhost_user *u = dev->opaque;
     CharBackend *chr = u->user->chr;
-    int ret;
+    ssize_t ret;
     size_t size = VHOST_USER_HDR_SIZE + msg->hdr.size;
 
     /*
@@ -322,7 +322,7 @@ static int vhost_user_write(struct vhost_dev *dev, VhostUserMsg *msg,
     ret = qemu_chr_fe_write_all(chr, (const uint8_t *) msg, size);
     if (ret != size) {
         error_report("Failed to write msg."
-                     " Wrote %d instead of %u.", ret, size);
+                     " Wrote %zd instead of %zu.", ret, size);
         return -1;
     }
 

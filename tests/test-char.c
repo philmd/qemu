@@ -112,7 +112,7 @@ static void char_ringbuf_test(void)
     Chardev *chr;
     CharBackend be;
     char *data;
-    int ret;
+    ssize_t ret;
 
     opts = qemu_opts_create(qemu_find_opts("chardev"), "ringbuf-label",
                             1, &error_abort);
@@ -551,7 +551,8 @@ static void char_pipe_test(void)
     gchar *tmp, *in, *out, *pipe = g_build_filename(tmp_path, "pipe", NULL);
     Chardev *chr;
     CharBackend be;
-    int ret, fd;
+    ssize_t ret;
+    int fd;
     char buf[10];
     FeHandler fe = { 0, };
 
@@ -815,7 +816,7 @@ static void char_null_test(void)
     Error *err = NULL;
     Chardev *chr;
     CharBackend be;
-    int ret;
+    ssize_t ret;
 
     chr = qemu_chr_find("label-null");
     g_assert_null(chr);

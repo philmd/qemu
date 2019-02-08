@@ -261,7 +261,7 @@ static void serial_xmit(SerialState *s)
             /* in loopback mode, say that we just received a char */
             serial_receive1(s, &s->tsr, 1);
         } else {
-            int rc = qemu_chr_fe_write(&s->chr, &s->tsr, 1);
+            ssize_t rc = qemu_chr_fe_write(&s->chr, &s->tsr, 1);
 
             if ((rc == 0 ||
                  (rc == -1 && errno == EAGAIN)) &&

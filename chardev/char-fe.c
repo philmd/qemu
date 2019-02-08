@@ -31,7 +31,7 @@
 #include "chardev/char-io.h"
 #include "chardev/char-mux.h"
 
-int qemu_chr_fe_write(CharBackend *be, const uint8_t *buf, size_t len)
+ssize_t qemu_chr_fe_write(CharBackend *be, const uint8_t *buf, size_t len)
 {
     Chardev *s = be->chr;
 
@@ -42,7 +42,7 @@ int qemu_chr_fe_write(CharBackend *be, const uint8_t *buf, size_t len)
     return qemu_chr_write(s, buf, len, false);
 }
 
-int qemu_chr_fe_write_all(CharBackend *be, const uint8_t *buf, size_t len)
+ssize_t qemu_chr_fe_write_all(CharBackend *be, const uint8_t *buf, size_t len)
 {
     Chardev *s = be->chr;
 
@@ -53,11 +53,11 @@ int qemu_chr_fe_write_all(CharBackend *be, const uint8_t *buf, size_t len)
     return qemu_chr_write(s, buf, len, true);
 }
 
-int qemu_chr_fe_read_all(CharBackend *be, uint8_t *buf, size_t len)
+ssize_t qemu_chr_fe_read_all(CharBackend *be, uint8_t *buf, size_t len)
 {
     Chardev *s = be->chr;
     size_t offset = 0;
-    int res;
+    ssize_t res;
 
     if (!s || !CHARDEV_GET_CLASS(s)->chr_sync_read) {
         return 0;

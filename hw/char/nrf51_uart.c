@@ -73,7 +73,7 @@ static uint64_t uart_read(void *opaque, hwaddr addr, unsigned int size)
 static gboolean uart_transmit(GIOChannel *chan, GIOCondition cond, void *opaque)
 {
     NRF51UARTState *s = NRF51_UART(opaque);
-    int r;
+    ssize_t r;
     uint8_t c = s->reg[R_UART_TXD];
 
     s->watch_tag = 0;

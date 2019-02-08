@@ -36,7 +36,7 @@
 static int mux_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     MuxChardev *d = MUX_CHARDEV(chr);
-    int ret;
+    ssize_t ret;
     if (!d->timestamps) {
         ret = qemu_chr_fe_write(&d->chr, buf, len);
     } else {

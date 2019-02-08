@@ -232,7 +232,7 @@ static size_t insert_IAC_escape_char(uint8_t *outv, size_t out_len)
 static int write_payload_3270(EmulatedCcw3270Device *dev, uint8_t cmd)
 {
     Terminal3270 *t = TERMINAL_3270(dev);
-    int retval = 0;
+    ssize_t retval = 0;
     int count = ccw_dstream_avail(get_cds(t));
     int bound = (OUTPUT_BUFFER_SIZE - 3) / 2;
     int len = MIN(count, bound);

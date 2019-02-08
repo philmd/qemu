@@ -190,7 +190,7 @@ static uint64_t uart_read(void *opaque, hwaddr offset, unsigned size)
 static gboolean uart_transmit(GIOChannel *chan, GIOCondition cond, void *opaque)
 {
     CMSDKAPBUART *s = CMSDK_APB_UART(opaque);
-    int ret;
+    ssize_t ret;
 
     s->watch_tag = 0;
 

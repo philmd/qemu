@@ -276,7 +276,7 @@ static gboolean cadence_uart_xmit(GIOChannel *chan, GIOCondition cond,
                                   void *opaque)
 {
     CadenceUARTState *s = opaque;
-    int ret;
+    ssize_t ret;
 
     /* instant drain the fifo when there's no back-end */
     if (!qemu_chr_fe_backend_connected(&s->chr)) {

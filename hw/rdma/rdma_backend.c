@@ -208,7 +208,7 @@ static int check_mux_op_status(CharBackend *mad_chr_be)
 
 static int exec_rdmacm_mux_req(RdmaBackendDev *backend_dev, RdmaCmMuxMsg *msg)
 {
-    int rc = 0;
+    ssize_t rc = 0;
 
     pr_dbg("Executing request %d\n", msg->hdr.op_code);
 

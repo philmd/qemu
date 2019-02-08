@@ -678,7 +678,7 @@ static int compare_chr_send(CompareState *s,
                             uint32_t size,
                             uint32_t vnet_hdr_len)
 {
-    int ret = 0;
+    ssize_t ret = 0;
     uint32_t len = htonl(size);
 
     if (!size) {

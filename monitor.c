@@ -391,7 +391,6 @@ static gboolean monitor_unblocked(GIOChannel *chan, GIOCondition cond,
 /* Caller must hold mon->mon_lock */
 static void monitor_flush_locked(Monitor *mon)
 {
-    int rc;
     size_t len;
     const char *buf;
 
@@ -403,7 +402,7 @@ static void monitor_flush_locked(Monitor *mon)
     len = qstring_get_length(mon->outbuf);
 
     if (len && !mon->mux_out) {
-        rc = qemu_chr_fe_write(&mon->chr, (const uint8_t *) buf, len);
+        ssize_t rc = qemu_chr_fe_write(&mon->chr, (const uint8_t *) buf, len);
         if ((rc < 0 && errno != EAGAIN) || (rc == len)) {
             /* all flushed or error */
             qobject_unref(mon->outbuf);

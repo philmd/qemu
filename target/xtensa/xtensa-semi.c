@@ -222,7 +222,7 @@ void HELPER(simcall)(CPUXtensaState *env)
                 uint32_t io_sz = page_left < len ? page_left : len;
                 hwaddr sz = io_sz;
                 void *buf = cpu_physical_memory_map(paddr, &sz, !is_write);
-                uint32_t io_done;
+                ssize_t io_done;
                 bool error = false;
 
                 if (buf) {

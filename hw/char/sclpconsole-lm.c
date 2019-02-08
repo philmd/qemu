@@ -191,7 +191,8 @@ static int read_event_data(SCLPEvent *event, EventBufferHeader *evt_buf_hdr,
  *  - write console data to character layer
  *  returns < 0 if an error occurred
  */
-static int write_console_data(SCLPEvent *event, const uint8_t *buf, size_t len)
+static ssize_t write_console_data(SCLPEvent *event,
+                                  const uint8_t *buf, size_t len)
 {
     SCLPConsoleLM *scon = SCLPLM_CONSOLE(event);
 
@@ -207,7 +208,7 @@ static int write_console_data(SCLPEvent *event, const uint8_t *buf, size_t len)
 
 static int process_mdb(SCLPEvent *event, MDBO *mdbo)
 {
-    int rc;
+    ssize_t rc;
     uint16_t len;
     uint8_t buffer[SIZE_BUFFER];
     const size_t hlen = sizeof(mdbo->length)
@@ -233,7 +234,7 @@ static int process_mdb(SCLPEvent *event, MDBO *mdbo)
 static int write_event_data(SCLPEvent *event, EventBufferHeader *ebh)
 {
     int len;
-    int written;
+    ssize_t written;
     int errors = 0;
     MDBO *mdbo;
     SclpMsg *data = (SclpMsg *) ebh;
