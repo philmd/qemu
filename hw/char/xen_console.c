@@ -48,7 +48,7 @@ struct XenConsole {
     int               backlog;
 };
 
-static void buffer_append(struct XenConsole *con)
+static size_t buffer_append(struct XenConsole *con)
 {
     struct buffer *buffer = &con->buffer;
     XENCONS_RING_IDX cons, prod, size;
@@ -59,8 +59,9 @@ static void buffer_append(struct XenConsole *con)
     xen_mb();
 
     size = prod - cons;
-    if ((size == 0) || (size > sizeof(intf->out)))
-        return;
+    if ((size == 0) || (size > sizeof(intf->out))) {
+        return 0;
+    }
 
     if ((buffer->capacity - buffer->size) < size) {
         buffer->capacity += (size + 1024);
@@ -89,6 +90,9 @@ static void buffer_append(struct XenConsole *con)
         if (buffer->consumed > buffer->max_capacity - over)
             buffer->consumed = buffer->max_capacity - over;
     }
+
+    assert(buffer->size >= buffer->consumed);
+    return buffer->size - buffer->consumed;
 }
 
 static void buffer_advance(struct buffer *buffer, size_t len)
