@@ -171,9 +171,9 @@ static gboolean tcp_chr_read_poll(void *opaque)
     return s->max_size > 0;
 }
 
-static int tcp_chr_process_IAC_bytes(Chardev *chr,
-                                     SocketChardev *s,
-                                     uint8_t *buf, int size)
+static size_t tcp_chr_process_IAC_bytes(Chardev *chr,
+                                        SocketChardev *s,
+                                        uint8_t *buf, size_t size)
 {
     /* Handle any telnet or tn3270 client's basic IAC options.
      * For telnet options, it satisfies char by char mode with no echo.
@@ -192,8 +192,8 @@ static int tcp_chr_process_IAC_bytes(Chardev *chr,
      * session, and NOP and IP need to be done later.
      */
 
-    int i;
-    int j = 0;
+    size_t i;
+    size_t j = 0;
 
     for (i = 0; i < size; i++) {
         if (s->do_telnetopt > 1) {
