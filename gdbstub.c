@@ -323,7 +323,7 @@ typedef struct GDBState {
     int line_sum; /* running checksum */
     int line_csum; /* checksum at the end of the packet */
     uint8_t last_packet[MAX_PACKET_LENGTH + 4];
-    int last_packet_len;
+    size_t last_packet_len;
     int signal;
 #ifdef CONFIG_USER_ONLY
     int fd;
@@ -475,7 +475,7 @@ static int gdb_continue_partial(GDBState *s, char *newstates)
     return res;
 }
 
-static void put_buffer(GDBState *s, const uint8_t *buf, int len)
+static void put_buffer(GDBState *s, const uint8_t *buf, size_t len)
 {
 #ifdef CONFIG_USER_ONLY
     int ret;
