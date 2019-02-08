@@ -103,6 +103,7 @@ static void continue_send(IPMIBmcExtern *ibe)
         goto check_reset;
     }
  send:
+    assert(ibe->outlen > ibe->outpos);
     ret = qemu_chr_fe_write(&ibe->chr, ibe->outbuf + ibe->outpos,
                             ibe->outlen - ibe->outpos);
     if (ret > 0) {
