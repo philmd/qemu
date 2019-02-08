@@ -65,9 +65,9 @@ typedef struct QEMUFIFO {
     int wptr, rptr;
 } QEMUFIFO;
 
-static int qemu_fifo_write(QEMUFIFO *f, const uint8_t *buf, int len1)
+static size_t qemu_fifo_write(QEMUFIFO *f, const uint8_t *buf, size_t len1)
 {
-    int l, len;
+    size_t l, len;
 
     l = f->buf_size - f->count;
     if (len1 > l)
@@ -88,9 +88,9 @@ static int qemu_fifo_write(QEMUFIFO *f, const uint8_t *buf, int len1)
     return len1;
 }
 
-static int qemu_fifo_read(QEMUFIFO *f, uint8_t *buf, int len1)
+static size_t qemu_fifo_read(QEMUFIFO *f, uint8_t *buf, size_t len1)
 {
-    int l, len;
+    size_t l, len;
 
     if (len1 > f->count)
         len1 = f->count;
