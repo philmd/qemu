@@ -300,7 +300,8 @@ static int vhost_user_write(struct vhost_dev *dev, VhostUserMsg *msg,
 {
     struct vhost_user *u = dev->opaque;
     CharBackend *chr = u->user->chr;
-    int ret, size = VHOST_USER_HDR_SIZE + msg->hdr.size;
+    int ret;
+    size_t size = VHOST_USER_HDR_SIZE + msg->hdr.size;
 
     /*
      * For non-vring specific requests, like VHOST_USER_SET_MEM_TABLE,
@@ -320,7 +321,7 @@ static int vhost_user_write(struct vhost_dev *dev, VhostUserMsg *msg,
     ret = qemu_chr_fe_write_all(chr, (const uint8_t *) msg, size);
     if (ret != size) {
         error_report("Failed to write msg."
-                     " Wrote %d instead of %d.", ret, size);
+                     " Wrote %d instead of %u.", ret, size);
         return -1;
     }
 
