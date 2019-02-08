@@ -285,6 +285,10 @@ static int usbredir_write(void *priv, uint8_t *data, int count)
         return 0;
     }
 
+    if (count < 0) {
+        ERROR("Illegal write count: %i\n", count);
+        return 0;
+    }
     r = qemu_chr_fe_write(&dev->cs, data, count);
     if (r < count) {
         if (!dev->watch) {
