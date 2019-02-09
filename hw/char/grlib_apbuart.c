@@ -121,7 +121,7 @@ static char uart_pop(UART *uart)
 
 static void uart_add_to_fifo(UART          *uart,
                              const uint8_t *buffer,
-                             int            length)
+                             size_t         length)
 {
     if (uart->len + length > FIFO_LENGTH) {
         abort();

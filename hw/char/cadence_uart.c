@@ -248,11 +248,10 @@ static void uart_ctrl_update(CadenceUARTState *s)
     }
 }
 
-static void uart_write_rx_fifo(void *opaque, const uint8_t *buf, int size)
+static void uart_write_rx_fifo(void *opaque, const uint8_t *buf, size_t size)
 {
     CadenceUARTState *s = opaque;
     uint64_t new_rx_time = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-    int i;
 
     if ((s->r[R_CR] & UART_CR_RX_DIS) || !(s->r[R_CR] & UART_CR_RX_EN)) {
         return;
@@ -261,7 +260,7 @@ static void uart_write_rx_fifo(void *opaque, const uint8_t *buf, int size)
     if (s->rx_count == CADENCE_UART_RX_FIFO_SIZE) {
         s->r[R_CISR] |= UART_INTR_ROVR;
     } else {
-        for (i = 0; i < size; i++) {
+        for (size_t i = 0; i < size; i++) {
             s->rx_fifo[s->rx_wpos] = buf[i];
             s->rx_wpos = (s->rx_wpos + 1) % CADENCE_UART_RX_FIFO_SIZE;
             s->rx_count++;
@@ -309,7 +308,7 @@ static gboolean cadence_uart_xmit(GIOChannel *chan, GIOCondition cond,
 }
 
 static void uart_write_tx_fifo(CadenceUARTState *s, const uint8_t *buf,
-                               int size)
+                               size_t size)
 {
     if ((s->r[R_CR] & UART_CR_TX_DIS) || !(s->r[R_CR] & UART_CR_TX_EN)) {
         return;
