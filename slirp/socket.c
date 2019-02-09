@@ -105,9 +105,10 @@ sofree(struct socket *so)
   g_free(so);
 }
 
-size_t sopreprbuf(struct socket *so, struct iovec *iov, int *np)
+size_t sopreprbuf(struct socket *so, struct iovec *iov, size_t *np)
 {
-	int n, lss, total;
+	size_t n;
+	int lss, total;
 	struct sbuf *sb = &so->so_snd;
 	int len = sb->sb_datalen - sb->sb_cc;
 	int mss = so->so_tcpcb->t_maxseg;
@@ -172,7 +173,8 @@ size_t sopreprbuf(struct socket *so, struct iovec *iov, int *np)
 int
 soread(struct socket *so)
 {
-	int n, nn;
+	size_t n;
+	int nn;
 	struct sbuf *sb = &so->so_snd;
 	struct iovec iov[2];
 
@@ -246,9 +248,9 @@ soread(struct socket *so)
 	return nn;
 }
 
-int soreadbuf(struct socket *so, const char *buf, int size)
+int soreadbuf(struct socket *so, const char *buf, size_t size)
 {
-    int n, nn, copy = size;
+    size_t n, nn, copy = size;
 	struct sbuf *sb = &so->so_snd;
 	struct iovec iov[2];
 

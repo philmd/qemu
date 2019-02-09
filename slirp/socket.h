@@ -150,8 +150,8 @@ void soisfconnecting(register struct socket *);
 void soisfconnected(register struct socket *);
 void sofwdrain(struct socket *);
 struct iovec; /* For win32 */
-size_t sopreprbuf(struct socket *so, struct iovec *iov, int *np);
-int soreadbuf(struct socket *so, const char *buf, int size);
+size_t sopreprbuf(struct socket *so, struct iovec *iov, size_t *np);
+int soreadbuf(struct socket *so, const char *buf, size_t size);
 
 void sotranslate_out(struct socket *, struct sockaddr_storage *);
 void sotranslate_in(struct socket *, struct sockaddr_storage *);

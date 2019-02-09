@@ -97,7 +97,7 @@ int slirp_add_guestfwd(Slirp *slirp, SlirpWriteCb write_cb, void *opaque,
 char *slirp_connection_info(Slirp *slirp);
 
 void slirp_socket_recv(Slirp *slirp, struct in_addr guest_addr,
-                       int guest_port, const uint8_t *buf, int size);
+                       int guest_port, const uint8_t *buf, size_t size);
 size_t slirp_socket_can_recv(Slirp *slirp, struct in_addr guest_addr,
                              int guest_port);
 #ifdef __cplusplus
