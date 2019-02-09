@@ -332,8 +332,7 @@ static void sh_serial_receive1(void *opaque, const uint8_t *buf, size_t size)
     sh_serial_state *s = opaque;
 
     if (s->feat & SH_SERIAL_FEAT_SCIF) {
-        int i;
-        for (i = 0; i < size; i++) {
+        for (size_t i = 0; i < size; i++) {
             if (s->rx_cnt < SH_RX_FIFO_LENGTH) {
                 s->rx_fifo[s->rx_head++] = buf[i];
                 if (s->rx_head == SH_RX_FIFO_LENGTH) {

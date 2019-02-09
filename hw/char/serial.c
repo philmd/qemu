@@ -614,8 +614,7 @@ static void serial_receive1(void *opaque, const uint8_t *buf, size_t size)
         qemu_system_wakeup_request(QEMU_WAKEUP_REASON_OTHER, NULL);
     }
     if(s->fcr & UART_FCR_FE) {
-        int i;
-        for (i = 0; i < size; i++) {
+        for (size_t i = 0; i < size; i++) {
             recv_fifo_put(s, buf[i]);
         }
         s->lsr |= UART_LSR_DR;

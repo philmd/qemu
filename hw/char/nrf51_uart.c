@@ -218,13 +218,12 @@ static void uart_receive(void *opaque, const uint8_t *buf, size_t size)
 {
 
     NRF51UARTState *s = NRF51_UART(opaque);
-    int i;
 
     if (size == 0 || s->rx_fifo_len >= UART_FIFO_LENGTH) {
         return;
     }
 
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         uint32_t pos = (s->rx_fifo_pos + s->rx_fifo_len) % UART_FIFO_LENGTH;
         s->rx_fifo[pos] = buf[i];
         s->rx_fifo_len++;

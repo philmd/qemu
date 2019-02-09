@@ -473,12 +473,11 @@ static void hostdev_receive(void *opaque, const uint8_t *buf, size_t size)
     SCC2698Channel *ch = opaque;
     IPOctalState *dev = ch->ipoctal;
     unsigned pos = ch->rhr_idx + ch->rx_pending;
-    int i;
 
     assert(size + ch->rx_pending <= RX_FIFO_SIZE);
 
     /* Copy data to the RxFIFO */
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         pos %= RX_FIFO_SIZE;
         ch->rhr[pos++] = buf[i];
     }

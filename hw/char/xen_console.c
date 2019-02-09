@@ -131,7 +131,7 @@ static void xencons_receive(void *opaque, const uint8_t *buf, size_t len)
     struct XenConsole *con = opaque;
     struct xencons_interface *intf = con->sring;
     XENCONS_RING_IDX prod;
-    int i, max;
+    size_t i, max;
 
     max = ring_free_bytes(con);
     /* The can_receive() func limits this, but check again anyway */

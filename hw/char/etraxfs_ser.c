@@ -169,7 +169,6 @@ static Property etraxfs_ser_properties[] = {
 static void serial_receive(void *opaque, const uint8_t *buf, size_t size)
 {
     ETRAXSerial *s = opaque;
-    int i;
 
     /* Got a byte.  */
     if (s->rx_fifo_len >= 16) {
@@ -177,7 +176,7 @@ static void serial_receive(void *opaque, const uint8_t *buf, size_t size)
         return;
     }
 
-    for (i = 0; i < size; i++) { 
+    for (size_t i = 0; i < size; i++) {
         s->rx_fifo[s->rx_fifo_pos] = buf[i];
         s->rx_fifo_pos++;
         s->rx_fifo_pos &= 15;

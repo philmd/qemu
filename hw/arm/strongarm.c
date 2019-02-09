@@ -1076,9 +1076,8 @@ static void strongarm_uart_receive(void *opaque, const uint8_t *buf,
                                    size_t size)
 {
     StrongARMUARTState *s = opaque;
-    int i;
 
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         strongarm_uart_rx_push(s, buf[i]);
     }
 

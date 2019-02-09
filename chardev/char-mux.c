@@ -213,11 +213,10 @@ static void mux_chr_read(void *opaque, const uint8_t *buf, size_t size)
     MuxChardev *d = MUX_CHARDEV(opaque);
     int m = d->focus;
     CharBackend *be = d->backends[m];
-    int i;
 
     mux_chr_accept_input(opaque);
 
-    for (i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
         if (mux_proc_byte(chr, d, buf[i])) {
             if (d->prod[m] == d->cons[m] &&
                 be && be->chr_can_read &&

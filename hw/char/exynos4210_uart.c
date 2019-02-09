@@ -499,9 +499,9 @@ static void exynos4210_uart_receive(void *opaque, const uint8_t *buf,
                                     size_t size)
 {
     Exynos4210UartState *s = (Exynos4210UartState *)opaque;
-    int i;
 
     if (s->reg[I_(UFCON)] & UFCON_FIFO_ENABLE) {
+        size_t i;
         if (fifo_empty_elements_number(&s->rx) < size) {
             for (i = 0; i < fifo_empty_elements_number(&s->rx); i++) {
                 fifo_store(&s->rx, buf[i]);

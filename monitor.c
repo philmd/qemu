@@ -4255,13 +4255,13 @@ static void monitor_qmp_read(void *opaque, const uint8_t *buf, size_t size)
 static void monitor_read(void *opaque, const uint8_t *buf, size_t size)
 {
     Monitor *old_mon = cur_mon;
-    int i;
 
     cur_mon = opaque;
 
     if (cur_mon->rs) {
-        for (i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             readline_handle_byte(cur_mon->rs, buf[i]);
+        }
     } else {
         if (size == 0 || buf[size - 1] != 0)
             monitor_printf(cur_mon, "corrupted command\n");

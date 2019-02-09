@@ -2343,9 +2343,7 @@ static int gdb_chr_can_receive(void *opaque)
 
 static void gdb_chr_receive(void *opaque, const uint8_t *buf, size_t size)
 {
-    int i;
-
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         gdb_read_byte(gdbserver_state, buf[i]);
     }
 }

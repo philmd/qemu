@@ -31,13 +31,12 @@ static int vty_can_receive(void *opaque)
 static void vty_receive(void *opaque, const uint8_t *buf, size_t size)
 {
     VIOsPAPRVTYDevice *dev = VIO_SPAPR_VTY_DEVICE(opaque);
-    int i;
 
     if ((dev->in == dev->out) && size) {
         /* toggle line to simulate edge interrupt */
         qemu_irq_pulse(spapr_vio_qirq(&dev->sdev));
     }
-    for (i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         if (dev->in - dev->out >= VTERM_BUFSIZE) {
             static bool reported;
             if (!reported) {

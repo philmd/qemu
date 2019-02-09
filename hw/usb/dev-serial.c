@@ -434,7 +434,7 @@ static int usb_serial_can_read(void *opaque)
 static void usb_serial_read(void *opaque, const uint8_t *buf, size_t size)
 {
     USBSerialState *s = opaque;
-    int first_size, start;
+    size_t first_size, start;
 
     /* room in the buffer? */
     if (size > (RECV_BUF - s->recv_used))

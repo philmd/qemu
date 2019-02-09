@@ -68,7 +68,7 @@ static void rng_egd_chr_read(void *opaque, const uint8_t *buf, size_t size)
 
     while (size > 0 && !QSIMPLEQ_EMPTY(&s->parent.requests)) {
         RngRequest *req = QSIMPLEQ_FIRST(&s->parent.requests);
-        int len = MIN(size, req->size - req->offset);
+        size_t len = MIN(size, req->size - req->offset);
 
         memcpy(req->data + req->offset, buf + buf_offset, len);
         buf_offset += len;
