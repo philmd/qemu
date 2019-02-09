@@ -113,7 +113,7 @@ struct USBRedirDevice {
     char *filter_str;
     /* Data passed from chardev the fd_read cb to the usbredirparser read cb */
     const uint8_t *read_buf;
-    int read_buf_size;
+    size_t read_buf_size;
     /* Active chardev-watch-tag */
     guint watch;
     /* For async handling of close / reject */
