@@ -281,12 +281,13 @@ static gboolean char_socket_test_idle(gpointer user_data)
 static void socket_read(void *opaque, const uint8_t *buf, size_t size)
 {
     SocketIdleData *data = opaque;
+    ssize_t ssize;
 
     g_assert_cmpint(size, ==, 1);
     g_assert_cmpint(*buf, ==, 'Z');
 
-    size = qemu_chr_fe_write(data->be, (const uint8_t *)"hello", 5);
-    g_assert_cmpint(size, ==, 5);
+    ssize = qemu_chr_fe_write(data->be, (const uint8_t *)"hello", 5);
+    g_assert_cmpint(ssize, ==, 5);
 }
 
 static int socket_can_read(void *opaque)
