@@ -104,7 +104,7 @@ static void buffer_advance(struct buffer *buffer, size_t len)
     }
 }
 
-static int ring_free_bytes(struct XenConsole *con)
+static size_t ring_free_bytes(struct XenConsole *con)
 {
     struct xencons_interface *intf = con->sring;
     XENCONS_RING_IDX cons, prod, space;
