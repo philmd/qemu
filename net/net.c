@@ -1689,7 +1689,7 @@ void net_socket_rs_init(SocketReadState *rs,
  * 0: success
  * -1: error occurs
  */
-int net_fill_rstate(SocketReadState *rs, const uint8_t *buf, int size)
+int net_fill_rstate(SocketReadState *rs, const uint8_t *buf, size_t size)
 {
     unsigned int l;
 

@@ -119,7 +119,7 @@ struct SocketReadState {
     SocketReadStateFinalize *finalize;
 };
 
-int net_fill_rstate(SocketReadState *rs, const uint8_t *buf, int size);
+int net_fill_rstate(SocketReadState *rs, const uint8_t *buf, size_t size);
 char *qemu_mac_strdup_printf(const uint8_t *macaddr);
 NetClientState *qemu_find_netdev(const char *id);
 int qemu_find_net_clients_except(const char *id, NetClientState **ncs,
