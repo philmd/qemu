@@ -504,7 +504,7 @@ static gboolean tcp_chr_hup(QIOChannel *channel,
     return G_SOURCE_REMOVE;
 }
 
-static int tcp_chr_sync_read(Chardev *chr, const uint8_t *buf, int len)
+static int tcp_chr_sync_read(Chardev *chr, uint8_t *buf, size_t len)
 {
     SocketChardev *s = SOCKET_CHARDEV(chr);
     int size;
