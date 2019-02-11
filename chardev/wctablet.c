@@ -204,10 +204,11 @@ static void wctablet_chr_accept_input(Chardev *chr)
 }
 
 static int wctablet_chr_write(struct Chardev *chr,
-                              const uint8_t *buf, int len)
+                              const uint8_t *buf, size_t len)
 {
     TabletChardev *tablet = WCTABLET_CHARDEV(chr);
-    unsigned int i, clen;
+    size_t i;
+    ptrdiff_t clen;
     char *pos;
 
     if (tablet->line_speed != 9600) {

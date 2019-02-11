@@ -1080,11 +1080,10 @@ typedef struct VCChardev {
 #define TYPE_CHARDEV_VC "chardev-vc"
 #define VC_CHARDEV(obj) OBJECT_CHECK(VCChardev, (obj), TYPE_CHARDEV_VC)
 
-static int vc_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static int vc_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     VCChardev *drv = VC_CHARDEV(chr);
     QemuConsole *s = drv->console;
-    int i;
 
     if (!s->ds) {
         return 0;
@@ -1095,7 +1094,7 @@ static int vc_chr_write(Chardev *chr, const uint8_t *buf, int len)
     s->update_x1 = 0;
     s->update_y1 = 0;
     console_show_cursor(s, 0);
-    for(i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) {
         console_putchar(s, buf[i]);
     }
     console_show_cursor(s, 1);
@@ -2180,7 +2179,8 @@ static void text_console_do_init(Chardev *chr, DisplayState *ds)
 
         s->t_attrib.bgcol = QEMU_COLOR_BLUE;
         len = snprintf(msg, sizeof(msg), "%s console\r\n", chr->label);
-        vc_chr_write(chr, (uint8_t *)msg, len);
+        assert(len >= 0);
+        vc_chr_write(chr, (uint8_t *)msg, (size_t)len);
         s->t_attrib = s->t_attrib_default;
     }
 

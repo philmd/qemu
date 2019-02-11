@@ -33,18 +33,15 @@
 /* MUX driver for serial I/O splitting */
 
 /* Called with chr_write_lock held.  */
-static int mux_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static int mux_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     MuxChardev *d = MUX_CHARDEV(chr);
     int ret;
     if (!d->timestamps) {
-        assert(len >= 0);
         ret = qemu_chr_fe_write(&d->chr, buf, len);
     } else {
-        int i;
-
         ret = 0;
-        for (i = 0; i < len; i++) {
+        for (size_t i = 0; i < len; i++) {
             if (d->linestart) {
                 char buf1[64];
                 int64_t ti;

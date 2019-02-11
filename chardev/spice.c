@@ -16,7 +16,7 @@ typedef struct SpiceChardev {
     bool                  active;
     bool                  blocked;
     const uint8_t         *datapos;
-    int                   datalen;
+    size_t                datalen;
     QLIST_ENTRY(SpiceChardev) next;
 } SpiceChardev;
 
@@ -67,7 +67,6 @@ static int vmc_read(SpiceCharDeviceInstance *sin, uint8_t *buf, int len)
         memcpy(buf, scd->datapos, bytes);
         scd->datapos += bytes;
         scd->datalen -= bytes;
-        assert(scd->datalen >= 0);
     }
     if (scd->datalen == 0) {
         scd->datapos = 0;
@@ -189,10 +188,10 @@ static GSource *spice_chr_add_watch(Chardev *chr, GIOCondition cond)
     return (GSource *)src;
 }
 
-static int spice_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static int spice_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     SpiceChardev *s = SPICE_CHARDEV(chr);
-    int read_bytes;
+    ssize_t read_bytes;
 
     assert(s->datalen == 0);
     s->datapos = buf;

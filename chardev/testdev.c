@@ -33,7 +33,7 @@ typedef struct {
     Chardev parent;
 
     uint8_t in_buf[32];
-    int in_buf_used;
+    size_t in_buf_used;
 } TestdevChardev;
 
 #define TYPE_CHARDEV_TESTDEV "chardev-testdev"
@@ -41,10 +41,10 @@ typedef struct {
     OBJECT_CHECK(TestdevChardev, (obj), TYPE_CHARDEV_TESTDEV)
 
 /* Try to interpret a whole incoming packet */
-static int testdev_eat_packet(TestdevChardev *testdev)
+static size_t testdev_eat_packet(TestdevChardev *testdev)
 {
     const uint8_t *cur = testdev->in_buf;
-    int len = testdev->in_buf_used;
+    size_t len = testdev->in_buf_used;
     uint8_t c;
     int arg;
 
@@ -82,10 +82,10 @@ static int testdev_eat_packet(TestdevChardev *testdev)
 }
 
 /* The other end is writing some data.  Store it and try to interpret */
-static int testdev_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static int testdev_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     TestdevChardev *testdev = TESTDEV_CHARDEV(chr);
-    int tocopy, eaten, orig_len = len;
+    size_t tocopy, eaten, orig_len = len;
 
     while (len) {
         /* Complete our buffer as much as possible */

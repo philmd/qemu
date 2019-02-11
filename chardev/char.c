@@ -256,8 +256,9 @@ static void char_init(Object *obj)
 
 }
 
-static int null_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static int null_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
+    /* Discard written data */
     return len;
 }
 

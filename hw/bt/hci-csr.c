@@ -46,9 +46,9 @@ struct csrhci_s {
         CSR_DATA_LEN,
         CSR_DATA
     } in_state;
-    int in_len;
-    int in_hdr;
-    int in_needed;
+    size_t in_len;
+    size_t in_hdr;
+    size_t in_needed;
     QEMUTimer *out_tm;
     int64_t baud_delay;
 
@@ -262,7 +262,7 @@ static void csrhci_in_packet(struct csrhci_s *s, uint8_t *pkt)
     csrhci_fifo_wake(s);
 }
 
-static int csrhci_header_len(const uint8_t *pkt)
+static size_t csrhci_header_len(const uint8_t *pkt)
 {
     switch (pkt[0]) {
     case H4_CMD_PKT:
@@ -282,7 +282,7 @@ static int csrhci_header_len(const uint8_t *pkt)
     exit(-1);
 }
 
-static int csrhci_data_len(const uint8_t *pkt)
+static size_t csrhci_data_len(const uint8_t *pkt)
 {
     switch (*pkt ++) {
     case H4_CMD_PKT:
@@ -315,7 +315,7 @@ static void csrhci_ready_for_next_inpkt(struct csrhci_s *s)
 }
 
 static int csrhci_write(struct Chardev *chr,
-                const uint8_t *buf, int len)
+                        const uint8_t *buf, size_t len)
 {
     struct csrhci_s *s = (struct csrhci_s *)chr;
     int total = 0;
@@ -324,7 +324,7 @@ static int csrhci_write(struct Chardev *chr,
         return 0;
 
     for (;;) {
-        int cnt = MIN(len, s->in_needed - s->in_len);
+        size_t cnt = MIN(len, s->in_needed - s->in_len);
         if (cnt) {
             memcpy(s->inpkt + s->in_len, buf, cnt);
             s->in_len += cnt;

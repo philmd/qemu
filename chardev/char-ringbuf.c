@@ -49,16 +49,15 @@ static size_t ringbuf_count(const Chardev *chr)
     return d->prod - d->cons;
 }
 
-static int ringbuf_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static int ringbuf_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     RingBufChardev *d = RINGBUF_CHARDEV(chr);
-    int i;
 
-    if (!buf || (len < 0)) {
+    if (!buf) {
         return -1;
     }
 
-    for (i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) {
         d->cbuf[d->prod++ & (d->size - 1)] = buf[i];
         if (d->prod - d->cons > d->size) {
             d->cons = d->prod - d->size;
@@ -117,7 +116,7 @@ void qmp_ringbuf_write(const char *device, const char *data,
     Chardev *chr;
     const uint8_t *write_data;
     int ret;
-    gsize write_count;
+    size_t write_count;
 
     chr = qemu_chr_find(device);
     if (!chr) {

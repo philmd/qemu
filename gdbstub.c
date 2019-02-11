@@ -518,12 +518,12 @@ static inline int tohex(int v)
 }
 
 /* writes 2*len+1 bytes in buf */
-static void memtohex(char *buf, const uint8_t *mem, int len)
+static void memtohex(char *buf, const uint8_t *mem, size_t len)
 {
-    int i, c;
+    int c;
     char *q;
     q = buf;
-    for(i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) {
         c = mem[i];
         *q++ = tohex(c >> 4);
         *q++ = tohex(c & 0xf);
@@ -2373,7 +2373,7 @@ static void gdb_chr_event(void *opaque, int event)
     }
 }
 
-static void gdb_monitor_output(GDBState *s, const char *msg, int len)
+static void gdb_monitor_output(GDBState *s, const char *msg, size_t len)
 {
     char buf[MAX_PACKET_LENGTH];
 
@@ -2384,10 +2384,10 @@ static void gdb_monitor_output(GDBState *s, const char *msg, int len)
     put_packet(s, buf);
 }
 
-static int gdb_monitor_write(Chardev *chr, const uint8_t *buf, int len)
+static int gdb_monitor_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     const char *p = (const char *)buf;
-    int max_sz;
+    size_t max_sz;
 
     max_sz = (sizeof(gdbserver_state->last_packet) - 2) / 2;
     for (;;) {

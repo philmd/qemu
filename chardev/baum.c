@@ -288,7 +288,7 @@ static void baum_chr_accept_input(struct Chardev *chr)
 }
 
 /* We want to send a packet */
-static void baum_write_packet(BaumChardev *baum, const uint8_t *buf, int len)
+static void baum_write_packet(BaumChardev *baum, const uint8_t *buf, size_t len)
 {
     Chardev *chr = CHARDEV(baum);
     uint8_t io_buf[1 + 2 * len], *cur = io_buf;
@@ -338,7 +338,7 @@ static void baum_cellCount_timer_cb(void *opaque)
 }
 
 /* Try to interpret a whole incoming packet */
-static int baum_eat_packet(BaumChardev *baum, const uint8_t *buf, int len)
+static size_t baum_eat_packet(BaumChardev *baum, const uint8_t *buf, size_t len)
 {
     const uint8_t *cur = buf;
     uint8_t req = 0;
@@ -479,10 +479,10 @@ static int baum_eat_packet(BaumChardev *baum, const uint8_t *buf, int len)
 }
 
 /* The other end is writing some data.  Store it and try to interpret */
-static int baum_chr_write(Chardev *chr, const uint8_t *buf, int len)
+static int baum_chr_write(Chardev *chr, const uint8_t *buf, size_t len)
 {
     BaumChardev *baum = BAUM_CHARDEV(chr);
-    int tocopy, cur, eaten, orig_len = len;
+    size_t tocopy, cur, eaten, orig_len = len;
 
     if (!len)
         return 0;
