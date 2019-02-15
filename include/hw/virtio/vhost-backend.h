@@ -20,11 +20,6 @@ typedef enum VhostBackendType {
     VHOST_BACKEND_TYPE_MAX = 3,
 } VhostBackendType;
 
-typedef enum VhostSetConfigType {
-    VHOST_SET_CONFIG_TYPE_MASTER = 0,
-    VHOST_SET_CONFIG_TYPE_MIGRATION = 1,
-} VhostSetConfigType;
-
 struct vhost_dev;
 struct vhost_log;
 struct vhost_memory;

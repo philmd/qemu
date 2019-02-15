@@ -5,6 +5,7 @@
 #include "hw/virtio/vhost-backend.h"
 #include "hw/virtio/virtio.h"
 #include "exec/memory.h"
+#include "contrib/libvhost-user/libvhost-user.h"
 
 /* Generic structures common for any vhost based device. */
 struct vhost_virtqueue {
@@ -25,7 +26,6 @@ struct vhost_virtqueue {
 };
 
 typedef unsigned long vhost_log_chunk_t;
-#define VHOST_LOG_PAGE 0x1000
 #define VHOST_LOG_BITS (8 * sizeof(vhost_log_chunk_t))
 #define VHOST_LOG_CHUNK (VHOST_LOG_PAGE * VHOST_LOG_BITS)
 #define VHOST_INVALID_FEATURE_BIT   (0xff)
