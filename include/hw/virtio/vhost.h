@@ -5,7 +5,10 @@
 #include "hw/virtio/vhost-backend.h"
 #include "hw/virtio/virtio.h"
 #include "exec/memory.h"
-#include "contrib/libvhost-user/libvhost-user.h"
+
+#if defined(CONFIG_LINUX)
+# include "contrib/libvhost-user/libvhost-user.h"
+#endif
 
 /* Generic structures common for any vhost based device. */
 struct vhost_virtqueue {
