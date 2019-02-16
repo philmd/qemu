@@ -163,7 +163,7 @@ typedef struct VhostUserMsg {
         VhostUserLog log;
         VhostUserConfig config;
         VhostUserVringArea area;
-    } payload;
+    } __attribute__((aligned(8))) payload;
 
     int fds[VHOST_MEMORY_MAX_NREGIONS];
     int fd_num;
