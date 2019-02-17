@@ -27,7 +27,7 @@ osx_mojave_task:
     pixman
     pkg-config
     snappy
-    spice-protocol
+#    spice-protocol (mojave-base)
     vde
   script:
     - mkdir build
