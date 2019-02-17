@@ -8,9 +8,9 @@ osx_mojave_task:
   script:
     - mkdir build
     - cd build
-    - ../configure || { cat config.log; exit 1; }
-    - gmake -j8
-    - gmake -j8 V=1 check
+    - ../configure --enable-cocoa --target-list=aarch64-softmmu,i386-softmmu,lm32-softmmu,m68k-softmmu,mips-softmmu,mips64el-softmmu,nios2-softmmu,ppc64-softmmu,riscv32-softmmu,riscv64-softmmu,s390x-softmmu,sh4-softmmu,sparc-softmmu,sparc64-softmmu,tricore-softmmu,x86_64-softmmu,xtensa-softmmu || { cat config.log; exit 1; }
+    - make -j2
+    - make -j2 V=1 check
 
 #./configure --prefix=/Users/sebastian/Developer/Cellar/qemu/0.13.0 --disable-darwin-user --enable-cocoa --disable-bsd-user
 
