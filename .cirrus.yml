@@ -1,7 +1,7 @@
 osx_mojave_task:
   osx_instance:
     matrix:
-      image: mojave-base
+#      image: mojave-base
       image: high-sierra-base
   env:
     CIRRUS_CLONE_DEPTH: 1
