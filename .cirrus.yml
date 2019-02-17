@@ -1,6 +1,8 @@
-osx_mojave_task:
+osx_tasks:
   osx_instance:
-    image: high-sierra-base
+    matrix:
+      image: mojave-base
+      image: high-sierra-base
   env:
     CIRRUS_CLONE_DEPTH: 1
   install_script: brew install
