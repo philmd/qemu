@@ -1,7 +1,6 @@
 osx_mojave_task:
   osx_instance:
     matrix:
-#      image: mojave-base
       image: high-sierra-base
   env:
     CIRRUS_CLONE_DEPTH: 1
@@ -27,7 +26,6 @@ osx_mojave_task:
     pixman
     pkg-config
     snappy
-#    spice-protocol (mojave-base)
     vde
   script:
     - mkdir build
