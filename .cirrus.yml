@@ -27,6 +27,8 @@ osx_mojave_task:
     snappy
     vde
   script:
+    - sw_vers -productName
+    - sw_vers -productVersion
     - mkdir build
     - cd build
     - ../configure
