@@ -1,4 +1,4 @@
-osx_tasks:
+osx_task:
   osx_instance:
     matrix:
       image: mojave-base
