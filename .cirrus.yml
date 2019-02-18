@@ -37,6 +37,7 @@ osx_task:
   script:
     - sw_vers -productName
     - sw_vers -productVersion
+    - export SRC_PATH=$(pwd)
     - mkdir build
     - cd build
     - ../configure
@@ -45,5 +46,6 @@ osx_task:
       --extra-ldflags="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib -L/usr/local/opt/ncurses/lib -L/usr/local/opt/texinfo/lib"
       --target-list=aarch64-softmmu,i386-softmmu,lm32-softmmu,m68k-softmmu,mips-softmmu,mips64el-softmmu,nios2-softmmu,ppc64-softmmu,riscv32-softmmu,riscv64-softmmu,s390x-softmmu,sh4-softmmu,sparc-softmmu,sparc64-softmmu,tricore-softmmu,x86_64-softmmu,xtensa-softmmu
       || { cat config.log; exit 1; }
-    - make -j2
+    - make ui/cocoa.o V=1
+    - make -j2 2>&1 | sed "s#${SRC_PATH}#SRC_PATH#"
     - make -j2 check
