@@ -68,7 +68,7 @@ buffer_zero_int(const void *buf, size_t len)
 /* Do not use push_options pragmas unnecessarily, because clang
  * does not support them.
  */
-#ifdef CONFIG_AVX2_OPT
+#if defined(CONFIG_AVX2_OPT) && defined(__GNUC__)
 #pragma GCC push_options
 #pragma GCC target("sse2")
 #endif
@@ -105,11 +105,11 @@ buffer_zero_sse2(const void *buf, size_t len)
 
     return _mm_movemask_epi8(_mm_cmpeq_epi8(t, zero)) == 0xFFFF;
 }
-#ifdef CONFIG_AVX2_OPT
+#if defined(CONFIG_AVX2_OPT) && defined(__GNUC__)
 #pragma GCC pop_options
 #endif
 
-#ifdef CONFIG_AVX2_OPT
+#if defined(CONFIG_AVX2_OPT) && defined(__GNUC__)
 /* Note that due to restrictions/bugs wrt __builtin functions in gcc <= 4.8,
  * the includes have to be within the corresponding push_options region, and
  * therefore the regions themselves have to be ordered with increasing ISA.
