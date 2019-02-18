@@ -42,6 +42,7 @@ addons:
     packages:
       - glib
       - pixman
+      - texinfo
 
 
 # The channel name "irc.oftc.net#qemu" is encrypted against qemu/qemu
@@ -168,6 +169,7 @@ matrix:
 
     # MacOSX builds
     - env:
+        - PATH=/usr/local/opt/texinfo/bin:$PATH
         - CONFIG="--target-list=aarch64-softmmu,arm-softmmu,i386-softmmu,mips-softmmu,mips64-softmmu,ppc64-softmmu,riscv64-softmmu,s390x-softmmu,x86_64-softmmu"
       os: osx
       osx_image: xcode9.4
@@ -175,6 +177,7 @@ matrix:
 
 
     - env:
+        - PATH=/usr/local/opt/texinfo/bin:$PATH
         - CONFIG="--target-list=i386-softmmu,ppc-softmmu,ppc64-softmmu,m68k-softmmu,x86_64-softmmu"
       os: osx
       osx_image: xcode10
