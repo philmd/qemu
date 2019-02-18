@@ -5,6 +5,7 @@ osx_task:
       image: high-sierra-base
   env:
     CIRRUS_CLONE_DEPTH: 1
+    PATH: /usr/local/opt/llvm/bin:/usr/local/opt/ncurses/bin:/usr/local/opt/texinfo/bin:$PATH
   install_script:
     - brew install
         autoconf
@@ -40,7 +41,8 @@ osx_task:
     - cd build
     - ../configure
       --enable-cocoa
-      --extra-cflags=-mavx2
+      --extra-cflags="-mavx2 -I/usr/local/opt/llvm/include -I/usr/local/opt/ncurses/include"
+      --extra-ldflags="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib -L/usr/local/opt/ncurses/lib -L/usr/local/opt/texinfo/lib"
       --target-list=aarch64-softmmu,i386-softmmu,lm32-softmmu,m68k-softmmu,mips-softmmu,mips64el-softmmu,nios2-softmmu,ppc64-softmmu,riscv32-softmmu,riscv64-softmmu,s390x-softmmu,sh4-softmmu,sparc-softmmu,sparc64-softmmu,tricore-softmmu,x86_64-softmmu,xtensa-softmmu
       || { cat config.log; exit 1; }
     - make -j2
