@@ -5,29 +5,34 @@ osx_task:
       image: high-sierra-base
   env:
     CIRRUS_CLONE_DEPTH: 1
-  install_script: brew install
-    autoconf
-    automake
-    llvm
-    libffi
-    libgcrypt
-    libiscsi
-    libpng
-    libssh2
-    libtasn1
-    libusb
-    lzfse
-    lzo
-    gettext
-    glib
-    gnutls
-    jpeg
-    ncurses
-    nettle
-    pixman
-    pkg-config
-    snappy
-    vde
+  install_script:
+    - brew install
+        autoconf
+        automake
+        llvm
+        libffi
+        libgcrypt
+        libiscsi
+        libpng
+        libssh2
+        libtasn1
+        libusb
+        lzfse
+        lzo
+        gettext
+        glib
+        gnutls
+        jpeg
+        ncurses
+        nettle
+        pixman
+        pkg-config
+        snappy
+        texinfo
+        vde
+    - makeinfo --version
+    - brew link texinfo --force
+    - makeinfo --version
   script:
     - sw_vers -productName
     - sw_vers -productVersion
