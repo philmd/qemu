@@ -40,8 +40,17 @@ addons:
       - gcovr
   homebrew:
     packages:
+      - libgcrypt
+      - libiscsi
+      - libssh2
+      - libusb
+      - lzfse
+      - lzo
+      - gettext
       - glib
       - pixman
+      - snappy
+      - vde
 
 
 # The channel name "irc.oftc.net#qemu" is encrypted against qemu/qemu
