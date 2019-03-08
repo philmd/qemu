@@ -714,9 +714,16 @@ spapr-rtas.bin slof.bin skiboot.lid \
 palcode-clipper \
 u-boot.e500 u-boot-sam460-20100605.bin \
 qemu_vga.ndrv \
-hppa-firmware.img
+hppa-firmware.img \
+edk2-aarch64-code.fd edk2-arm-code.fd edk2-i386-code.fd \
+edk2-i386-secure-code.fd edk2-x86_64-code.fd edk2-x86_64-secure-code.fd \
+edk2-arm-vars.fd edk2-i386-vars.fd edk2-licenses.txt
+
+DESCS=50-edk2-i386-secure.json 50-edk2-x86_64-secure.json \
+60-edk2-aarch64.json 60-edk2-arm.json 60-edk2-i386.json 60-edk2-x86_64.json
 else
 BLOBS=
+DESCS=
 endif
 
 define install-manual =
@@ -796,6 +803,14 @@ endif
 ifneq ($(BLOBS),)
 	set -e; for x in $(BLOBS); do \
 		$(INSTALL_DATA) $(SRC_PATH)/pc-bios/$$x "$(DESTDIR)$(qemu_datadir)"; \
+	done
+	$(INSTALL_DIR) "$(DESTDIR)$(qemu_datadir)/firmware"
+	set -e; tmpf=$$(mktemp); trap 'rm -f -- "$$tmpf"' EXIT; \
+	for x in $(DESCS); do \
+		sed -e 's,@DATADIR@,$(DESTDIR)$(qemu_datadir),' \
+			"$(SRC_PATH)/pc-bios/descriptors/$$x" > "$$tmpf"; \
+		$(INSTALL_DATA) "$$tmpf" \
+			"$(DESTDIR)$(qemu_datadir)/firmware/$$x"; \
 	done
 endif
 	for s in $(ICON_SIZES); do \
