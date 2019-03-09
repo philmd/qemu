@@ -339,3 +339,23 @@ matrix:
         - CONFIG="--target-list=xtensa-softmmu,arm-softmmu,aarch64-softmmu,alpha-softmmu"
         - TEST_CMD="make -j3 check-tcg V=1"
         - CACHE_NAME="${TRAVIS_BRANCH}-linux-gcc-default"
+
+
+    # EDK2 roms builds
+    - if: tag IS present OR commit_message =~ /(edk2|EDK2)/
+      env:
+        - CONFIG="--disable-system --disable-user --prefix=$PWD/dist"
+      script:
+        - git submodule update --init roms/edk2
+        - make -j3
+        - make -C roms efi -j2
+        - make install
+      addons:
+        apt:
+          packages:
+            - dos2unix
+            - gcc-aarch64-linux-gnu
+            - gcc-arm-linux-gnueabihf
+            - iasl
+            - nasm
+            - uuid-dev
