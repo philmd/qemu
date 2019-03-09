@@ -54,6 +54,7 @@ submodules:
 ../pc-bios/edk2-aarch64-code.fd: submodules
 	+./edk2-build.sh \
 		aarch64 \
+		$(EDK2_BUILD_OPTIONS) \
 		--arch=AARCH64 \
 		--platform=ArmVirtPkg/ArmVirtQemu.dsc \
 		-D NETWORK_IP6_ENABLE \
@@ -65,6 +66,7 @@ submodules:
 ../pc-bios/edk2-arm-code.fd: submodules
 	+./edk2-build.sh \
 		arm \
+		$(EDK2_BUILD_OPTIONS) \
 		--arch=ARM \
 		--platform=ArmVirtPkg/ArmVirtQemu.dsc \
 		-D NETWORK_IP6_ENABLE \
@@ -76,6 +78,7 @@ submodules:
 ../pc-bios/edk2-i386-code.fd: submodules
 	+./edk2-build.sh \
 		i386 \
+		$(EDK2_BUILD_OPTIONS) \
 		--arch=IA32 \
 		--platform=OvmfPkg/OvmfPkgIa32.dsc \
 		-D NETWORK_IP6_ENABLE \
@@ -88,6 +91,7 @@ submodules:
 ../pc-bios/edk2-i386-secure-code.fd: submodules
 	+./edk2-build.sh \
 		i386 \
+		$(EDK2_BUILD_OPTIONS) \
 		--arch=IA32 \
 		--platform=OvmfPkg/OvmfPkgIa32.dsc \
 		-D NETWORK_IP6_ENABLE \
@@ -102,6 +106,7 @@ submodules:
 ../pc-bios/edk2-x86_64-code.fd: submodules
 	+./edk2-build.sh \
 		x86_64 \
+		$(EDK2_BUILD_OPTIONS) \
 		--arch=X64 \
 		--platform=OvmfPkg/OvmfPkgX64.dsc \
 		-D NETWORK_IP6_ENABLE \
@@ -114,6 +119,7 @@ submodules:
 ../pc-bios/edk2-x86_64-secure-code.fd: submodules
 	+./edk2-build.sh \
 		x86_64 \
+		$(EDK2_BUILD_OPTIONS) \
 		--arch=IA32 \
 		--arch=X64 \
 		--platform=OvmfPkg/OvmfPkgIa32X64.dsc \
