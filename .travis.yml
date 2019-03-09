@@ -258,3 +258,23 @@ matrix:
     - env:
         - CONFIG="--disable-system"
         - TEST_CMD="make -j3 check-tcg V=1"
+
+
+    # EDK2 roms builds
+    - if: tag IS present OR commit_message =~ /(edk2|EDK2)/
+      env:
+        - CONFIG="--disable-system --disable-user --prefix=$PWD/dist"
+        - EDK2_BUILD_OPTIONS="--quiet --silent"
+      script:
+        - git submodule update --init roms/edk2
+        - make -C roms efi -j2
+        - make install
+      addons:
+        apt:
+          packages:
+            - dos2unix
+            - gcc-aarch64-linux-gnu
+            - gcc-arm-linux-gnueabihf
+            - iasl
+            - nasm
+            - uuid-dev
