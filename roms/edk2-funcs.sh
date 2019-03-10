@@ -108,8 +108,8 @@ qemu_edk2_get_cross_prefix()
 
   host_arch=$(uname -m)
 
-  if [ "$gcc_arch" == "$host_arch" ] ||
-     ( [ "$gcc_arch" == i686 ] && [ "$host_arch" == x86_64 ] ); then
+  if [ "$gcc_arch" = "$host_arch" ] ||
+     ( [ "$gcc_arch" = i686 ] && [ "$host_arch" = x86_64 ] ); then
     # no cross-compiler needed
     :
   else
