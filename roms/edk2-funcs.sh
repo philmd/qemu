@@ -113,6 +113,11 @@ qemu_edk2_get_cross_prefix()
     # no cross-compiler needed
     :
   else
+    if [ -f /etc/lsb-release ] && [ "$gcc_arch" = arm ]; then
+      # XXX kludge for Debian-based distribs
+      printf 'arm-linux-gnueabihf-\n'
+      return 0
+    fi
     printf '%s-linux-gnu-\n' "$gcc_arch"
   fi
 }
