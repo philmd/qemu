@@ -11,7 +11,7 @@
 # THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS, WITHOUT
 # WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
-toolchain = $(shell source ./edk2-funcs.sh && qemu_edk2_get_toolchain $(1))
+toolchain = $(shell . ./edk2-funcs.sh && qemu_edk2_get_toolchain $(1))
 
 licenses := \
 	edk2/License.txt \
