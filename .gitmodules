@@ -52,3 +52,6 @@
 [submodule "roms/edk2"]
 	path = roms/edk2
 	url = https://github.com/tianocore/edk2.git
+[submodule "firmwares"]
+	path = firmwares
+	url = https://gitlab.com/philmd/qemu-firmwares.git
