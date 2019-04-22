@@ -925,14 +925,12 @@ static void pc_build_smbios(PCMachineState *pcms)
     }
 }
 
-static FWCfgState *fw_cfg_init(PCMachineState *pcms,
+static FWCfgState *fw_cfg_init(PCMachineState *pcms, const CPUArchIdList *cpus,
                                uint16_t boot_cpus, uint16_t apic_id_limit)
 {
     FWCfgState *fw_cfg;
     uint64_t *numa_fw_cfg;
     int i;
-    const CPUArchIdList *cpus;
-    MachineClass *mc = MACHINE_GET_CLASS(pcms);
 
     fw_cfg = fw_cfg_init_io_dma(FW_CFG_IO_BASE, FW_CFG_IO_BASE + 4,
                                 &address_space_memory);
@@ -968,7 +966,6 @@ static FWCfgState *fw_cfg_init(PCMachineState *pcms,
      */
     numa_fw_cfg = g_new0(uint64_t, 1 + apic_id_limit + nb_numa_nodes);
     numa_fw_cfg[0] = cpu_to_le64(nb_numa_nodes);
-    cpus = mc->possible_cpu_arch_ids(MACHINE(pcms));
     for (i = 0; i < cpus->len; i++) {
         unsigned int apic_id = cpus->cpus[i].arch_id;
         assert(apic_id < apic_id_limit);
@@ -1664,6 +1661,7 @@ void pc_memory_init(PCMachineState *pcms,
     MemoryRegion *ram_below_4g, *ram_above_4g;
     FWCfgState *fw_cfg;
     MachineState *machine = MACHINE(pcms);
+    MachineClass *mc = MACHINE_GET_CLASS(machine);
     PCMachineClass *pcmc = PC_MACHINE_GET_CLASS(pcms);
 
     assert(machine->ram_size == pcms->below_4g_mem_size +
@@ -1760,7 +1758,8 @@ void pc_memory_init(PCMachineState *pcms,
                                         option_rom_mr,
                                         1);
 
-    fw_cfg = fw_cfg_init(pcms, pcms->boot_cpus, pcms->apic_id_limit);
+    fw_cfg = fw_cfg_init(pcms, mc->possible_cpu_arch_ids(machine),
+                         pcms->boot_cpus, pcms->apic_id_limit);
 
     rom_set_fw(fw_cfg);
 
