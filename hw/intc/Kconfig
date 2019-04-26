@@ -32,6 +32,10 @@ config OPENPIC_KVM
     default y
     depends on OPENPIC && KVM
 
+config MIPS_GIC
+    bool
+    select MIPS_GIC_TIMER
+
 config XICS
     bool
     depends on POWERNV || PSERIES

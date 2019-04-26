@@ -47,7 +47,7 @@ config MIPS_CPS
     bool
     select MIPS_ITU
     select MIPS_CPC
-    select PTIMER
+    select MIPS_GIC
     select MIPS_GCR
 
 config MIPS_BOSTON
