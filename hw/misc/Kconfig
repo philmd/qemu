@@ -88,6 +88,9 @@ config MIPS_ITU
 config MIPS_CPC
     bool
 
+config MIPS_GCR
+    bool
+
 config MPS2_FPGAIO
     bool
 
