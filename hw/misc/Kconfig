@@ -85,6 +85,9 @@ config STM32F2XX_SYSCFG
 config MIPS_ITU
     bool
 
+config MIPS_CPC
+    bool
+
 config MPS2_FPGAIO
     bool
 
