@@ -81,3 +81,14 @@ build-tci:
    done
  - QTEST_QEMU_BINARY="x86_64-softmmu/qemu-system-x86_64" ./tests/pxe-test
  - QTEST_QEMU_BINARY="s390x-softmmu/qemu-system-s390x" ./tests/pxe-test -m slow
+
+# EDK2 roms builds
+build-edk2:
+ script:
+ - apt-get install -y -qq dos2unix gcc-aarch64-linux-gnu gcc-arm-linux-gnueabihf
+   iasl nasm uuid-dev
+ - ./configure --disable-system --disable-user --prefix=$PWD/dist
+ - git submodule update --init roms/edk2
+ - make -j3
+ - make -C roms efi -j2
+ - make install
