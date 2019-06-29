@@ -44,7 +44,7 @@ class NextCubeMachine(Test):
                         command_line='screendump %s' % screenshot_path)
 
         console_logger = logging.getLogger('ocr')
-        proc = process.run("tesseract --psm 6 %s stdout" % screenshot_path)
+        proc = process.run("tesseract %s stdout" % screenshot_path)
         console_logger.debug(proc.stdout_text)
         self.assertIn('Backplane', proc.stdout_text)
         self.assertIn('Ethernet address', proc.stdout_text)
