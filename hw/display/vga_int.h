@@ -192,6 +192,7 @@ extern const uint8_t gr_mask[16];
 #define VGABIOS_CIRRUS_FILENAME "vgabios-cirrus.bin"
 
 extern const MemoryRegionOps vga_mem_ops;
+extern const MemoryRegionPortio vbe_portio_list[];
 
 /* vga-pci.c */
 void pci_std_vga_mmio_region_init(VGACommonState *s,
