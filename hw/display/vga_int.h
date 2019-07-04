@@ -28,6 +28,7 @@
 #include "exec/ioport.h"
 #include "exec/memory.h"
 #include "ui/console.h"
+#include "migration/vmstate.h"
 
 #include "hw/display/bochs-vbe.h"
 
