@@ -1672,9 +1672,8 @@ Standard VGA
 M: Gerd Hoffmann <kraxel@redhat.com>
 S: Maintained
 F: hw/display/vga*
-F: hw/display/bochs-display.c
+F: hw/display/bochs-*
 F: include/hw/display/vga.h
-F: include/hw/display/bochs-vbe.h
 
 ramfb
 M: Gerd Hoffmann <kraxel@redhat.com>

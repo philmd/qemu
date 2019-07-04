@@ -10,13 +10,14 @@
 #include "qemu/units.h"
 #include "hw/hw.h"
 #include "hw/pci/pci.h"
-#include "hw/display/bochs-vbe.h"
 #include "hw/display/edid.h"
 
 #include "qapi/error.h"
 
 #include "ui/console.h"
 #include "ui/qemu-pixman.h"
+
+#include "bochs-vbe.h"
 
 typedef struct BochsDisplayMode {
     pixman_format_code_t format;

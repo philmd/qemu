@@ -30,7 +30,7 @@
 #include "ui/console.h"
 #include "migration/vmstate.h"
 
-#include "hw/display/bochs-vbe.h"
+#include "bochs-vbe.h"
 
 #define ST01_V_RETRACE      0x08
 #define ST01_DISP_ENABLE    0x01
