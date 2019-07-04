@@ -2226,11 +2226,8 @@ void vga_common_init(VGACommonState *s, Object *obj)
      * into a device attribute set by the machine/platform to remove
      * all target endian dependencies from this file.
      */
-#ifdef TARGET_WORDS_BIGENDIAN
-    s->default_endian_fb = true;
-#else
-    s->default_endian_fb = false;
-#endif
+    s->default_endian_fb = target_words_bigendian();
+
     vga_dirty_log_start(s);
 }
 
