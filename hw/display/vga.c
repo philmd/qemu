@@ -690,7 +690,7 @@ static void vbe_update_vgaregs(VGACommonState *s)
     s->cr[VGA_CRTC_MAX_SCAN] &= ~0x9f; /* no double scan */
 }
 
-static uint32_t vbe_ioport_read_index(void *opaque, uint32_t addr)
+uint32_t vbe_ioport_read_index(void *opaque, uint32_t addr)
 {
     VGACommonState *s = opaque;
     return s->vbe_index;
