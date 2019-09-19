@@ -2297,6 +2297,7 @@ F: roms/edk2
 F: roms/edk2-*
 F: tests/data/uefi-boot-images/
 F: tests/uefi-test-tools/
+F: tests/docker/dockerfiles/fedora-edk2.docker
 
 Usermode Emulation
 ------------------
