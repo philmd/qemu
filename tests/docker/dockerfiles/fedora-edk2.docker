@@ -1,0 +1,32 @@
+#
+# Docker Fedora 29 image to build minimal QEMU with EDK2
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+FROM fedora:29
+
+ENTRYPOINT bash
+
+RUN test -n "${http_proxy}" \
+    && echo proxy=${http_proxy} >> /etc/dnf/dnf.conf || true
+
+RUN dnf install -y \
+    acpica-tools \
+    bc \
+    bzip2 \
+    ccache \
+    clang \
+    findutils \
+    gcc \
+    gcc-aarch64-linux-gnu \
+    gcc-arm-linux-gnu \
+    gcc-c++ \
+    glib2-devel \
+    git \
+    libuuid-devel \
+    make \
+    nasm \
+    pixman-devel \
+    python3 \
+    uuid-devel \
+    zlib-devel
