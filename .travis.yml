@@ -341,6 +341,23 @@ matrix:
         - CACHE_NAME="${TRAVIS_BRANCH}-linux-gcc-default"
 
 
+    # Release builds
+    - if: tag IS present
+      env:
+        - BUILD_DIR="some/build/dir" SRC_DIR="../../.."
+        - CONFIG="--prefix=$PWD/dist" BASE_CONFIG=""
+        - TEST_CMD="make install -j3"
+      before_script:
+        - command -v ccache && ccache --zero-stats
+        - mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
+      script:
+        - ${SRC_DIR}/scripts/make-release ${SRC_DIR} ${TRAVIS_TAG}
+        - ls -l qemu-${TRAVIS_TAG}.tar.bz2
+        - tar -xf qemu-${TRAVIS_TAG}.tar.bz2 && cd qemu-${TRAVIS_TAG}
+        - ../configure ${BASE_CONFIG} ${CONFIG} || { cat config.log && exit 1; }
+        - make install
+
+
     # EDK2 roms builds
     - if: tag IS present OR commit_message =~ /(edk2|EDK2)/
       env:
