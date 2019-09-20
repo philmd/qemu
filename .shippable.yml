@@ -20,5 +20,6 @@ build:
     options: "-e HOME=/root"
   ci:
     - unset CC
+    - git submodule update --init --recursive roms/edk2
     - ./configure ${QEMU_CONFIGURE_OPTS} --target-list=${TARGET_LIST}
     - make -j$(($(getconf _NPROCESSORS_ONLN) + 1)) ${MAKE_ARGS}
