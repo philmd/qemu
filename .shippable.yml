@@ -7,7 +7,7 @@ env:
   matrix:
     - IMAGE=fedora-edk2
       TARGET_LIST=i386-softmmu,x86_64-softmmu,aarch64-softmmu
-      MAKE_ARGS=-C roms efi
+      MAKE_ARGS="-C roms efi"
 build:
   pre_ci:
     # usually host ARCH is set by configure
