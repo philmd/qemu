@@ -4,12 +4,18 @@ git:
 env:
   global:
     - LC_ALL=C
+    - CCACHE_SLOPPINESS="include_file_ctime,include_file_mtime"
+    - CCACHE_MAXSIZE=1G
+    - CCACHE_DIR=$SHIPPABLE_BUILD_DIR/.ccache
   matrix:
     - IMAGE=fedora-edk2
       TARGET_LIST=i386-softmmu,x86_64-softmmu,aarch64-softmmu
       PRE_CONFIGURE_COMMANDS="git submodule update --init --recursive roms/edk2"
       MAKE_ARGS="-C roms efi"
 build:
+  cache: true
+  cache_dir_list:
+    - $SHIPPABLE_BUILD_DIR/.ccache
   pre_ci:
     # usually host ARCH is set by configure
     - echo "ARCH=$(uname -m)" > config-host.mak
@@ -21,9 +27,11 @@ build:
     options: "-e HOME=/root"
   ci:
     - unset CC
+    - command -v ccache && ccache --zero-stats
     - ${PRE_CONFIGURE_COMMANDS}
     - ./configure ${QEMU_CONFIGURE_OPTS} --target-list=${TARGET_LIST}
     # Console size exceeds 16 MB limit. Truncated from here.
     - make -j$(($(getconf _NPROCESSORS_ONLN) + 1)) ${MAKE_ARGS} | tee build.log 2>&1
   post_ci:
+    - command -v ccache && ccache --show-stats
     - tail -c 14M build.log
