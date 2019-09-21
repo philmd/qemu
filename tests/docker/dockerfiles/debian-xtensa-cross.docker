@@ -5,20 +5,12 @@
 # using a prebuilt toolchains for Xtensa cores from:
 # https://github.com/foss-xtensa/toolchain/releases
 #
-FROM debian:stretch-slim
+FROM qemu:debian9
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt install -yy eatmydata && \
     DEBIAN_FRONTEND=noninteractive eatmydata \
     apt-get install -y --no-install-recommends \
-        bison \
-        build-essential \
-        ca-certificates \
-        curl \
-        flex \
-        gettext \
-        git \
-        python-minimal
+        curl
 
 ENV CPU_LIST csp dc232b dc233c
 ENV TOOLCHAIN_RELEASE 2018.02
