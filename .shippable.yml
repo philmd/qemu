@@ -4,13 +4,12 @@ git:
 env:
   global:
     - LC_ALL=C
-    - PRE_CONFIGURE_COMMANDS="unset CC"
   matrix:
     - IMAGE=debian-amd64
       TARGET_LIST=x86_64-softmmu,x86_64-linux-user
     - IMAGE=fedora-edk2
       TARGET_LIST=i386-softmmu,x86_64-softmmu,aarch64-softmmu
-      PRE_CONFIGURE_COMMANDS="unset CC && git submodule update --init --recursive roms/edk2"
+      PRE_CONFIGURE_COMMANDS="git submodule update --init --recursive roms/edk2"
       MAKE_ARGS="-C roms efi"
 build:
   pre_ci:
@@ -23,6 +22,7 @@ build:
     pull: false
     options: "-e HOME=/root"
   ci:
+    - unset CC
     - ${PRE_CONFIGURE_COMMANDS}
     - ./configure ${QEMU_CONFIGURE_OPTS} --target-list=${TARGET_LIST}
     # Console size exceeds 16 MB limit. Truncated from here.
