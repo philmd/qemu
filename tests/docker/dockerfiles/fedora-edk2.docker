@@ -16,6 +16,7 @@ RUN dnf install -y \
     bzip2 \
     ccache \
     clang \
+    dos2unix \
     findutils \
     gcc \
     gcc-aarch64-linux-gnu \
