@@ -240,13 +240,6 @@ static void fw_cfg_boot_set(void *opaque, const char *boot_device,
     fw_cfg_modify_i16(opaque, FW_CFG_BOOT_DEVICE, boot_device[0]);
 }
 
-static void ppc_prep_reset(void *opaque)
-{
-    PowerPCCPU *cpu = opaque;
-
-    cpu_reset(CPU(cpu));
-}
-
 static const MemoryRegionPortio prep_portio_list[] = {
     /* System control ports */
     { 0x0092, 1, 1, .read = PREP_io_800_readb, .write = PREP_io_800_writeb, },
@@ -431,7 +424,7 @@ static void ppc_prep_init(MachineState *machine)
 
     /* init CPUs */
     for (i = 0; i < machine->smp.cpus; i++) {
-        cpu = POWERPC_CPU(cpu_create(machine->cpu_type));
+        cpu = POWERPC_CPU(cpu_create_with_reset(machine->cpu_type, NULL));
         env = &cpu->env;
 
         if (env->flags & POWERPC_FLAG_RTC_CLK) {
@@ -441,7 +434,6 @@ static void ppc_prep_init(MachineState *machine)
             /* Set time-base frequency to 100 Mhz */
             cpu_ppc_tb_init(env, 100UL * 1000UL * 1000UL);
         }
-        qemu_register_reset(ppc_prep_reset, cpu);
     }
 
     /* allocate RAM */
@@ -633,7 +625,7 @@ static void ibm_40p_init(MachineState *machine)
     char boot_device;
 
     /* init CPU */
-    cpu = POWERPC_CPU(cpu_create(machine->cpu_type));
+    cpu = POWERPC_CPU(cpu_create_with_reset(machine->cpu_type, NULL));
     env = &cpu->env;
     if (PPC_INPUT(env) != PPC_FLAGS_INPUT_6xx) {
         error_report("only 6xx bus is supported on this machine");
@@ -647,7 +639,6 @@ static void ibm_40p_init(MachineState *machine)
         /* Set time-base frequency to 100 Mhz */
         cpu_ppc_tb_init(env, 100UL * 1000UL * 1000UL);
     }
-    qemu_register_reset(ppc_prep_reset, cpu);
 
     /* PCI host */
     dev = qdev_create(NULL, "raven-pcihost");

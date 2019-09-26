@@ -185,7 +185,7 @@ static void bamboo_init(MachineState *machine)
     int success;
     int i;
 
-    cpu = POWERPC_CPU(cpu_create(machine->cpu_type));
+    cpu = POWERPC_CPU(cpu_create_with_reset(machine->cpu_type, main_cpu_reset));
     env = &cpu->env;
 
     if (env->mmu_model != POWERPC_MMU_BOOKE) {
@@ -194,7 +194,6 @@ static void bamboo_init(MachineState *machine)
         exit(1);
     }
 
-    qemu_register_reset(main_cpu_reset, cpu);
     ppc_booke_timers_init(cpu, 400000000, 0);
     ppc_dcr_init(env, NULL, NULL);
 

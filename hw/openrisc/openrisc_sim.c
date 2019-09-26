@@ -135,7 +135,8 @@ static void openrisc_sim_init(MachineState *machine)
     unsigned int smp_cpus = machine->smp.cpus;
 
     for (n = 0; n < smp_cpus; n++) {
-        cpu = OPENRISC_CPU(cpu_create(machine->cpu_type));
+        cpu = OPENRISC_CPU(cpu_create_with_reset(machine->cpu_type,
+                                                 main_cpu_reset));
         if (cpu == NULL) {
             fprintf(stderr, "Unable to find CPU definition!\n");
             exit(1);
@@ -144,8 +145,6 @@ static void openrisc_sim_init(MachineState *machine)
         cpu_irqs[n] = (qemu_irq *) cpu->env.irq;
 
         cpu_openrisc_clock_init(cpu);
-
-        qemu_register_reset(main_cpu_reset, cpu);
     }
 
     ram = g_malloc(sizeof(*ram));

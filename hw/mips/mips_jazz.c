@@ -163,9 +163,8 @@ static void mips_jazz_init(MachineState *machine,
     ESPState *esp;
 
     /* init CPUs */
-    cpu = MIPS_CPU(cpu_create(machine->cpu_type));
+    cpu = MIPS_CPU(cpu_create_with_reset(machine->cpu_type, main_cpu_reset));
     env = &cpu->env;
-    qemu_register_reset(main_cpu_reset, cpu);
 
     /*
      * Chipset returns 0 in invalid reads and do not raise data exceptions.

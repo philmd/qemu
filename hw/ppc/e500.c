@@ -870,7 +870,8 @@ void ppce500_init(MachineState *machine)
         CPUState *cs;
         qemu_irq *input;
 
-        cpu = POWERPC_CPU(cpu_create(machine->cpu_type));
+        cpu = POWERPC_CPU(cpu_create_with_reset(machine->cpu_type,
+                                i ? ppce500_cpu_reset_sec : ppce500_cpu_reset));
         env = &cpu->env;
         cs = CPU(cpu);
 
@@ -897,11 +898,7 @@ void ppce500_init(MachineState *machine)
             /* Primary CPU */
             struct boot_info *boot_info;
             boot_info = g_malloc0(sizeof(struct boot_info));
-            qemu_register_reset(ppce500_cpu_reset, cpu);
             env->load_info = boot_info;
-        } else {
-            /* Secondary CPUs */
-            qemu_register_reset(ppce500_cpu_reset_sec, cpu);
         }
     }
 

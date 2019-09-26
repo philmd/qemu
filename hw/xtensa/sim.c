@@ -45,13 +45,6 @@ static uint64_t translate_phys_addr(void *opaque, uint64_t addr)
     return cpu_get_phys_page_debug(CPU(cpu), addr);
 }
 
-static void sim_reset(void *opaque)
-{
-    XtensaCPU *cpu = opaque;
-
-    cpu_reset(CPU(cpu));
-}
-
 static void xtensa_sim_init(MachineState *machine)
 {
     XtensaCPU *cpu = NULL;
@@ -61,15 +54,14 @@ static void xtensa_sim_init(MachineState *machine)
     int n;
 
     for (n = 0; n < machine->smp.cpus; n++) {
-        cpu = XTENSA_CPU(cpu_create(machine->cpu_type));
+        cpu = XTENSA_CPU(cpu_create_with_reset(machine->cpu_type, NULL));
         env = &cpu->env;
 
         env->sregs[PRID] = n;
-        qemu_register_reset(sim_reset, cpu);
         /* Need MMU initialized prior to ELF loading,
          * so that ELF gets loaded into virtual addresses
          */
-        sim_reset(cpu);
+        cpu_reset(CPU(cpu));
     }
 
     if (env) {

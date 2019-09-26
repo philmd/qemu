@@ -143,12 +143,12 @@ static void ppc_core99_init(MachineState *machine)
 
     /* init CPUs */
     for (i = 0; i < smp_cpus; i++) {
-        cpu = POWERPC_CPU(cpu_create(machine->cpu_type));
+        cpu = POWERPC_CPU(cpu_create_with_reset(machine->cpu_type,
+                                                ppc_core99_reset));
         env = &cpu->env;
 
         /* Set time-base frequency to 100 Mhz */
         cpu_ppc_tb_init(env, TBFREQ);
-        qemu_register_reset(ppc_core99_reset, cpu);
     }
 
     /* allocate RAM */

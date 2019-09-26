@@ -92,13 +92,6 @@ static void load_kernel(MoxieCPU *cpu, LoaderParams *loader_params)
     }
 }
 
-static void main_cpu_reset(void *opaque)
-{
-    MoxieCPU *cpu = opaque;
-
-    cpu_reset(CPU(cpu));
-}
-
 static void moxiesim_init(MachineState *machine)
 {
     MoxieCPU *cpu = NULL;
@@ -114,10 +107,8 @@ static void moxiesim_init(MachineState *machine)
     LoaderParams loader_params;
 
     /* Init CPUs. */
-    cpu = MOXIE_CPU(cpu_create(machine->cpu_type));
+    cpu = MOXIE_CPU(cpu_create_with_reset(machine->cpu_type, NULL));
     env = &cpu->env;
-
-    qemu_register_reset(main_cpu_reset, cpu);
 
     /* Allocate RAM. */
     memory_region_init_ram(ram, NULL, "moxiesim.ram", ram_size, &error_fatal);

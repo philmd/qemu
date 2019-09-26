@@ -251,7 +251,8 @@ static void xtfpga_init(const XtfpgaBoardDesc *board, MachineState *machine)
     for (n = 0; n < smp_cpus; n++) {
         CPUXtensaState *cenv = NULL;
 
-        cpu = XTENSA_CPU(cpu_create(machine->cpu_type));
+        cpu = XTENSA_CPU(cpu_create_with_reset(machine->cpu_type,
+                                               xtfpga_reset));
         cenv = &cpu->env;
         if (!env) {
             env = cenv;
@@ -269,7 +270,6 @@ static void xtfpga_init(const XtfpgaBoardDesc *board, MachineState *machine)
         }
         cenv->sregs[PRID] = n;
         xtensa_select_static_vectors(cenv, n != 0);
-        qemu_register_reset(xtfpga_reset, cpu);
         /* Need MMU initialized prior to ELF loading,
          * so that ELF gets loaded into virtual addresses
          */

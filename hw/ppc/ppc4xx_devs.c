@@ -42,13 +42,6 @@
 #  define LOG_UIC(...) do { } while (0)
 #endif
 
-static void ppc4xx_reset(void *opaque)
-{
-    PowerPCCPU *cpu = opaque;
-
-    cpu_reset(CPU(cpu));
-}
-
 /*****************************************************************************/
 /* Generic PowerPC 4xx processor instantiation */
 PowerPCCPU *ppc4xx_init(const char *cpu_type,
@@ -59,7 +52,7 @@ PowerPCCPU *ppc4xx_init(const char *cpu_type,
     CPUPPCState *env;
 
     /* init CPUs */
-    cpu = POWERPC_CPU(cpu_create(cpu_type));
+    cpu = POWERPC_CPU(cpu_create_with_reset(cpu_type, NULL));
     env = &cpu->env;
 
     cpu_clk->cb = NULL; /* We don't care about CPU clock frequency changes */
@@ -68,8 +61,6 @@ PowerPCCPU *ppc4xx_init(const char *cpu_type,
     tb_clk->cb = ppc_40x_timers_init(env, sysclk, PPC_INTERRUPT_PIT);
     tb_clk->opaque = env;
     ppc_dcr_init(env, NULL, NULL);
-    /* Register qemu callbacks */
-    qemu_register_reset(ppc4xx_reset, cpu);
 
     return cpu;
 }

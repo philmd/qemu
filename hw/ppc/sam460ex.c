@@ -295,14 +295,13 @@ static void sam460ex_init(MachineState *machine)
     Error *err = NULL;
     int success;
 
-    cpu = POWERPC_CPU(cpu_create(machine->cpu_type));
+    cpu = POWERPC_CPU(cpu_create_with_reset(machine->cpu_type, main_cpu_reset));
     env = &cpu->env;
     if (env->mmu_model != POWERPC_MMU_BOOKE) {
         error_report("Only MMU model BookE is supported by this machine.");
         exit(1);
     }
 
-    qemu_register_reset(main_cpu_reset, cpu);
     boot_info = g_malloc0(sizeof(*boot_info));
     env->load_info = boot_info;
 

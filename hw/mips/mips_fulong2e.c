@@ -309,10 +309,8 @@ static void mips_fulong2e_init(MachineState *machine)
     DeviceState *dev;
 
     /* init CPUs */
-    cpu = MIPS_CPU(cpu_create(machine->cpu_type));
+    cpu = MIPS_CPU(cpu_create_with_reset(machine->cpu_type, main_cpu_reset));
     env = &cpu->env;
-
-    qemu_register_reset(main_cpu_reset, cpu);
 
     /* TODO: support more than 256M RAM as highmem */
     ram_size = 256 * MiB;
