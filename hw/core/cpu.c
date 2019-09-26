@@ -67,6 +67,15 @@ CPUState *cpu_create(const char *typename)
     return cpu;
 }
 
+CPUState *cpu_create_with_reset(const char *typename, QEMUResetHandler *reset)
+{
+    CPUState *cpu = cpu_create(typename);
+
+    qemu_register_reset(reset ? reset : (QEMUResetHandler *)cpu_reset, cpu);
+
+    return cpu;
+}
+
 bool cpu_paging_enabled(const CPUState *cpu)
 {
     CPUClass *cc = CPU_GET_CLASS(cpu);

@@ -29,6 +29,7 @@
 #include "qemu/rcu_queue.h"
 #include "qemu/queue.h"
 #include "qemu/thread.h"
+#include "sysemu/reset.h"
 
 typedef int (*WriteCoreDumpFunction)(const void *buf, size_t size,
                                      void *opaque);
@@ -682,6 +683,8 @@ ObjectClass *cpu_class_by_name(const char *typename, const char *cpu_model);
  * Returns: A #CPUState or %NULL if an error occurred.
  */
 CPUState *cpu_create(const char *typename);
+
+CPUState *cpu_create_with_reset(const char *typename, QEMUResetHandler *reset);
 
 /**
  * parse_cpu_option:
