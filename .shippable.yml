@@ -7,7 +7,7 @@ env:
   matrix:
     - IMAGE=fedora-edk2
       TARGET_LIST=i386-softmmu,x86_64-softmmu,aarch64-softmmu
-      PRE_CONFIGURE_COMMANDS="git submodule update --init roms/edk2 && (cd roms/edk2 && git submodule update --init CryptoPkg/Library/OpensslLib/openssl)"
+      PRE_CONFIGURE_COMMANDS="git submodule update --init roms/edk2 && pushd roms/edk2 && git submodule update --init CryptoPkg/Library/OpensslLib/openssl && popd"
       MAKE_ARGS="-C roms efi"
 build:
   pre_ci:
