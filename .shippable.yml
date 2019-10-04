@@ -24,6 +24,6 @@ build:
     - ${PRE_CONFIGURE_COMMANDS}
     - ./configure ${QEMU_CONFIGURE_OPTS} --target-list=${TARGET_LIST}
     # Console size exceeds 16 MB limit. Truncated from here.
-    - make -j$(($(getconf _NPROCESSORS_ONLN) + 1)) ${MAKE_ARGS} | tee build.log 2>&1
+    - make -j$(($(getconf _NPROCESSORS_ONLN) + 1)) ${MAKE_ARGS} 2>&1 | tee build.log | head -c 14M
   post_ci:
-    - tail -c 14M build.log
+    - tail -c 2M build.log
