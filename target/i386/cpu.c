@@ -4409,7 +4409,7 @@ static void x86_register_cpudef_types(X86CPUDefinition *def)
     /* Versioned models: */
 
     for (vdef = x86_cpu_def_get_versions(def); vdef->version; vdef++) {
-        X86CPUModel *m = g_new0(X86CPUModel, 1);
+        m = g_new0(X86CPUModel, 1);
         m->cpudef = def;
         m->version = vdef->version;
         name = x86_cpu_versioned_model_name(def, vdef->version);
