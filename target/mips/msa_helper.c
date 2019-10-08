@@ -4195,20 +4195,20 @@ static inline int32_t float64_to_q32(float64 a, float_status *status)
 
 #define MSA_FLOAT_COND(DEST, OP, ARG1, ARG2, BITS, QUIET)                   \
     do {                                                                    \
-        float_status *status = &env->active_tc.msa_fp_status;               \
+        float_status *_status = &env->active_tc.msa_fp_status;              \
         int c;                                                              \
         int64_t cond;                                                       \
-        set_float_exception_flags(0, status);                               \
+        set_float_exception_flags(0, _status);                              \
         if (!QUIET) {                                                       \
-            cond = float ## BITS ## _ ## OP(ARG1, ARG2, status);            \
+            cond = float ## BITS ## _ ## OP(ARG1, ARG2, _status);           \
         } else {                                                            \
-            cond = float ## BITS ## _ ## OP ## _quiet(ARG1, ARG2, status);  \
+            cond = float ## BITS ## _ ## OP ## _quiet(ARG1, ARG2, _status); \
         }                                                                   \
         DEST = cond ? M_MAX_UINT(BITS) : 0;                                 \
         c = update_msacsr(env, CLEAR_IS_INEXACT, 0);                        \
                                                                             \
         if (get_enabled_exceptions(env, c)) {                               \
-            DEST = ((FLOAT_SNAN ## BITS(status) >> 6) << 6) | c;            \
+            DEST = ((FLOAT_SNAN ## BITS(_status) >> 6) << 6) | c;           \
         }                                                                   \
     } while (0)
 

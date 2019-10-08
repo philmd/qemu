@@ -21970,7 +21970,7 @@ static int decode_nanomips_32_48_opc(CPUMIPSState *env, DisasContext *ctx)
                 case NM_BPOSGE32C:
                     check_dsp_r3(ctx);
                     {
-                        int32_t imm = extract32(ctx->opcode, 1, 13) |
+                        imm = extract32(ctx->opcode, 1, 13) |
                                       extract32(ctx->opcode, 0, 1) << 13;
 
                         gen_compute_branch_nm(ctx, OPC_BPOSGE32, 4, -1, -2,
@@ -22194,7 +22194,7 @@ static int decode_nanomips_opc(CPUMIPSState *env, DisasContext *ctx)
         break;
     case NM_LI16:
         {
-            int imm = extract32(ctx->opcode, 0, 7);
+            imm = extract32(ctx->opcode, 0, 7);
             imm = (imm == 0x7f ? -1 : imm);
             if (rt != 0) {
                 tcg_gen_movi_tl(cpu_gpr[rt], imm);
