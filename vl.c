@@ -2474,7 +2474,7 @@ static MachineClass *machine_parse(const char *name, GSList *machines)
         printf("Supported machines are:\n");
         machines = g_slist_sort(machines, machine_class_cmp);
         for (el = machines; el; el = el->next) {
-            MachineClass *mc = el->data;
+            mc = el->data;
             if (mc->alias) {
                 printf("%-20s %s (alias of %s)\n", mc->alias, mc->desc, mc->name);
             }
