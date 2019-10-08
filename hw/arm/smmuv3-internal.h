@@ -515,18 +515,18 @@ typedef struct CD {
 #define STE_S2S(x)         extract32((x)->word[5], 26, 1)
 #define STE_CTXPTR(x)                                           \
     ({                                                          \
-        unsigned long addr;                                     \
-        addr = (uint64_t)extract32((x)->word[1], 0, 16) << 32;  \
-        addr |= (uint64_t)((x)->word[0] & 0xffffffc0);          \
-        addr;                                                   \
+        unsigned long _addr;                                    \
+        _addr = (uint64_t)extract32((x)->word[1], 0, 16) << 32; \
+        _addr |= (uint64_t)((x)->word[0] & 0xffffffc0);         \
+        _addr;                                                  \
     })
 
 #define STE_S2TTB(x)                                            \
     ({                                                          \
-        unsigned long addr;                                     \
-        addr = (uint64_t)extract32((x)->word[7], 0, 16) << 32;  \
-        addr |= (uint64_t)((x)->word[6] & 0xfffffff0);          \
-        addr;                                                   \
+        unsigned long _addr;                                    \
+        _addr = (uint64_t)extract32((x)->word[7], 0, 16) << 32; \
+        _addr |= (uint64_t)((x)->word[6] & 0xfffffff0);         \
+        _addr;                                                  \
     })
 
 static inline int oas2bits(int oas_field)
