@@ -173,13 +173,13 @@ typedef struct VhostUserGPU {
 extern const GraphicHwOps virtio_gpu_ops;
 
 #define VIRTIO_GPU_FILL_CMD(out) do {                                   \
-        size_t s;                                                       \
-        s = iov_to_buf(cmd->elem.out_sg, cmd->elem.out_num, 0,          \
+        size_t _s;                                                      \
+        _s = iov_to_buf(cmd->elem.out_sg, cmd->elem.out_num, 0,         \
                        &out, sizeof(out));                              \
-        if (s != sizeof(out)) {                                         \
+        if (_s != sizeof(out)) {                                        \
             qemu_log_mask(LOG_GUEST_ERROR,                              \
                           "%s: command size incorrect %zu vs %zu\n",    \
-                          __func__, s, sizeof(out));                    \
+                          __func__, _s, sizeof(out));                   \
             return;                                                     \
         }                                                               \
     } while (0)
