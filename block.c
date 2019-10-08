@@ -4706,7 +4706,6 @@ void bdrv_iterate_format(void (*it)(void *opaque, const char *name),
 {
     BlockDriver *drv;
     int count = 0;
-    int i;
     const char **formats = NULL;
 
     QLIST_FOREACH(drv, &bdrv_drivers, list) {
@@ -4729,7 +4728,7 @@ void bdrv_iterate_format(void (*it)(void *opaque, const char *name),
         }
     }
 
-    for (i = 0; i < (int)ARRAY_SIZE(block_driver_modules); i++) {
+    for (size_t i = 0; i < (int)ARRAY_SIZE(block_driver_modules); i++) {
         const char *format_name = block_driver_modules[i].format_name;
 
         if (format_name) {
@@ -4754,7 +4753,7 @@ void bdrv_iterate_format(void (*it)(void *opaque, const char *name),
 
     qsort(formats, count, sizeof(formats[0]), qsort_strcmp);
 
-    for (i = 0; i < count; i++) {
+    for (size_t i = 0; i < count; i++) {
         it(opaque, formats[i]);
     }
 
