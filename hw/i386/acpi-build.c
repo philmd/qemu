@@ -2186,7 +2186,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
         }
 
         if (bus) {
-            Aml *scope = aml_scope("PCI0");
+            scope = aml_scope("PCI0");
             /* Scan all PCI buses. Generate tables to support hotplug. */
             build_append_pci_bus_devices(scope, bus, pm->pcihp_bridge_en);
 
