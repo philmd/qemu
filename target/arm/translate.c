@@ -5078,7 +5078,7 @@ static int disas_neon_data_insn(DisasContext *s, uint32_t insn)
         {
             /* VFMA, VFMS: fused multiply-add */
             TCGv_ptr fpstatus = get_fpstatus_ptr(1);
-            TCGv_i32 tmp3 = neon_load_reg(rd, pass);
+            tmp3 = neon_load_reg(rd, pass);
             if (size) {
                 /* VFMS */
                 gen_helper_vfp_negs(tmp, tmp);
