@@ -490,13 +490,12 @@ static PageDesc *page_find_alloc(tb_page_addr_t index, int alloc)
 {
     PageDesc *pd;
     void **lp;
-    int i;
 
     /* Level 1.  Always allocated.  */
     lp = l1_map + ((index >> v_l1_shift) & (v_l1_size - 1));
 
     /* Level 2..N-1.  */
-    for (i = v_l2_levels; i > 0; i--) {
+    for (size_t i = v_l2_levels; i > 0; i--) {
         void **p = atomic_rcu_read(lp);
 
         if (p == NULL) {
@@ -526,9 +525,7 @@ static PageDesc *page_find_alloc(tb_page_addr_t index, int alloc)
         pd = g_new0(PageDesc, V_L2_SIZE);
 #ifndef CONFIG_USER_ONLY
         {
-            int i;
-
-            for (i = 0; i < V_L2_SIZE; i++) {
+            for (size_t i = 0; i < V_L2_SIZE; i++) {
                 qemu_spin_init(&pd[i].lock);
             }
         }

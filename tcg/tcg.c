@@ -2055,15 +2055,15 @@ static void tcg_dump_ops(TCGContext *s, bool have_prefs)
             case INDEX_op_qemu_st_i64:
                 {
                     TCGMemOpIdx oi = op->args[k++];
-                    MemOp op = get_memop(oi);
+                    MemOp mop = get_memop(oi);
                     unsigned ix = get_mmuidx(oi);
 
-                    if (op & ~(MO_AMASK | MO_BSWAP | MO_SSIZE)) {
-                        col += qemu_log(",$0x%x,%u", op, ix);
+                    if (mop & ~(MO_AMASK | MO_BSWAP | MO_SSIZE)) {
+                        col += qemu_log(",$0x%x,%u", mop, ix);
                     } else {
                         const char *s_al, *s_op;
-                        s_al = alignment_name[(op & MO_AMASK) >> MO_ASHIFT];
-                        s_op = ldst_name[op & (MO_BSWAP | MO_SSIZE)];
+                        s_al = alignment_name[(mop & MO_AMASK) >> MO_ASHIFT];
+                        s_op = ldst_name[mop & (MO_BSWAP | MO_SSIZE)];
                         col += qemu_log(",%s%s,%u", s_al, s_op, ix);
                     }
                     i = 1;
