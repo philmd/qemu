@@ -177,6 +177,12 @@
 # define QEMU_NONSTRING
 #endif
 
+#if __has_attribute(nonnull)
+# define QEMU_NONNULL(LIST) __attribute__((nonnull((LIST))))
+#else
+# define QEMU_NONNULL(LIST)
+#endif
+
 /*
  * Forced inlining may be desired to encourage constant propagation
  * of function parameters.  However, it can also make debugging harder,
