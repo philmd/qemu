@@ -24,6 +24,7 @@ config APIC
     bool
     select MSI_NONBROKEN
     select I8259
+    select IOAPIC
 
 config ARM_GIC_KVM
     bool
