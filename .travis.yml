@@ -89,6 +89,8 @@ git:
 
 
 before_script:
+  # Hack to blow away py2
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] ; then brew link --overwrite python ; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ] ; then export PATH="/usr/local/opt/ccache/libexec:$PATH" ; fi
   - if command -v ccache ; then ccache --zero-stats ; fi
   - mkdir -p ${BUILD_DIR} && cd ${BUILD_DIR}
