@@ -1,6 +1,6 @@
 # core qdev-related obj files, also used by *-user:
-common-obj-y += qdev-core.o
-common-obj-$(CONFIG_SOFTMMU) += qdev.o qdev-properties.o
+common-obj-y += qdev-core.o qdev-properties.o
+common-obj-$(CONFIG_SOFTMMU) += qdev.o
 common-obj-$(CONFIG_SOFTMMU) += bus.o reset.o
 common-obj-$(call lnot,$(CONFIG_SOFTMMU)) += qdev-stub.o
 common-obj-$(CONFIG_SOFTMMU) += qdev-fw.o
