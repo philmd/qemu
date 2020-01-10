@@ -91,3 +91,8 @@ MSIMessage msix_get_message(PCIDevice *dev, unsigned int vector)
 {
     g_assert_not_reached();
 }
+
+AddressSpace *pci_device_iommu_address_space(PCIDevice *dev)
+{
+    return &address_space_memory;
+}
