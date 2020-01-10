@@ -330,6 +330,8 @@ static inline void tlb_flush_by_mmuidx_all_cpus_synced(CPUState *cpu,
 {
 }
 #endif
+
+#if !defined(CONFIG_USER_ONLY) && defined(CONFIG_TCG)
 void *probe_access(CPUArchState *env, target_ulong addr, int size,
                    MMUAccessType access_type, int mmu_idx, uintptr_t retaddr);
 
@@ -344,6 +346,7 @@ static inline void *probe_read(CPUArchState *env, target_ulong addr, int size,
 {
     return probe_access(env, addr, size, MMU_DATA_LOAD, mmu_idx, retaddr);
 }
+#endif
 
 #define CODE_GEN_ALIGN           16 /* must be >= of the size of a icache line */
 
