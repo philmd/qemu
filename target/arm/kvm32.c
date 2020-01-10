@@ -21,7 +21,7 @@
 #include "internals.h"
 #include "qemu/log.h"
 
-static inline void set_feature(uint64_t *features, int feature)
+static inline void kvm_set_feature(uint64_t *features, int feature)
 {
     *features |= 1ULL << feature;
 }
@@ -120,19 +120,19 @@ bool kvm_arm_get_host_cpu_features(ARMHostCPUFeatures *ahcf)
      * timers; this in turn implies most of the other feature
      * bits, but a few must be tested.
      */
-    set_feature(&features, ARM_FEATURE_V7VE);
-    set_feature(&features, ARM_FEATURE_VFP3);
-    set_feature(&features, ARM_FEATURE_GENERIC_TIMER);
+    kvm_set_feature(&features, ARM_FEATURE_V7VE);
+    kvm_set_feature(&features, ARM_FEATURE_VFP3);
+    kvm_set_feature(&features, ARM_FEATURE_GENERIC_TIMER);
 
     if (extract32(id_pfr0, 12, 4) == 1) {
-        set_feature(&features, ARM_FEATURE_THUMB2EE);
+        kvm_set_feature(&features, ARM_FEATURE_THUMB2EE);
     }
     if (extract32(ahcf->isar.mvfr1, 12, 4) == 1) {
-        set_feature(&features, ARM_FEATURE_NEON);
+        kvm_set_feature(&features, ARM_FEATURE_NEON);
     }
     if (extract32(ahcf->isar.mvfr1, 28, 4) == 1) {
         /* FMAC support implies VFPv4 */
-        set_feature(&features, ARM_FEATURE_VFP4);
+        kvm_set_feature(&features, ARM_FEATURE_VFP4);
     }
 
     ahcf->features = features;
