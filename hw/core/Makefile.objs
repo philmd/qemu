@@ -2,7 +2,7 @@
 common-obj-y += qdev-core.o qdev-properties.o
 common-obj-$(CONFIG_SOFTMMU) += qdev.o
 common-obj-$(CONFIG_SOFTMMU) += bus.o reset.o
-common-obj-$(call lnot,$(CONFIG_SOFTMMU)) += qdev-stub.o
+common-obj-$(CONFIG_USER_ONLY) += qdev-stub.o
 common-obj-$(CONFIG_SOFTMMU) += qdev-fw.o
 common-obj-$(CONFIG_SOFTMMU) += fw-path-provider.o
 # irq.o needed for qdev GPIO handling:
