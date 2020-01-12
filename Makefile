@@ -391,7 +391,8 @@ MINIKCONF_ARGS = \
 MINIKCONF_INPUTS = $(SRC_PATH)/Kconfig.host \
                    $(SRC_PATH)/accel/Kconfig \
                    $(SRC_PATH)/hw/Kconfig \
-                   $(wildcard $(SRC_PATH)/hw/*/Kconfig)
+                   $(wildcard $(SRC_PATH)/hw/*/Kconfig) \
+                   $(wildcard $(SRC_PATH)/target/*/Kconfig)
 MINIKCONF = $(PYTHON) $(SRC_PATH)/scripts/minikconf.py \
 
 $(SUBDIR_DEVICES_MAK): %/config-devices.mak: default-configs/%.mak $(MINIKCONF_INPUTS) $(BUILD_DIR)/config-host.mak
