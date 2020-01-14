@@ -1,4 +1,3 @@
-obj-$(CONFIG_TCG) += arm-semi.o
 obj-y += helper.o vfp_helper.o
 obj-y += cpu.o gdbstub.o
 obj-$(TARGET_AARCH64) += cpu64.o gdbstub64.o
@@ -71,6 +70,7 @@ obj-$(CONFIG_ARM_V6) += cpu_v6.o
 obj-$(CONFIG_ARM_V7R) += cpu_v7r.o
 obj-$(CONFIG_ARM_V7M) += cpu_v7m.o
 
+obj-$(CONFIG_SEMIHOSTING) += arm-semi.o
 obj-$(CONFIG_SOFTMMU) += psci.o
 
 obj-$(TARGET_AARCH64) += translate-a64.o helper-a64.o
