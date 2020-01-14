@@ -16,6 +16,21 @@ freebsd_12_task:
     - gmake -j8
     - gmake -j8 V=1 check
 
+freebsd_13_user_task:
+  freebsd_instance:
+    image: freebsd-13-0-snap
+    cpu: 8
+    memory: 8G
+  install_script: pkg install -y
+    bash bison curl cyrus-sasl git glib gmake gnutls gsed
+    perl5 pixman pkgconf png
+  script:
+    - mkdir build
+    - cd build
+    - ../configure --disable-system || { cat config.log; exit 1; }
+    - gmake -j8
+    - gmake -j8 V=1 check
+
 macos_task:
   osx_instance:
     image: mojave-base
