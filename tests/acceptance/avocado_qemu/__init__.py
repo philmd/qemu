@@ -56,13 +56,15 @@ def pick_default_qemu_bin(arch=None):
 
 
 def _console_interaction(test, success_message, failure_message,
-                         send_string):
+                         send_string, keep_sending=False):
+    assert not keep_sending or send_string
     console = test.vm.console_socket.makefile()
     console_logger = logging.getLogger('console')
     while True:
         if send_string:
             test.vm.console_socket.sendall(send_string.encode())
-            send_string = None # send once
+            if not keep_sending:
+                send_string = None # send only once
         msg = console.readline().strip()
         if not msg:
             continue
@@ -73,6 +75,22 @@ def _console_interaction(test, success_message, failure_message,
             console.close()
             fail = 'Failure message found in console: %s' % failure_message
             test.fail(fail)
+
+def interrupt_console_until_pattern(test, interrupt_string, success_message,
+                                    failure_message=None):
+    """
+    Keep sending a string to a console until interrupt ('break') a console ...
+    Waits for messages to appear on the console, while logging the content
+
+    :param test: an Avocado test containing a VM that will have its console
+                 read and probed for a success or failure message
+    :type test: :class:`avocado_qemu.Test`
+    :param interrupt_string: ...
+    :param success_message: if this message appears, test succeeds
+    :param failure_message: if this message appears, test fails
+    """
+    _console_interaction(test, success_message, failure_message,
+                         interrupt_string, True)
 
 def wait_for_console_pattern(test, success_message, failure_message=None):
     """
