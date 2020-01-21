@@ -2704,6 +2704,7 @@ M: Alex Bennée <alex.bennee@linaro.org>
 M: Fam Zheng <fam@euphon.net>
 R: Philippe Mathieu-Daudé <philmd@redhat.com>
 S: Maintained
+F: .mergify.yml
 F: .travis.yml
 F: scripts/travis/
 F: .shippable.yml
