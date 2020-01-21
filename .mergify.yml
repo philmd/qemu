@@ -1,0 +1,12 @@
+pull_request_rules:
+  - name: warn Pull Requests are ignored on GitHub
+    conditions:
+      - -merged
+    actions:
+        close:
+          message: |
+              Welcome to the QEMU project!
+              This GitHub repository is a simple mirror,
+              and does not accept merge requests.
+              Please see http://wiki.qemu.org/Contribute/SubmitAPatch
+              for how to submit changes to QEMU.
