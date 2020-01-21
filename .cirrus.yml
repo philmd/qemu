@@ -3,18 +3,23 @@ env:
 
 freebsd_12_task:
   freebsd_instance:
-    image: freebsd-12-0-release-amd64
+    image: freebsd-12-1-snap
     cpu: 8
     memory: 8G
-  install_script: pkg install -y
-    bash bison curl cyrus-sasl git glib gmake gnutls gsed
-    nettle perl5 pixman pkgconf png usbredir
+  install_script:
+    - pkg install -y
+      bash bison curl cyrus-sasl git glib gmake gnutls gsed
+      nettle perl5 pixman pkgconf png usbredir py36-pip
+      pip-3.6 install virtualenv
+    - pip-3.6 install virtualenv
+    - export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.6
   script:
     - mkdir build
     - cd build
     - ../configure || { cat config.log; exit 1; }
     - gmake -j8
     - gmake -j8 V=1 check
+    - gmake check-acceptance
 
 macos_task:
   osx_instance:
@@ -27,6 +32,7 @@ macos_task:
     - ../configure --python=/usr/local/bin/python3 || { cat config.log; exit 1; }
     - gmake -j$(sysctl -n hw.ncpu)
     - gmake check -j$(sysctl -n hw.ncpu)
+    - gmake check-acceptance
 
 macos_xcode_task:
   osx_instance:
@@ -40,3 +46,4 @@ macos_xcode_task:
     - ../configure --cc=clang || { cat config.log; exit 1; }
     - gmake -j$(sysctl -n hw.ncpu)
     - gmake check -j$(sysctl -n hw.ncpu)
+    - gmake check-acceptance
