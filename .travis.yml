@@ -396,7 +396,8 @@ matrix:
         - TEST_CMD="make -j${JOBS} check-tcg V=1"
         - CACHE_NAME="${TRAVIS_BRANCH}-linux-gcc-debug-tcg"
 
-    - name: "[aarch64] GCC check-tcg"
+    # we split the aarch64 builds as it takes a while to build them all
+    - name: "[aarch64] GCC check-tcg (main-softmmu)"
       arch: arm64
       dist: xenial
       addons:
@@ -426,7 +427,40 @@ matrix:
           - genisoimage
       env:
         - TEST_CMD="make check check-tcg V=1"
-        - CONFIG="--disable-containers --target-list=${MAIN_SOFTMMU_TARGETS}"
+        - CONFIG="--disable-containers --target-list=aarch64-softmmu,aarch64-linux-user,arm-softmmu,arm-linux-user"
+
+    - name: "[aarch64] GCC check-tcg (other-softmmu)"
+      arch: arm64
+      dist: xenial
+      addons:
+        apt_packages:
+          - libaio-dev
+          - libattr1-dev
+          - libbrlapi-dev
+          - libcap-ng-dev
+          - libgcrypt20-dev
+          - libgnutls28-dev
+          - libgtk-3-dev
+          - libiscsi-dev
+          - liblttng-ust-dev
+          - libncurses5-dev
+          - libnfs-dev
+          - libnss3-dev
+          - libpixman-1-dev
+          - libpng-dev
+          - librados-dev
+          - libsdl2-dev
+          - libseccomp-dev
+          - liburcu-dev
+          - libusb-1.0-0-dev
+          - libvdeplug-dev
+          - libvte-2.91-dev
+          # Tests dependencies
+          - genisoimage
+      env:
+        - TEST_CMD="make check check-tcg V=1"
+        - CONFIG="--disable-containers --target-list-exclude==${MAIN_SOFTMMU_TARGETS}"
+
 
     - name: "[ppc64] GCC check-tcg"
       arch: ppc64le
