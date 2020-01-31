@@ -896,7 +896,7 @@ check-acceptance: check-venv $(TESTS_RESULTS_DIR)
 # Consolidated targets
 
 check-obj-all: $(patsubst %,check-%, $(check-block-y)) \
-	$(patsubst %,check-qtest-%, $(QTEST_TARGETS)) \
+	$(check-qtest-y) $(check-qtest-generic-y) \
 	$(check-unit-y) $(check-speed-y) \
 	$(FP_TEST_BIN) $(SF_COMPARE_RULES) $(SF_MATH_RULES) \
 	check-tests/qapi-schema/frontend
