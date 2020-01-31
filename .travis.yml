@@ -96,7 +96,7 @@ before_script:
 # Main build & test - rarely overridden - controlled by TEST_CMD
 script:
   - BUILD_RC=0 && make -j${JOBS} || BUILD_RC=$?
-  - if [ test -n "${TEST_CMD}" ] ; then make -j${JOBS} check-obj-all ; fi
+  - if [ -n "${TEST_CMD}" ] ; then make -j${JOBS} check-obj-all ; fi
   - if [ "$BUILD_RC" -eq 0 ] ; then travis_retry ${TEST_CMD} ; else $(exit $BUILD_RC); fi
 after_script:
   - if command -v ccache ; then ccache --show-stats ; fi
