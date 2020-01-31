@@ -895,6 +895,12 @@ check-acceptance: check-venv $(TESTS_RESULTS_DIR)
 
 # Consolidated targets
 
+check-obj-all: $(patsubst %,check-%, $(check-block-y)) \
+	$(patsubst %,check-qtest-%, $(QTEST_TARGETS)) \
+	$(check-unit-y) $(check-speed-y) \
+	$(FP_TEST_BIN) $(SF_COMPARE_RULES) $(SF_MATH_RULES) \
+	check-tests/qapi-schema/frontend
+
 .PHONY: check-block check-qapi-schema check-qtest check-unit check check-clean
 check-qapi-schema: check-tests/qapi-schema/frontend check-tests/qapi-schema/doc-good.texi
 check-qtest: $(patsubst %,check-qtest-%, $(QTEST_TARGETS))
