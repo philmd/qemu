@@ -13,20 +13,24 @@ freebsd_12_task:
     - mkdir build
     - cd build
     - ../configure || { cat config.log; exit 1; }
-    - gmake -j8
-    - gmake -j8 V=1 check
+  build_script:
+    - gmake -C build -j8
+  test_script:
+    - gmake -C build -j8 V=1 check
 
 macos_task:
   osx_instance:
     image: mojave-base
   install_script:
     - brew install pkg-config python gnu-sed glib pixman make sdl2
-  script:
+  configure_script:
     - mkdir build
     - cd build
     - ../configure || { cat config.log; exit 1; }
-    - gmake -j$(sysctl -n hw.ncpu)
-    - gmake check -j$(sysctl -n hw.ncpu)
+  build_script:
+    - gmake -C build -j$(sysctl -n hw.ncpu)
+  test_script:
+    - gmake -C build check -j$(sysctl -n hw.ncpu)
 
 macos_xcode_task:
   osx_instance:
@@ -34,9 +38,11 @@ macos_xcode_task:
     image: mojave-xcode
   install_script:
     - brew install pkg-config gnu-sed glib pixman make sdl2
-  script:
+  configure_script:
     - mkdir build
     - cd build
     - ../configure --cc=clang || { cat config.log; exit 1; }
-    - gmake -j$(sysctl -n hw.ncpu)
-    - gmake check -j$(sysctl -n hw.ncpu)
+  build_script:
+    - gmake -C build -j$(sysctl -n hw.ncpu)
+  test_script:
+    - gmake -C build check -j$(sysctl -n hw.ncpu)
