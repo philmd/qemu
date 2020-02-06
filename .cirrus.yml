@@ -20,7 +20,7 @@ freebsd_12_task:
   test_script:
     - gmake -C build -j8 V=1 check
 
-macos_task:
+macos_base_task:
   osx_instance:
     image: mojave-base
   install_script:
