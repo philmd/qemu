@@ -645,6 +645,20 @@ _default_cache_mode()
         return
     fi
 }
+_supported_aio_modes()
+{
+    for mode; do
+        if [ "$mode" = "$AIOMODE" ]; then
+            return
+        fi
+    done
+    _notrun "not suitable for aio mode: $AIOMODE"
+}
+_default_aio_mode()
+{
+    AIOMODE="$1"
+    QEMU_IO="$QEMU_IO --aio $1"
+}
 
 _unsupported_imgopts()
 {
@@ -697,6 +711,20 @@ _require_large_file()
         _notrun "file system on $TEST_DIR does not support large enough files"
     fi
     rm "$TEST_IMG"
+}
+
+# Check that a set of devices is available in the QEMU binary
+#
+_require_devices()
+{
+    available=$($QEMU -M none -device help | \
+                grep ^name | sed -e 's/^name "//' -e 's/".*$//')
+    for device
+    do
+        if ! echo "$available" | grep -q "$device" ; then
+            _notrun "$device not available"
+        fi
+    done
 }
 
 # make sure this script returns success

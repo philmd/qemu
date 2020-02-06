@@ -846,6 +846,28 @@ static BlockdevDetectZeroesOptions bdrv_parse_detect_zeroes(QemuOpts *opts,
 }
 
 /**
+ * Set open flags for aio engine
+ *
+ * Return 0 on success, -1 if the engine specified is invalid
+ */
+int bdrv_parse_aio(const char *mode, int *flags)
+{
+    if (!strcmp(mode, "threads")) {
+        /* do nothing, default */
+    } else if (!strcmp(mode, "native")) {
+        *flags |= BDRV_O_NATIVE_AIO;
+#ifdef CONFIG_LINUX_IO_URING
+    } else if (!strcmp(mode, "io_uring")) {
+        *flags |= BDRV_O_IO_URING;
+#endif
+    } else {
+        return -1;
+    }
+
+    return 0;
+}
+
+/**
  * Set open flags for a given discard mode
  *
  * Return 0 on success, -1 if the discard mode was invalid.
@@ -1976,18 +1998,19 @@ char *bdrv_perm_names(uint64_t perm)
         { 0, NULL }
     };
 
-    char *result = g_strdup("");
+    GString *result = g_string_sized_new(30);
     struct perm_name *p;
 
     for (p = permissions; p->name; p++) {
         if (perm & p->perm) {
-            char *old = result;
-            result = g_strdup_printf("%s%s%s", old, *old ? ", " : "", p->name);
-            g_free(old);
+            if (result->len > 0) {
+                g_string_append(result, ", ");
+            }
+            g_string_append(result, p->name);
         }
     }
 
-    return result;
+    return g_string_free(result, FALSE);
 }
 
 /*
@@ -6419,6 +6442,7 @@ void bdrv_refresh_filename(BlockDriverState *bs)
                 child->bs->exact_filename);
         pstrcpy(bs->filename, sizeof(bs->filename), child->bs->filename);
 
+        qobject_unref(bs->full_open_options);
         bs->full_open_options = qobject_ref(child->bs->full_open_options);
 
         return;

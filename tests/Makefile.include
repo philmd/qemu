@@ -429,6 +429,7 @@ tests/fp/%:
 tests/test-qdev-global-props$(EXESUF): tests/test-qdev-global-props.o \
 	hw/core/qdev.o hw/core/qdev-properties.o hw/core/hotplug.o\
 	hw/core/bus.o \
+	hw/core/resettable.o \
 	hw/core/irq.o \
 	hw/core/fw-path-provider.o \
 	hw/core/reset.o \
@@ -585,6 +586,7 @@ include $(SRC_PATH)/tests/qtest/Makefile.include
 
 tests/test-qga$(EXESUF): qemu-ga$(EXESUF)
 tests/test-qga$(EXESUF): tests/test-qga.o $(qtest-obj-y)
+tests/vhost-user-bridge$(EXESUF): tests/vhost-user-bridge.o $(test-util-obj-y) libvhost-user.a
 
 SPEED = quick
 
@@ -917,6 +919,6 @@ all: $(QEMU_IOTESTS_HELPERS-y)
 
 -include $(wildcard tests/*.d)
 -include $(wildcard tests/qtest/*.d)
--include $(wildcard tests/qtest/qos/*.d)
+-include $(wildcard tests/qtest/libqos/*.d)
 
 endif
