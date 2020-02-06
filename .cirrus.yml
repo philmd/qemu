@@ -33,6 +33,9 @@ macos_task:
     - gmake -C build -j$(sysctl -n hw.ncpu)
   test_script:
     - gmake -C build check -j$(sysctl -n hw.ncpu)
+  acceptance_script:
+    - cd build
+    - gmake check-acceptance
 
 macos_xcode_task:
   osx_instance:
