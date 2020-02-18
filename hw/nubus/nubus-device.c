@@ -90,7 +90,7 @@ static void nubus_register_format_block(NubusDevice *dev)
                                   dev->slot_nb);
 
     hwaddr fblock_offset = memory_region_size(&dev->slot_mem) - FBLOCK_SIZE;
-    memory_region_init_io(&dev->fblock_io, NULL, &nubus_format_block_ops,
+    memory_region_init_io(&dev->fblock_io, OBJECT(dev), &nubus_format_block_ops,
                           dev, fblock_name, FBLOCK_SIZE);
     memory_region_add_subregion(&dev->slot_mem, fblock_offset,
                                 &dev->fblock_io);
@@ -143,7 +143,7 @@ void nubus_register_rom(NubusDevice *dev, const uint8_t *rom, uint32_t size,
 
     dev->rom = rom;
     rom_name = g_strdup_printf("nubus-slot-%d-rom", dev->slot_nb);
-    memory_region_init_io(&dev->rom_io, NULL, &mac_nubus_rom_ops,
+    memory_region_init_io(&dev->rom_io, OBJECT(dev), &mac_nubus_rom_ops,
                           dev, rom_name, size);
     memory_region_set_readonly(&dev->rom_io, true);
 
