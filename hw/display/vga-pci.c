@@ -249,7 +249,7 @@ static void pci_std_vga_realize(PCIDevice *dev, Error **errp)
 
     /* mmio bar for vga register access */
     if (d->flags & (1 << PCI_VGA_FLAG_ENABLE_MMIO)) {
-        memory_region_init(&d->mmio, NULL, "vga.mmio",
+        memory_region_init(&d->mmio, OBJECT(dev), "vga.mmio",
                            PCI_VGA_MMIO_SIZE);
 
         if (d->flags & (1 << PCI_VGA_FLAG_ENABLE_QEXT)) {
