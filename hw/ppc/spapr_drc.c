@@ -887,7 +887,7 @@ int spapr_dt_drc(void *fdt, int offset, Object *owner, uint32_t drc_type_mask)
         drc = SPAPR_DR_CONNECTOR(obj);
         drck = SPAPR_DR_CONNECTOR_GET_CLASS(drc);
 
-        if (owner && (drc->owner != owner)) {
+        if (drc->owner != owner) {
             continue;
         }
 
