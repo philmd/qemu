@@ -1221,12 +1221,12 @@ void *spapr_build_fdt(SpaprMachineState *spapr, bool reset, size_t space)
     spapr_populate_cpus_dt_node(fdt, spapr);
 
     if (smc->dr_lmb_enabled) {
-        _FDT(spapr_dt_drc(fdt, 0, NULL, SPAPR_DR_CONNECTOR_TYPE_LMB));
+        _FDT(spapr_dt_drc(fdt, 0, OBJECT(spapr), SPAPR_DR_CONNECTOR_TYPE_LMB));
     }
 
     if (mc->has_hotpluggable_cpus) {
         int offset = fdt_path_offset(fdt, "/cpus");
-        ret = spapr_dt_drc(fdt, offset, NULL, SPAPR_DR_CONNECTOR_TYPE_CPU);
+        ret = spapr_dt_drc(fdt, offset, OBJECT(spapr), SPAPR_DR_CONNECTOR_TYPE_CPU);
         if (ret < 0) {
             error_report("Couldn't set up CPU DR device tree properties");
             exit(1);
@@ -1269,7 +1269,7 @@ void *spapr_build_fdt(SpaprMachineState *spapr, bool reset, size_t space)
     }
 
     if (smc->dr_phb_enabled) {
-        ret = spapr_dt_drc(fdt, 0, NULL, SPAPR_DR_CONNECTOR_TYPE_PHB);
+        ret = spapr_dt_drc(fdt, 0, OBJECT(spapr), SPAPR_DR_CONNECTOR_TYPE_PHB);
         if (ret < 0) {
             error_report("Couldn't set up PHB DR device tree properties");
             exit(1);
