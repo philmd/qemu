@@ -813,7 +813,8 @@ void memory_region_init_ram_nomigrate(MemoryRegion *mr,
                                       struct Object *owner,
                                       const char *name,
                                       uint64_t size,
-                                      Error **errp);
+                                      Error **errp)
+                                      QEMU_NONNULL(2);
 
 /**
  * memory_region_init_ram_shared_nomigrate:  Initialize RAM memory region.
@@ -865,7 +866,8 @@ void memory_region_init_resizeable_ram(MemoryRegion *mr,
                                        void (*resized)(const char*,
                                                        uint64_t length,
                                                        void *host),
-                                       Error **errp);
+                                       Error **errp)
+                                       QEMU_NONNULL(2);
 #ifdef CONFIG_POSIX
 
 /**
@@ -896,7 +898,8 @@ void memory_region_init_ram_from_file(MemoryRegion *mr,
                                       uint64_t align,
                                       uint32_t ram_flags,
                                       const char *path,
-                                      Error **errp);
+                                      Error **errp)
+                                      QEMU_NONNULL(2);
 
 /**
  * memory_region_init_ram_from_fd:  Initialize RAM memory region with a
@@ -919,7 +922,8 @@ void memory_region_init_ram_from_fd(MemoryRegion *mr,
                                     uint64_t size,
                                     bool share,
                                     int fd,
-                                    Error **errp);
+                                    Error **errp)
+                                    QEMU_NONNULL(2);
 #endif
 
 /**
@@ -969,7 +973,8 @@ void memory_region_init_ram_device_ptr(MemoryRegion *mr,
                                        struct Object *owner,
                                        const char *name,
                                        uint64_t size,
-                                       void *ptr);
+                                       void *ptr)
+                                       QEMU_NONNULL(2);
 
 /**
  * memory_region_init_alias: Initialize a memory region that aliases all or a
@@ -1012,7 +1017,8 @@ void memory_region_init_rom_nomigrate(MemoryRegion *mr,
                                       struct Object *owner,
                                       const char *name,
                                       uint64_t size,
-                                      Error **errp);
+                                      Error **errp)
+                                      QEMU_NONNULL(2);
 
 /**
  * memory_region_init_rom_device_nomigrate:  Initialize a ROM memory region.
@@ -1037,7 +1043,8 @@ void memory_region_init_rom_device_nomigrate(MemoryRegion *mr,
                                              void *opaque,
                                              const char *name,
                                              uint64_t size,
-                                             Error **errp);
+                                             Error **errp)
+                                             QEMU_NONNULL(2);
 
 /**
  * memory_region_init_iommu: Initialize a memory region of a custom type
@@ -1066,7 +1073,8 @@ void memory_region_init_iommu(void *_iommu_mr,
                               const char *mrtypename,
                               Object *owner,
                               const char *name,
-                              uint64_t size);
+                              uint64_t size)
+                              QEMU_NONNULL(4);
 
 /**
  * memory_region_init_ram - Initialize RAM memory region.  Accesses into the
@@ -1154,7 +1162,8 @@ void memory_region_init_rom_device(MemoryRegion *mr,
                                    void *opaque,
                                    const char *name,
                                    uint64_t size,
-                                   Error **errp);
+                                   Error **errp)
+                                   QEMU_NONNULL(2);
 
 
 /**
