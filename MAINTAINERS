@@ -427,8 +427,9 @@ F: accel/stubs/hax-stub.c
 F: target/i386/hax-all.c
 F: include/sysemu/hax.h
 
-X86 HVF CPUs
+X86 HVF Accelerator
 M: Roman Bolshakov <r.bolshakov@yadro.com>
+R: Cameron Esfahani <dirty@apple.com>
 S: Maintained
 F: accel/stubs/hvf-stub.c
 F: target/i386/hvf/
