@@ -1316,6 +1316,7 @@ void helper_book3s_msgsndp(CPUPPCState *env, target_ulong rb)
 #endif
 #endif
 
+#ifndef CONFIG_USER_ONLY
 void ppc_cpu_do_unaligned_access(CPUState *cs, vaddr vaddr,
                                  MMUAccessType access_type,
                                  int mmu_idx, uintptr_t retaddr)
@@ -1331,3 +1332,4 @@ void ppc_cpu_do_unaligned_access(CPUState *cs, vaddr vaddr,
     env->error_code = insn & 0x03FF0000;
     cpu_loop_exit(cs);
 }
+#endif /* !CONFIG_USER_ONLY */
