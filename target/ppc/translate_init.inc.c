@@ -10902,8 +10902,6 @@ static void ppc_cpu_class_init(ObjectClass *oc, void *data)
     cc->do_unaligned_access = ppc_cpu_do_unaligned_access;
     cc->get_phys_page_debug = ppc_cpu_get_phys_page_debug;
     cc->vmsd = &vmstate_ppc_cpu;
-#endif
-#if defined(CONFIG_SOFTMMU)
     cc->write_elf64_note = ppc64_cpu_write_elf64_note;
     cc->write_elf32_note = ppc32_cpu_write_elf32_note;
 #endif
