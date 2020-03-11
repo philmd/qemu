@@ -176,9 +176,6 @@ typedef struct CPUClass {
     GuestPanicInformation* (*get_crash_info)(CPUState *cpu);
     void (*dump_statistics)(CPUState *cpu, int flags);
     int64_t (*get_arch_id)(CPUState *cpu);
-    bool (*get_paging_enabled)(const CPUState *cpu);
-    void (*get_memory_mapping)(CPUState *cpu, MemoryMappingList *list,
-                               Error **errp);
     void (*set_pc)(CPUState *cpu, vaddr value);
     void (*synchronize_from_tb)(CPUState *cpu, struct TranslationBlock *tb);
     int (*gdb_read_register)(CPUState *cpu, uint8_t *buf, int reg);
@@ -221,6 +218,9 @@ typedef struct CPUClass {
 #endif /* CONFIG_TCG */
 
 #if !defined(CONFIG_USER_ONLY)
+    bool (*get_paging_enabled)(const CPUState *cpu);
+    void (*get_memory_mapping)(CPUState *cpu, MemoryMappingList *list,
+                               Error **errp);
     hwaddr (*get_phys_page_debug)(CPUState *cpu, vaddr addr);
     hwaddr (*get_phys_page_attrs_debug)(CPUState *cpu, vaddr addr,
                                         MemTxAttrs *attrs);
@@ -482,6 +482,8 @@ static inline void cpu_tb_jmp_cache_clear(CPUState *cpu)
 extern bool mttcg_enabled;
 #define qemu_tcg_mttcg_enabled() (mttcg_enabled)
 
+#ifndef CONFIG_USER_ONLY
+
 /**
  * cpu_paging_enabled:
  * @cpu: The CPU whose state is to be inspected.
@@ -498,6 +500,8 @@ bool cpu_paging_enabled(const CPUState *cpu);
  */
 void cpu_get_memory_mapping(CPUState *cpu, MemoryMappingList *list,
                             Error **errp);
+
+#endif /* !CONFIG_USER_ONLY */
 
 /**
  * cpu_write_elf64_note:
