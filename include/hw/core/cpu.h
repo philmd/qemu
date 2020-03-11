@@ -178,7 +178,6 @@ typedef struct CPUClass {
     void (*synchronize_from_tb)(CPUState *cpu, struct TranslationBlock *tb);
     int (*gdb_read_register)(CPUState *cpu, uint8_t *buf, int reg);
     int (*gdb_write_register)(CPUState *cpu, uint8_t *buf, int reg);
-    bool (*debug_check_watchpoint)(CPUState *cpu, CPUWatchpoint *wp);
 
     const char *gdb_core_xml_file;
     gchar * (*gdb_arch_name)(CPUState *cpu);
@@ -188,7 +187,6 @@ typedef struct CPUClass {
     bool (*cpu_exec_interrupt)(CPUState *cpu, int interrupt_request);
 
     void (*disas_set_info)(CPUState *cpu, disassemble_info *info);
-    vaddr (*adjust_watchpoint_address)(CPUState *cpu, vaddr addr, int len);
     void (*tcg_initialize)(void);
 
 #if defined(CONFIG_TCG)
@@ -197,6 +195,8 @@ typedef struct CPUClass {
                      bool probe, uintptr_t retaddr);
     void (*debug_excp_handler)(CPUState *cpu);
 #if !defined(CONFIG_USER_ONLY)
+    bool (*debug_check_watchpoint)(CPUState *cpu, CPUWatchpoint *wp);
+    vaddr (*adjust_watchpoint_address)(CPUState *cpu, vaddr addr, int len);
     void (*do_unaligned_access)(CPUState *cpu, vaddr addr,
                                 MMUAccessType access_type,
                                 int mmu_idx, uintptr_t retaddr);

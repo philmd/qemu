@@ -187,6 +187,7 @@ static int cpu_common_gdb_write_register(CPUState *cpu, uint8_t *buf, int reg)
     return 0;
 }
 
+#if defined(CONFIG_TCG) && !defined(CONFIG_USER_ONLY)
 static bool cpu_common_debug_check_watchpoint(CPUState *cpu, CPUWatchpoint *wp)
 {
     /* If no extra check is required, QEMU watchpoint match can be considered
@@ -194,6 +195,11 @@ static bool cpu_common_debug_check_watchpoint(CPUState *cpu, CPUWatchpoint *wp)
      */
     return true;
 }
+static vaddr cpu_adjust_watchpoint_address(CPUState *cpu, vaddr addr, int len)
+{
+    return addr;
+}
+#endif /* CONFIG_TCG && !CONFIG_USER_ONLY */
 
 static bool cpu_common_virtio_is_big_endian(CPUState *cpu)
 {
@@ -399,11 +405,6 @@ static int64_t cpu_common_get_arch_id(CPUState *cpu)
     return cpu->cpu_index;
 }
 
-static vaddr cpu_adjust_watchpoint_address(CPUState *cpu, vaddr addr, int len)
-{
-    return addr;
-}
-
 static void generic_handle_interrupt(CPUState *cpu, int mask)
 {
     cpu->interrupt_request |= mask;
@@ -433,14 +434,16 @@ static void cpu_class_init(ObjectClass *klass, void *data)
     k->gdb_read_register = cpu_common_gdb_read_register;
     k->gdb_write_register = cpu_common_gdb_write_register;
     k->virtio_is_big_endian = cpu_common_virtio_is_big_endian;
-    k->debug_check_watchpoint = cpu_common_debug_check_watchpoint;
     k->cpu_exec_enter = cpu_common_noop;
     k->cpu_exec_exit = cpu_common_noop;
     k->cpu_exec_interrupt = cpu_common_exec_interrupt;
 #if defined(CONFIG_TCG)
     k->debug_excp_handler = cpu_common_noop;
-#endif /* CONFIG_TCG */
+#if !defined(CONFIG_USER_ONLY)
+    k->debug_check_watchpoint = cpu_common_debug_check_watchpoint;
     k->adjust_watchpoint_address = cpu_adjust_watchpoint_address;
+#endif /* CONFIG_TCG && !CONFIG_USER_ONLY */
+#endif /* CONFIG_TCG */
     set_bit(DEVICE_CATEGORY_CPU, dc->categories);
     dc->realize = cpu_common_realizefn;
     dc->unrealize = cpu_common_unrealizefn;
