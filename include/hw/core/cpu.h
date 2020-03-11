@@ -885,9 +885,8 @@ void cpu_interrupt(CPUState *cpu, int mask);
 
 #endif /* USER_ONLY */
 
-#ifdef NEED_CPU_H
+#if defined(CONFIG_TCG) && !defined(CONFIG_USER_ONLY)
 
-#ifdef CONFIG_SOFTMMU
 static inline void cpu_unaligned_access(CPUState *cpu, vaddr addr,
                                         MMUAccessType access_type,
                                         int mmu_idx, uintptr_t retaddr)
@@ -911,9 +910,8 @@ static inline void cpu_transaction_failed(CPUState *cpu, hwaddr physaddr,
                                   mmu_idx, attrs, response, retaddr);
     }
 }
-#endif
 
-#endif /* NEED_CPU_H */
+#endif /* CONFIG_TCG && !CONFIG_USER_ONLY */
 
 /**
  * cpu_set_pc:
