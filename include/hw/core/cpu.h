@@ -482,6 +482,37 @@ static inline void cpu_tb_jmp_cache_clear(CPUState *cpu)
 extern bool mttcg_enabled;
 #define qemu_tcg_mttcg_enabled() (mttcg_enabled)
 
+/**
+ * CPUDumpFlags:
+ * @CPU_DUMP_CODE:
+ * @CPU_DUMP_FPU: dump FPU register state, not just integer
+ * @CPU_DUMP_CCOP: dump info about TCG QEMU's condition code optimization state
+ */
+enum CPUDumpFlags {
+    CPU_DUMP_CODE = 0x00010000,
+    CPU_DUMP_FPU  = 0x00020000,
+    CPU_DUMP_CCOP = 0x00040000,
+};
+
+/**
+ * cpu_dump_state:
+ * @cpu: The CPU whose state is to be dumped.
+ * @f: If non-null, dump to this stream, else to current print sink.
+ *
+ * Dumps CPU state.
+ */
+void cpu_dump_state(CPUState *cpu, FILE *f, int flags);
+
+/**
+ * cpu_dump_statistics:
+ * @cpu: The CPU whose state is to be dumped.
+ * @flags: Flags what to dump.
+ *
+ * Dump CPU statistics to the current monitor if we have one, else to
+ * stdout.
+ */
+void cpu_dump_statistics(CPUState *cpu, int flags);
+
 #ifndef CONFIG_USER_ONLY
 
 /**
@@ -500,8 +531,6 @@ bool cpu_paging_enabled(const CPUState *cpu);
  */
 void cpu_get_memory_mapping(CPUState *cpu, MemoryMappingList *list,
                             Error **errp);
-
-#endif /* !CONFIG_USER_ONLY */
 
 /**
  * cpu_write_elf64_note:
@@ -552,38 +581,6 @@ int cpu_write_elf32_qemunote(WriteCoreDumpFunction f, CPUState *cpu,
  */
 GuestPanicInformation *cpu_get_crash_info(CPUState *cpu);
 
-/**
- * CPUDumpFlags:
- * @CPU_DUMP_CODE:
- * @CPU_DUMP_FPU: dump FPU register state, not just integer
- * @CPU_DUMP_CCOP: dump info about TCG QEMU's condition code optimization state
- */
-enum CPUDumpFlags {
-    CPU_DUMP_CODE = 0x00010000,
-    CPU_DUMP_FPU  = 0x00020000,
-    CPU_DUMP_CCOP = 0x00040000,
-};
-
-/**
- * cpu_dump_state:
- * @cpu: The CPU whose state is to be dumped.
- * @f: If non-null, dump to this stream, else to current print sink.
- *
- * Dumps CPU state.
- */
-void cpu_dump_state(CPUState *cpu, FILE *f, int flags);
-
-/**
- * cpu_dump_statistics:
- * @cpu: The CPU whose state is to be dumped.
- * @flags: Flags what to dump.
- *
- * Dump CPU statistics to the current monitor if we have one, else to
- * stdout.
- */
-void cpu_dump_statistics(CPUState *cpu, int flags);
-
-#ifndef CONFIG_USER_ONLY
 /**
  * cpu_get_phys_page_attrs_debug:
  * @cpu: The CPU to obtain the physical page address for.
@@ -645,7 +642,8 @@ static inline int cpu_asidx_from_attrs(CPUState *cpu, MemTxAttrs attrs)
     }
     return ret;
 }
-#endif
+
+#endif /* CONFIG_USER_ONLY */
 
 /**
  * cpu_list_add:
