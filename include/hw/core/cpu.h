@@ -209,7 +209,6 @@ typedef struct CPUClass {
     int (*write_elf32_qemunote)(WriteCoreDumpFunction f, CPUState *cpu,
                                 void *opaque);
 
-    const VMStateDescription *vmsd;
     const char *gdb_core_xml_file;
     gchar * (*gdb_arch_name)(CPUState *cpu);
     const char * (*gdb_get_dynamic_xml)(CPUState *cpu, const char *xmlname);
@@ -220,6 +219,10 @@ typedef struct CPUClass {
     void (*disas_set_info)(CPUState *cpu, disassemble_info *info);
     vaddr (*adjust_watchpoint_address)(CPUState *cpu, vaddr addr, int len);
     void (*tcg_initialize)(void);
+
+#if !defined(CONFIG_USER_ONLY)
+    const VMStateDescription *vmsd;
+#endif /* !CONFIG_USER_ONLY */
 
     /* Keep non-pointer data at the end to minimize holes.  */
     int gdb_num_core_regs;
