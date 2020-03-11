@@ -169,7 +169,6 @@ typedef struct CPUClass {
     int reset_dump_flags;
     bool (*has_work)(CPUState *cpu);
     void (*do_interrupt)(CPUState *cpu);
-    bool (*virtio_is_big_endian)(CPUState *cpu);
     int (*memory_rw_debug)(CPUState *cpu, vaddr addr,
                            uint8_t *buf, int len, bool is_write);
     void (*dump_state)(CPUState *cpu, FILE *, int flags);
@@ -225,6 +224,7 @@ typedef struct CPUClass {
     int (*write_elf32_qemunote)(WriteCoreDumpFunction f, CPUState *cpu,
                                 void *opaque);
     GuestPanicInformation *(*get_crash_info)(CPUState *cpu);
+    bool (*virtio_is_big_endian)(CPUState *cpu);
     const VMStateDescription *vmsd;
 #endif /* !CONFIG_USER_ONLY */
 
