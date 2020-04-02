@@ -37,6 +37,7 @@
 
 #include "qemu/osdep.h"
 #include "qemu/module.h"
+#include "sysemu/qtest.h"
 #include "hw/irq.h"
 #include "hw/isa/isa.h"
 
@@ -210,7 +211,9 @@ static const TypeInfo testdev_info = {
 
 static void testdev_register_types(void)
 {
-    type_register_static(&testdev_info);
+    if (qtest_enabled()) {
+        type_register_static(&testdev_info);
+    }
 }
 
 type_init(testdev_register_types)

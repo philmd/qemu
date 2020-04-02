@@ -24,6 +24,7 @@
 #include "qemu/event_notifier.h"
 #include "qemu/module.h"
 #include "sysemu/kvm.h"
+#include "sysemu/qtest.h"
 
 typedef struct PCITestDevHdr {
     uint8_t test;
@@ -355,7 +356,9 @@ static const TypeInfo pci_testdev_info = {
 
 static void pci_testdev_register_types(void)
 {
-    type_register_static(&pci_testdev_info);
+    if (qtest_enabled()) {
+        type_register_static(&pci_testdev_info);
+    }
 }
 
 type_init(pci_testdev_register_types)
