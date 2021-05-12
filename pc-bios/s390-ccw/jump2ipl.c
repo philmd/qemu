@@ -34,6 +34,8 @@ static void jump_to_IPL_addr(void)
 
 void jump_to_IPL_code(uint64_t address)
 {
+    register unsigned long _addr asm("1");
+
     /* store the subsystem information _after_ the bootmap was loaded */
     write_subsystem_identification();
     write_iplb_location();
@@ -64,9 +66,13 @@ void jump_to_IPL_code(uint64_t address)
      * We use the load normal reset to keep r15 unchanged. jump_to_IPL_2
      * can then use r15 as its stack pointer.
      */
-    asm volatile("lghi 1,1\n\t"
-                 "diag 1,1,0x308\n\t"
-                 : : : "1", "memory");
+    asm volatile(
+            "    lghi %0,%[flags]\n"
+            "    diag %[addr],%[subcode],0x308\n"
+            : [addr] "+d" (_addr)
+            : [flags] "K" (1), [subcode] "d" (_addr)
+            : "memory");
+
     panic("\n! IPL returns !\n");
 }
 
