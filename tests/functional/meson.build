@@ -14,9 +14,14 @@ test_timeouts = {
 }
 
 tests_generic = [
+  'empty_cpu_model',
 ]
 
 tests_x86_64_quick = [
+  'cpu_queries',
+  'mem_addr_space',
+  'pc_cpu_hotplug_props',
+  'virtio_version',
 ]
 
 tests_x86_64_thorough = [
