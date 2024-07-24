@@ -228,7 +228,6 @@ CRIS TCG CPUs
 M: Edgar E. Iglesias <edgar.iglesias@gmail.com>
 S: Maintained
 F: target/cris/
-F: hw/cris/
 F: disas/cris.c
 
 Hexagon TCG CPUs
@@ -1209,13 +1208,6 @@ Arduino
 M: Philippe Mathieu-Daudé <philmd@linaro.org>
 S: Maintained
 F: hw/avr/arduino.c
-
-CRIS Machines
--------------
-Etrax hardware
-M: Edgar E. Iglesias <edgar.iglesias@gmail.com>
-S: Maintained
-F: hw/*/etraxfs_*.c
 
 HP-PARISC Machines
 ------------------
