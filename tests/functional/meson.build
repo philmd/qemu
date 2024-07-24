@@ -15,6 +15,12 @@ test_timeouts = {
 
 tests_generic = [
   'empty_cpu_model',
+  'info_usernet',
+  'version',
+]
+
+tests_ppc_quick = [
+  'ppc_74xx',
 ]
 
 tests_x86_64_quick = [
