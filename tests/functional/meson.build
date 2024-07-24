@@ -23,6 +23,14 @@ tests_ppc_quick = [
   'ppc_74xx',
 ]
 
+tests_riscv32_quick = [
+  'riscv_opensbi',
+]
+
+tests_riscv64_quick = [
+  'riscv_opensbi',
+]
+
 tests_x86_64_quick = [
   'cpu_queries',
   'mem_addr_space',

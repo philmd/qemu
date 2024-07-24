@@ -337,6 +337,7 @@ F: include/hw/riscv/
 F: linux-user/host/riscv32/
 F: linux-user/host/riscv64/
 F: tests/tcg/riscv64/
+F: tests/functional/test_riscv_opensbi.py
 
 RISC-V XThead* extensions
 M: Christoph Muellner <christoph.muellner@vrull.eu>
