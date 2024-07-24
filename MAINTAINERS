@@ -4127,6 +4127,7 @@ F: .travis.yml
 F: docs/devel/ci*
 F: scripts/ci/
 F: tests/docker/
+F: tests/functional/
 F: tests/vm/
 F: tests/lcitool/
 F: tests/avocado/tuxrun_baselines.py
