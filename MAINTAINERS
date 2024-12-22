@@ -4310,3 +4310,9 @@ Machine development tool
 M: Maksim Davydov <davydov-max@yandex-team.ru>
 S: Supported
 F: scripts/compare-machine-types.py
+
+b4 tool configuration
+M: Jiaxun Yang <jiaxun.yang@flygoat.com>
+M: Philippe Mathieu-Daudé <philmd@linaro.org>
+S: Odd Fixes
+F: .b4-config
