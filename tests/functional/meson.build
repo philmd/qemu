@@ -104,6 +104,10 @@ tests_avr_system_thorough = [
   'avr_mega2560',
 ]
 
+tests_hppa_system_quick = [
+  'hppa_seabios',
+]
+
 tests_i386_system_thorough = [
   'i386_tuxrun',
 ]
