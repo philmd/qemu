@@ -38,6 +38,14 @@
 
 static void switch_mode(CPUARMState *env, int mode);
 
+MemOp mo_endian(CPUARMState *env)
+{
+    if (!is_a64(env) && arm_cpu_data_is_big_endian_a32(env, arm_sctlr_b(env))) {
+        return MO_BE;
+    }
+    return MO_LE;
+}
+
 int compare_u64(const void *a, const void *b)
 {
     if (*(uint64_t *)a > *(uint64_t *)b) {
