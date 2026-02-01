@@ -3233,15 +3233,17 @@ int virtio_set_features_ex(VirtIODevice *vdev, const uint64_t *features)
     return ret;
 }
 
-#if defined(TARGET_PPC64) || defined(TARGET_ARM)
-#define LEGACY_VIRTIO_IS_BIENDIAN 1
-#endif
+static bool target_is_legacy_virtio_biendian(void)
+{
+    return target_ppc64() || target_base_arm();
+}
 
 static bool virtio_access_is_big_endian(const VirtIODevice *vdev)
 {
-#if defined(LEGACY_VIRTIO_IS_BIENDIAN)
-    return virtio_is_big_endian(vdev);
-#elif TARGET_BIG_ENDIAN
+    if (target_is_legacy_virtio_biendian()) {
+        return virtio_is_big_endian(vdev);
+    }
+#if TARGET_BIG_ENDIAN
     if (virtio_vdev_has_feature(vdev, VIRTIO_F_VERSION_1)) {
         /* Devices conforming to VIRTIO 1.0 or later are always LE. */
         return false;
