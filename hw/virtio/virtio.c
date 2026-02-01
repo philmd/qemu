@@ -3243,15 +3243,14 @@ static bool virtio_access_is_big_endian(const VirtIODevice *vdev)
     if (target_is_legacy_virtio_biendian()) {
         return virtio_is_big_endian(vdev);
     }
-#if TARGET_BIG_ENDIAN
+    if (!target_big_endian()) {
+        return false;
+    }
     if (virtio_vdev_has_feature(vdev, VIRTIO_F_VERSION_1)) {
         /* Devices conforming to VIRTIO 1.0 or later are always LE. */
         return false;
     }
     return true;
-#else
-    return false;
-#endif
 }
 
 void virtio_reset(VirtIODevice *vdev)
