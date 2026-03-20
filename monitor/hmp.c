@@ -1632,11 +1632,10 @@ static int get_monitor_def(Monitor *mon, int64_t *pval, const char *name)
         }
     }
 
-    if (cs->cc->sysemu_ops->monitor_get_register) {
-        ret = cs->cc->sysemu_ops->monitor_get_register(cs, name, &tmp);
-    } else {
-        ret = target_get_monitor_def(cs, name, &tmp);
+    if (!cs->cc->sysemu_ops->monitor_get_register) {
+        return -1;
     }
+    ret = cs->cc->sysemu_ops->monitor_get_register(cs, name, &tmp);
     if (!ret) {
         *pval = target_long_bits() == 32 ? (int32_t)tmp : tmp;
     }
