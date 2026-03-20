@@ -86,10 +86,18 @@ typedef struct SysemuCPUOps {
     bool (*internal_is_big_endian)(CPUState *cpu);
 
     /**
+     * @monitor_get_register: Callback to fill @pval with register @name.
+     *                        This field is legacy, use @gdb_core_xml_file
+     *                        to dump registers instead.
+     */
+    int (*monitor_get_register)(CPUState *cs, const char *name, uint64_t *pval);
+
+    /**
      * @monitor_defs: Array of MonitorDef entries. This field is legacy,
      *                use @gdb_core_xml_file to dump registers instead.
      */
     const MonitorDef *monitor_defs;
+
     /**
      * @legacy_vmsd: Legacy state for migration.
      *               Do not use in new targets, use #DeviceClass::vmsd instead.
