@@ -25,9 +25,9 @@
 #include "qemu/module.h"
 #include "qemu/error-report.h"
 #include "qemu/timer.h"
+#include "qom/object.h"
 #include "hw/core/cpu.h"
 #include "target/arm/arm-powerctl.h"
-#include "target/arm/cpu.h"
 #include "hw/misc/allwinner-cpucfg.h"
 #include "trace.h"
 
@@ -92,7 +92,8 @@ static void allwinner_cpucfg_cpu_reset(AwCpuCfgState *s, uint8_t cpu_id)
          */
         return;
     }
-    bool target_aa64 = arm_feature(cpu_env(target_cpu), ARM_FEATURE_AARCH64);
+    bool target_aa64 = object_property_get_bool(OBJECT(target_cpu),
+                                                "aarch64", NULL);
 
     ret = arm_set_cpu_on(cpu_id, s->entry_addr, 0,
                          CPU_EXCEPTION_LEVEL_ON_RESET, target_aa64);
