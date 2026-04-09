@@ -2218,6 +2218,9 @@ static ObjectClass *arm_cpu_class_by_name(const char *cpu_model)
         cpunamestr = "max";
     }
 #endif
+    if (!strcmp(cpunamestr, "max")) {
+        cpunamestr = target_aarch64() ? "aarch64-max" : "arm-max";
+    }
     typename = g_strdup_printf(ARM_CPU_TYPE_NAME("%s"), cpunamestr);
     oc = object_class_by_name(typename);
     g_strfreev(cpuname);

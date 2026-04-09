@@ -901,7 +901,7 @@ static void sbsa_ref_class_init(ObjectClass *oc, const void *data)
         ARM_CPU_TYPE_NAME("neoverse-n1"),
         ARM_CPU_TYPE_NAME("neoverse-v1"),
         ARM_CPU_TYPE_NAME("neoverse-n2"),
-        ARM_CPU_TYPE_NAME("max"),
+        ARM_CPU_TYPE_NAME("aarch64-max"),
         NULL,
     };
 

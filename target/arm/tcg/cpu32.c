@@ -798,7 +798,7 @@ static const ARMCPUInfo arm_tcg_cpus[] = {
     { .name = "sa1100",      .initfn = sa1100_initfn },
     { .name = "sa1110",      .initfn = sa1110_initfn },
 #ifndef TARGET_AARCH64
-    { .name = "max",         .initfn = arm_max_initfn },
+    { .name = "arm-max",     .initfn = arm_max_initfn },
 #endif
 };
 

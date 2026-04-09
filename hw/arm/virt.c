@@ -3425,7 +3425,8 @@ static int virt_get_physical_address_range(MachineState *ms,
 static const char *virt_get_default_cpu_type(const MachineState *ms)
 {
     return tcg_enabled() ? ARM_CPU_TYPE_NAME("cortex-a15")
-                         : ARM_CPU_TYPE_NAME("max");
+                         : target_aarch64() ? ARM_CPU_TYPE_NAME("aarch64-max")
+                                            : ARM_CPU_TYPE_NAME("arm-max");
 }
 
 static GPtrArray *virt_get_valid_cpu_types(const MachineState *ms)
@@ -3453,8 +3454,10 @@ static GPtrArray *virt_get_valid_cpu_types(const MachineState *ms)
         if (kvm_enabled() || hvf_enabled() || whpx_enabled()) {
             g_ptr_array_add(vct, g_strdup(ARM_CPU_TYPE_NAME("host")));
         }
+        g_ptr_array_add(vct, g_strdup(ARM_CPU_TYPE_NAME("aarch64-max")));
+    } else {
+        g_ptr_array_add(vct, g_strdup(ARM_CPU_TYPE_NAME("arm-max")));
     }
-    g_ptr_array_add(vct, g_strdup(ARM_CPU_TYPE_NAME("max")));
 
     return vct;
 }
