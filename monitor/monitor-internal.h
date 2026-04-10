@@ -74,6 +74,12 @@ typedef struct HMPCommand {
     const char *params;
     const char *help;
     const char *flags; /* p=preconfig */
+    /**
+     * @arch_bitmask: bitmask of QEMU_ARCH_* constants
+     *     Allow to restrict the command for a particular set of
+     *     target architectures.
+     */
+    uint32_t arch_bitmask;
     void (*cmd)(Monitor *mon, const QDict *qdict);
     /*
      * If implementing a command that takes no arguments and simply
