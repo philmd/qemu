@@ -1496,6 +1496,10 @@ void kvm_arch_accel_class_init(ObjectClass *oc)
 {
 }
 
+void kvm_arch_cpu_instance_init(CPUState *cpu)
+{
+}
+
 bool kvm_arch_cpu_realize(CPUState *cpu, Error **errp)
 {
     return true;
