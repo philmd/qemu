@@ -14,7 +14,7 @@
 #include "accel/tcg/cpu-ops.h"
 #include "cpregs.h"
 
-static inline bool fgt_svc(CPUARMState *env, int el)
+static inline bool fgt_svc(const CPUARMState *env, int el)
 {
     /*
      * Assuming fine-grained-traps are active, return true if we
@@ -29,7 +29,7 @@ static inline bool fgt_svc(CPUARMState *env, int el)
 }
 
 /* Return true if memory alignment should be enforced. */
-static bool aprofile_require_alignment(CPUARMState *env, int el, uint64_t sctlr)
+static bool aprofile_require_alignment(const CPUARMState *env, int el, uint64_t sctlr)
 {
 #ifdef CONFIG_USER_ONLY
     return false;
@@ -65,7 +65,7 @@ static bool aprofile_require_alignment(CPUARMState *env, int el, uint64_t sctlr)
 #endif
 }
 
-bool access_secure_reg(CPUARMState *env)
+bool access_secure_reg(const CPUARMState *env)
 {
     bool ret = (arm_feature(env, ARM_FEATURE_EL3) &&
                 !arm_el_is_aa64(env, 3) &&
@@ -74,7 +74,7 @@ bool access_secure_reg(CPUARMState *env)
     return ret;
 }
 
-static CPUARMTBFlags rebuild_hflags_common(CPUARMState *env, int fp_el,
+static CPUARMTBFlags rebuild_hflags_common(const CPUARMState *env, int fp_el,
                                            ARMMMUIdx mmu_idx,
                                            CPUARMTBFlags flags)
 {
@@ -88,7 +88,7 @@ static CPUARMTBFlags rebuild_hflags_common(CPUARMState *env, int fp_el,
     return flags;
 }
 
-static CPUARMTBFlags rebuild_hflags_common_32(CPUARMState *env, int fp_el,
+static CPUARMTBFlags rebuild_hflags_common_32(const CPUARMState *env, int fp_el,
                                               ARMMMUIdx mmu_idx,
                                               CPUARMTBFlags flags)
 {
@@ -105,7 +105,7 @@ static CPUARMTBFlags rebuild_hflags_common_32(CPUARMState *env, int fp_el,
     return rebuild_hflags_common(env, fp_el, mmu_idx, flags);
 }
 
-static CPUARMTBFlags rebuild_hflags_m32(CPUARMState *env, int fp_el,
+static CPUARMTBFlags rebuild_hflags_m32(const CPUARMState *env, int fp_el,
                                         ARMMMUIdx mmu_idx)
 {
     CPUARMTBFlags flags = {};
@@ -139,7 +139,7 @@ static CPUARMTBFlags rebuild_hflags_m32(CPUARMState *env, int fp_el,
 }
 
 /* This corresponds to the ARM pseudocode function IsFullA64Enabled(). */
-static bool sme_fa64(CPUARMState *env, int el)
+static bool sme_fa64(const CPUARMState *env, int el)
 {
     if (!cpu_isar_feature(aa64_sme_fa64, env_archcpu(env))) {
         return false;
@@ -164,7 +164,7 @@ static bool sme_fa64(CPUARMState *env, int el)
     return true;
 }
 
-static int neon_exception_el(CPUARMState *env, int cur_el)
+static int neon_exception_el(const CPUARMState *env, int cur_el)
 {
     /*
      * Return the EL to trap to for A32 Neon specific traps
@@ -244,7 +244,7 @@ static int neon_exception_el(CPUARMState *env, int cur_el)
     return 0;
 }
 
-static bool arm_d32dis(CPUARMState *env, int cur_el)
+static bool arm_d32dis(const CPUARMState *env, int cur_el)
 {
     bool cpacr_d32dis = FIELD_EX64(env->cp15.cpacr_el1, CPACR, D32DIS);
 
@@ -262,7 +262,7 @@ static bool arm_d32dis(CPUARMState *env, int cur_el)
     return cpacr_d32dis;
 }
 
-static CPUARMTBFlags rebuild_hflags_a32(CPUARMState *env, int fp_el,
+static CPUARMTBFlags rebuild_hflags_a32(const CPUARMState *env, int fp_el,
                                         ARMMMUIdx mmu_idx)
 {
     CPUARMTBFlags flags = {};
@@ -318,7 +318,7 @@ static CPUARMTBFlags rebuild_hflags_a32(CPUARMState *env, int fp_el,
  * Return the exception level to which exceptions should be taken for ZT0.
  * C.f. the ARM pseudocode function CheckSMEZT0Enabled, after the ZA check.
  */
-static int zt0_exception_el(CPUARMState *env, int el)
+static int zt0_exception_el(const CPUARMState *env, int el)
 {
 #ifndef CONFIG_USER_ONLY
     if (el <= 1
@@ -344,7 +344,7 @@ static int zt0_exception_el(CPUARMState *env, int el)
  * Compare the EnFPM bits in the "Accessing FPMR" pseudocode.  Note that
  * the floating-point enabled check will be handled separately.
  */
-static int fpmr_exception_el(CPUARMState *env, int el)
+static int fpmr_exception_el(const CPUARMState *env, int el)
 {
     switch (el) {
     case 0:
@@ -377,8 +377,8 @@ static int fpmr_exception_el(CPUARMState *env, int el)
     return 0;
 }
 
-static CPUARMTBFlags rebuild_hflags_a64(CPUARMState *env, int el, int fp_el,
-                                        ARMMMUIdx mmu_idx)
+static CPUARMTBFlags rebuild_hflags_a64(const CPUARMState *env, int el,
+                                        int fp_el, ARMMMUIdx mmu_idx)
 {
     CPUARMTBFlags flags = {};
     ARMMMUIdx stage1 = stage_1_mmu_idx(mmu_idx);
@@ -664,7 +664,7 @@ static CPUARMTBFlags rebuild_hflags_a64(CPUARMState *env, int el, int fp_el,
     return rebuild_hflags_common(env, fp_el, mmu_idx, flags);
 }
 
-static CPUARMTBFlags rebuild_hflags_internal(CPUARMState *env)
+static CPUARMTBFlags rebuild_hflags_internal(const CPUARMState *env)
 {
     int el = arm_current_el(env);
     int fp_el = fp_exception_el(env, el);
@@ -733,7 +733,7 @@ void HELPER(rebuild_hflags_a64)(CPUARMState *env, int el)
     env->hflags = rebuild_hflags_a64(env, el, fp_el, mmu_idx);
 }
 
-static void assert_hflags_rebuild_correctly(CPUARMState *env)
+static void assert_hflags_rebuild_correctly(const CPUARMState *env)
 {
 #ifdef CONFIG_DEBUG_TCG
     CPUARMTBFlags c = env->hflags;
@@ -749,7 +749,7 @@ static void assert_hflags_rebuild_correctly(CPUARMState *env)
 #endif
 }
 
-static bool mve_no_pred(CPUARMState *env)
+static bool mve_no_pred(const CPUARMState *env)
 {
     /*
      * Return true if there is definitely no predication of MVE
