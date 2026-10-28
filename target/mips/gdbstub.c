@@ -31,13 +31,13 @@ static int mips_gdb_get_regl(const CPUMIPSState *env,
                                   : gdb_get_reg32(buf, val);
 }
 
-int mips_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
+static bool mips_gdb_read_value(CPUMIPSState *env, int n, uint64_t *pval)
 {
-    CPUMIPSState *env = cpu_env(cs);
     uint64_t val;
 
     if (n < 32) {
-        return mips_gdb_get_regl(env, mem_buf, env->active_tc.gpr[n]);
+        *pval = env->active_tc.gpr[n];
+        return true;
     }
     if (env->CP0_Config1 & (1 << CP0C1_FP) && n >= 38 && n < 72) {
         switch (n) {
@@ -83,12 +83,24 @@ int mips_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
             break;
         default:
             if (n > 89) {
-                return 0;
+                return false;
             }
             /* 16 embedded regs.  */
             val = 0;
             break;
         }
+    }
+    *pval = val;
+    return true;
+}
+
+int mips_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
+{
+    CPUMIPSState *env = cpu_env(cs);
+    uint64_t val;
+
+    if (!mips_gdb_read_value(env, n, &val)) {
+        return 0;
     }
     return mips_gdb_get_regl(env, mem_buf, val);
 }
