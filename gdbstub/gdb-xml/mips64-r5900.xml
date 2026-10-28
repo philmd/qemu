@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
+
+<!--
+     Toshiba R5900 specific registers:
+     - LO1/HI1, the pipeline 1 multiply/divide unit results;
+     - the upper 64 bits of the 128-bit general purpose registers.
+-->
+
+<!DOCTYPE feature SYSTEM "gdb-target.dtd">
+<feature name="org.qemu.gdb.mips.r5900">
+  <reg name="lo1" bitsize="64" type="int64"/>
+  <reg name="hi1" bitsize="64" type="int64"/>
+
+  <reg name="r0_hi" bitsize="64" type="uint64"/>
+  <reg name="r1_hi" bitsize="64" type="uint64"/>
+  <reg name="r2_hi" bitsize="64" type="uint64"/>
+  <reg name="r3_hi" bitsize="64" type="uint64"/>
+  <reg name="r4_hi" bitsize="64" type="uint64"/>
+  <reg name="r5_hi" bitsize="64" type="uint64"/>
+  <reg name="r6_hi" bitsize="64" type="uint64"/>
+  <reg name="r7_hi" bitsize="64" type="uint64"/>
+  <reg name="r8_hi" bitsize="64" type="uint64"/>
+  <reg name="r9_hi" bitsize="64" type="uint64"/>
+  <reg name="r10_hi" bitsize="64" type="uint64"/>
+  <reg name="r11_hi" bitsize="64" type="uint64"/>
+  <reg name="r12_hi" bitsize="64" type="uint64"/>
+  <reg name="r13_hi" bitsize="64" type="uint64"/>
+  <reg name="r14_hi" bitsize="64" type="uint64"/>
+  <reg name="r15_hi" bitsize="64" type="uint64"/>
+  <reg name="r16_hi" bitsize="64" type="uint64"/>
+  <reg name="r17_hi" bitsize="64" type="uint64"/>
+  <reg name="r18_hi" bitsize="64" type="uint64"/>
+  <reg name="r19_hi" bitsize="64" type="uint64"/>
+  <reg name="r20_hi" bitsize="64" type="uint64"/>
+  <reg name="r21_hi" bitsize="64" type="uint64"/>
+  <reg name="r22_hi" bitsize="64" type="uint64"/>
+  <reg name="r23_hi" bitsize="64" type="uint64"/>
+  <reg name="r24_hi" bitsize="64" type="uint64"/>
+  <reg name="r25_hi" bitsize="64" type="uint64"/>
+  <reg name="r26_hi" bitsize="64" type="uint64"/>
+  <reg name="r27_hi" bitsize="64" type="uint64"/>
+  <reg name="r28_hi" bitsize="64" type="uint64"/>
+  <reg name="r29_hi" bitsize="64" type="uint64"/>
+  <reg name="r30_hi" bitsize="64" type="uint64"/>
+  <reg name="r31_hi" bitsize="64" type="uint64"/>
+</feature>

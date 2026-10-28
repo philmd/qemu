@@ -243,6 +243,45 @@ static int mips_gdb_write_fpu(CPUState *cs, uint8_t *buf, int n)
                                        MIPS_GDB_FPU_LEGACY_BASE + n);
 }
 
+#if defined(TARGET_MIPS64)
+/* org.qemu.gdb.mips.r5900: lo1, hi1, r0_hi..r31_hi */
+static int r5900_gdb_read_regs(CPUState *cs, GByteArray *buf, int n)
+{
+    CPUMIPSState *env = cpu_env(cs);
+
+    switch (n) {
+    case 0:
+        return gdb_get_reg64(buf, env->active_tc.LO[1]);
+    case 1:
+        return gdb_get_reg64(buf, env->active_tc.HI[1]);
+    default:
+        return gdb_get_reg64(buf, env->active_tc.gpr_hi[n - 2]);
+    }
+}
+
+static int r5900_gdb_write_regs(CPUState *cs, uint8_t *buf, int n)
+{
+    CPUMIPSState *env = cpu_env(cs);
+    uint64_t val = ldn_p(buf, 8);
+
+    switch (n) {
+    case 0:
+        env->active_tc.LO[1] = val;
+        break;
+    case 1:
+        env->active_tc.HI[1] = val;
+        break;
+    case 2:
+        /* r0 is hardwired to zero */
+        break;
+    default:
+        env->active_tc.gpr_hi[n - 2] = val;
+        break;
+    }
+    return 8;
+}
+#endif /* TARGET_MIPS64 */
+
 void mips_cpu_gdb_class_init_xml(CPUClass *cc)
 {
     cc->gdb_core_xml_file = target_long_bits() == 64 ? "mips64-cpu.xml"
@@ -262,4 +301,11 @@ void mips_cpu_register_gdb_regs(CPUState *cs)
                              gdb_find_static_feature(cp0_xml));
     gdb_register_coprocessor(cs, mips_gdb_read_fpu, mips_gdb_write_fpu,
                              gdb_find_static_feature(fpu_xml));
+
+#if defined(TARGET_MIPS64)
+    if (MIPS_CPU_GET_CLASS(cs)->cpu_def->insn_flags & INSN_R5900) {
+        gdb_register_coprocessor(cs, r5900_gdb_read_regs, r5900_gdb_write_regs,
+                                 gdb_find_static_feature("mips64-r5900.xml"));
+    }
+#endif
 }
