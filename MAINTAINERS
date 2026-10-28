@@ -139,6 +139,7 @@ S: Odd Fixes
 K: ^Subject:.*(?i)mips
 F: docs/system/target-mips.rst
 F: configs/targets/mips*
+F: gdbstub/gdb-xml/mips*.xml
 F: tests/functional/mips*/meson.build
 
 X86 general architecture support

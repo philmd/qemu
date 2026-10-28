@@ -5,3 +5,4 @@ TARGET_SYSTBL_ABI=n64
 TARGET_SYSTBL=syscall_n64.tbl
 TARGET_BIG_ENDIAN=y
 TARGET_LONG_BITS=64
+TARGET_XML_FILES= mips64-cpu.xml mips64-cp0.xml mips64-fpu.xml

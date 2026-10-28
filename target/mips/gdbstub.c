@@ -21,6 +21,7 @@
 #include "qemu/bitops.h"
 #include "cpu.h"
 #include "internal.h"
+#include "exec/gdbstub.h"
 #include "gdbstub/helpers.h"
 #include "fpu_helper.h"
 
@@ -176,4 +177,89 @@ int mips_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
     }
 
     return regsz;
+}
+
+static int mips_gdb_cpu_legacy_regnum(int n)
+{
+    switch (n) {
+    case 32:
+        return 33; /* lo */
+    case 33:
+        return 34; /* hi */
+    case 34:
+        return 37; /* pc */
+    default:
+        return n;
+    }
+}
+
+/* org.gnu.gdb.mips.cp0: status, badvaddr, cause */
+static const int mips_gdb_cp0_legacy_regnum[] = { 32, 35, 36 };
+
+/* org.gnu.gdb.mips.fpu: f0..f31, fcsr, fir */
+#define MIPS_GDB_FPU_LEGACY_BASE  38
+
+static int mips_gdb_read_legacy(CPUState *cs, GByteArray *buf, int n)
+{
+    uint64_t val;
+
+    if (!mips_gdb_read_value(cpu_env(cs), n, &val)) {
+        return 0;
+    }
+    return target_long_bits() == 64 ? gdb_get_reg64(buf, val)
+                                    : gdb_get_reg32(buf, val);
+}
+
+static int mips_gdb_read_cpu(CPUState *cs, GByteArray *buf, int n)
+{
+    return mips_gdb_read_legacy(cs, buf, mips_gdb_cpu_legacy_regnum(n));
+}
+
+static int mips_gdb_write_cpu(CPUState *cs, uint8_t *buf, int n)
+{
+    return mips_cpu_gdb_write_register(cs, buf,
+                                       mips_gdb_cpu_legacy_regnum(n));
+}
+
+static int mips_gdb_read_cp0(CPUState *cs, GByteArray *buf, int n)
+{
+    return mips_gdb_read_legacy(cs, buf, mips_gdb_cp0_legacy_regnum[n]);
+}
+
+static int mips_gdb_write_cp0(CPUState *cs, uint8_t *buf, int n)
+{
+    return mips_cpu_gdb_write_register(cs, buf,
+                                       mips_gdb_cp0_legacy_regnum[n]);
+}
+
+static int mips_gdb_read_fpu(CPUState *cs, GByteArray *buf, int n)
+{
+    return mips_gdb_read_legacy(cs, buf, MIPS_GDB_FPU_LEGACY_BASE + n);
+}
+
+static int mips_gdb_write_fpu(CPUState *cs, uint8_t *buf, int n)
+{
+    return mips_cpu_gdb_write_register(cs, buf,
+                                       MIPS_GDB_FPU_LEGACY_BASE + n);
+}
+
+void mips_cpu_gdb_class_init_xml(CPUClass *cc)
+{
+    cc->gdb_core_xml_file = target_long_bits() == 64 ? "mips64-cpu.xml"
+                                                     : "mips32-cpu.xml";
+    cc->gdb_num_core_regs = 0;
+    cc->gdb_read_register = mips_gdb_read_cpu;
+    cc->gdb_write_register = mips_gdb_write_cpu;
+}
+
+void mips_cpu_register_gdb_regs(CPUState *cs)
+{
+    const bool is_64bit = target_long_bits() == 64;
+    const char *cp0_xml = is_64bit ? "mips64-cp0.xml" : "mips32-cp0.xml";
+    const char *fpu_xml = is_64bit ? "mips64-fpu.xml" : "mips32-fpu.xml";
+
+    gdb_register_coprocessor(cs, mips_gdb_read_cp0, mips_gdb_write_cp0,
+                             gdb_find_static_feature(cp0_xml));
+    gdb_register_coprocessor(cs, mips_gdb_read_fpu, mips_gdb_write_fpu,
+                             gdb_find_static_feature(fpu_xml));
 }

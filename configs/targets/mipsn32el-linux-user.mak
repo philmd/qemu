@@ -5,3 +5,4 @@ TARGET_BASE_ARCH=mips
 TARGET_SYSTBL_ABI=n32
 TARGET_SYSTBL=syscall_n32.tbl
 TARGET_LONG_BITS=64
+TARGET_XML_FILES= mips64-cpu.xml mips64-cp0.xml mips64-fpu.xml

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
+
+<!DOCTYPE feature SYSTEM "gdb-target.dtd">
+<feature name="org.gnu.gdb.mips.cp0">
+  <reg name="status" bitsize="32"/>
+  <reg name="badvaddr" bitsize="32"/>
+  <reg name="cause" bitsize="32"/>
+</feature>

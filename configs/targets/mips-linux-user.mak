@@ -4,3 +4,4 @@ TARGET_SYSTBL_ABI=o32
 TARGET_SYSTBL=syscall_o32.tbl
 TARGET_BIG_ENDIAN=y
 TARGET_LONG_BITS=32
+TARGET_XML_FILES= mips32-cpu.xml mips32-cp0.xml mips32-fpu.xml
