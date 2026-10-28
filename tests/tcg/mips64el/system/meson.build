@@ -39,6 +39,15 @@ foreach t: [
   }
 endforeach
 
+# n32: 32-bit pointers, 64-bit GPRs are needed to move 64-bit values to HI1/LO1
+tests += {
+  'test_r5900_tx79.c': {
+    'cflags': cflags + ['-mabi=n32'],
+    'qemu_args': qemu_args,
+    'gdb_test': gdb_test,
+  }
+}
+
 if 'qemu-system-mips64el' in emulators
   tcg_tests += {
     'mips64el-softmmu': {
