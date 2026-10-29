@@ -49,6 +49,7 @@ tests_mips_msa_groups = [
   '../mips/test_msa_int_add.c',
   '../mips/test_msa_int_average.c',
   '../mips/test_msa_int_compare.c',
+  '../mips/test_msa_int_div_mod.c',
 ]
 
 foreach src: tests_mips_msa + tests_mips_msa_groups
