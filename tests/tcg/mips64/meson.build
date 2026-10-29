@@ -42,6 +42,7 @@ endforeach
 tests_mips_msa_groups = [
   '../mips/test_msa_bit_count.c',
   '../mips/test_msa_bit_move.c',
+  '../mips/test_msa_bit_set.c',
 ]
 
 foreach src: tests_mips_msa + tests_mips_msa_groups
