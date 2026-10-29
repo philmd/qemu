@@ -178,13 +178,21 @@ def complete_and_diff(reg_map):
     frame = gdb.selected_frame()
     changed = 0
 
-    for e in reg_map.values():
-        if "initial" in e and "hidden" not in e:
+    # Compare named registers first, hidden ones only as a fallback
+    for use_hidden in (False, True):
+        if use_hidden and changed > 0:
+            break
+
+        for e in reg_map.values():
+            if "initial" not in e or ("hidden" in e) != use_hidden:
+                continue
+
             name = e["name"]
             old_val = e["initial"]
 
             try:
-                new_val = frame.read_register(name)
+                new_val = frame.read_register(e["regnum"] if use_hidden
+                                              else name)
             except ValueError:
                 report(False, f"failed to read {name} at end of run")
                 continue
