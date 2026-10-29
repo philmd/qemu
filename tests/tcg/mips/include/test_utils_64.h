@@ -58,7 +58,7 @@ static inline int32_t check_results_64(const char *isa_ase_name,
     uint32_t pass_count = 0;
     uint32_t fail_count = 0;
 
-    printf("| %-10s \t| %-20s\t| %-16s \t|",
+    printf("# %-10s \t| %-20s\t| %-16s \t|",
            isa_ase_name, group_name, instruction_name);
     for (i = 0; i < test_count; i++) {
         if (b64_result[i] == b64_expect[i]) {
@@ -92,10 +92,10 @@ static inline bool check_binary_op_64_with_input(binary_op_64 op, const char *op
             uint64_t expected = expect[i * cols + j];
             uint64_t res = 0;
             op(&input1, &input2, &res);
-            printf("assert(0x%"PRIx64" == %s(0x%"PRIx64", 0x%"PRIx64"));\n",
+            printf("# assert(0x%"PRIx64" == %s(0x%"PRIx64", 0x%"PRIx64"));\n",
                    res, op_str, input1, input2);
             if (expected != res) {
-                printf("// error: expected 0x%"PRIx64"\n", expected);
+                printf("# error: expected 0x%"PRIx64"\n", expected);
                 ret = false;
             }
         }
