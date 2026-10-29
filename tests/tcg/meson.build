@@ -323,8 +323,8 @@ foreach target, plan: tcg_tests
       # return a clear error if user misspell a setup entry
       foreach key, _ : setup
         allowed = ['exe_name', 'env_var', 'expected_output', 'cc_feat', 'cflags',
-                   'depends', 'gdb_feat', 'gdb_test', 'plugin_test', 'qemu_args',
-                   'test_name', 'wrapper']
+                   'depends', 'gdb_feat', 'gdb_test', 'plugin_test', 'protocol',
+                   'qemu_args', 'test_name', 'wrapper']
         if key not in allowed
           error('unknown tcg setup entry \'' + key + '\' for test ' + src +
                 ' (possible: [' + ', '.join(allowed) + '])')
@@ -519,7 +519,9 @@ foreach target, plan: tcg_tests
         skip_test = 'gdb not available for ' + gdb_arch
       endif
 
+      test_protocol = 'protocol' in setup ? setup['protocol'] : 'exitcode'
       if skip_test != ''
+        test_protocol = 'exitcode'
         # still declare test, but skip it and print reason
         cmd = ['sh', '-c', 'echo "' + skip_test + '" && exit 77']
       endif
@@ -530,6 +532,7 @@ foreach target, plan: tcg_tests
         test(test_name, env, args: cmd,
              depends: test_depends,
              timeout: 120,
+             protocol: test_protocol,
              suite: ['tcg', 'tcg-' + target])
       endif
       added_tests += {test_name: true}
