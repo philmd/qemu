@@ -23,18 +23,6 @@ if 'qemu-mips' in emulators
 endif
 
 tests_mips_msa = [
-  '../mips/user/ase/msa/pack/test_msa_vshf_b.c',
-  '../mips/user/ase/msa/pack/test_msa_pckev_b.c',
-  '../mips/user/ase/msa/pack/test_msa_vshf_w.c',
-  '../mips/user/ase/msa/pack/test_msa_pckod_h.c',
-  '../mips/user/ase/msa/pack/test_msa_pckod_b.c',
-  '../mips/user/ase/msa/pack/test_msa_vshf_d.c',
-  '../mips/user/ase/msa/pack/test_msa_pckev_w.c',
-  '../mips/user/ase/msa/pack/test_msa_pckev_h.c',
-  '../mips/user/ase/msa/pack/test_msa_pckev_d.c',
-  '../mips/user/ase/msa/pack/test_msa_pckod_w.c',
-  '../mips/user/ase/msa/pack/test_msa_vshf_h.c',
-  '../mips/user/ase/msa/pack/test_msa_pckod_d.c',
   '../mips/user/ase/msa/shift/test_msa_sra_d.c',
   '../mips/user/ase/msa/shift/test_msa_srl_b.c',
   '../mips/user/ase/msa/shift/test_msa_srl_d.c',

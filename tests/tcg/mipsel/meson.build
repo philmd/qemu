@@ -56,6 +56,7 @@ tests_mips_msa_groups = [
   '../mips/test_msa_int_subtract.c',
   '../mips/test_msa_interleave.c',
   '../mips/test_msa_logic.c',
+  '../mips/test_msa_pack.c',
 ]
 
 foreach src: tests_mips_msa + tests_mips_msa_groups
