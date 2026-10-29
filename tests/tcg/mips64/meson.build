@@ -51,6 +51,7 @@ tests_mips_msa_groups = [
   '../mips/test_msa_int_div_mod.c',
   '../mips/test_msa_int_dot_product.c',
   '../mips/test_msa_int_max_min.c',
+  '../mips/test_msa_int_multiply.c',
 ]
 
 foreach src: tests_mips_msa + tests_mips_msa_groups
