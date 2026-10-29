@@ -17,6 +17,9 @@ static uint32_t ref_and(uint32_t a, uint32_t b) { return a & b; }
 static uint32_t ref_nor(uint32_t a, uint32_t b) { return ~(a | b); }
 static uint32_t ref_or(uint32_t a, uint32_t b) { return a | b; }
 static uint32_t ref_xor(uint32_t a, uint32_t b) { return a ^ b; }
+/* SELEQZ/SELNEZ select rs, or zero, depending on rt. */
+static uint32_t ref_seleqz(uint32_t a, uint32_t b) { return b == 0 ? a : 0; }
+static uint32_t ref_selnez(uint32_t a, uint32_t b) { return b != 0 ? a : 0; }
 
 static int check_op(const char *name, binary_op_32 op, ref_op_32 ref,
                     const uint32_t *input, size_t count)
@@ -53,11 +56,13 @@ int main(void)
 {
     int ret = 0;
 
-    printf("TAP version 14\n1..4\n");
+    printf("TAP version 14\n1..6\n");
     ret |= run("AND", do_mips32r6_AND, ref_and);
     ret |= run("NOR", do_mips32r6_NOR, ref_nor);
     ret |= run("OR", do_mips32r6_OR, ref_or);
     ret |= run("XOR", do_mips32r6_XOR, ref_xor);
+    ret |= run("SELEQZ", do_mips32r6_SELEQZ, ref_seleqz);
+    ret |= run("SELNEZ", do_mips32r6_SELNEZ, ref_selnez);
 
     return ret ? 1 : 0;
 }
