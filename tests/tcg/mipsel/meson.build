@@ -57,14 +57,16 @@ tests_mips_msa_groups = [
   '../mips/test_msa_interleave.c',
   '../mips/test_msa_logic.c',
   '../mips/test_msa_pack.c',
+  '../mips/test_msa_shift.c',
 ]
 
-foreach src: tests_mips_msa + tests_mips_msa_groups
+foreach src: tests_mips_msa_groups
   tests += {
     src: {
       'cflags': ['-mabi=32', '-march=mips32r5', '-mmsa', '-mno-odd-spreg',
                  '-mfp64', '-mnan=2008'],
       'qemu_args': ['-cpu', 'P5600'],
+      'protocol': 'tap',
     }
   }
 endforeach
