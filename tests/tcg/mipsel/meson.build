@@ -40,7 +40,11 @@ endif
 
 tests = []
 
-foreach src: tests_mips_msa
+tests_mips_msa_groups = [
+  '../mips/test_msa_bit_count.c',
+]
+
+foreach src: tests_mips_msa + tests_mips_msa_groups
   tests += {
     src: {
       'cflags': ['-mabi=32', '-march=mips32r5', '-mmsa', '-mno-odd-spreg',
